@@ -7,7 +7,7 @@ import { UserService } from 'src/user/user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
+  @Post('/join')
   async create(@Body() userData: JoinUserDto): Promise<userEntity> {
     return await this.userService.create(userData);
   }

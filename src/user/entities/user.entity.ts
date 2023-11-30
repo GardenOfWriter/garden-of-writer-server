@@ -1,4 +1,6 @@
+import * as bcrypt from 'bcrypt';
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -27,4 +29,10 @@ export class userEntity {
 
   @UpdateDateColumn()
   updateDate: Date;
+
+  //비밀번호 암호화
+  @BeforeInsert()
+  private beforeInsert() {
+    this.password = bcrypt.hashSync(this.password, 10);
+  }
 }
