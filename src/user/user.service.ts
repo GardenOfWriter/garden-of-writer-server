@@ -19,7 +19,7 @@ export class UserService {
     private readonly userRepository: Repository<userEntity>,
   ) {}
 
-  findAll(): Promise<userEntity[]> {
+  async findAll(): Promise<userEntity[]> {
     console.log('모든 유저 조회');
     return this.userRepository.find();
   }
@@ -57,9 +57,15 @@ export class UserService {
     return user;
   }
 
-  async findUser(id: number) {
-    return this.userRepository.findOne({
+  async findById(id: number): Promise<userEntity> {
+    return await this.userRepository.findOne({
       where: { id },
+    });
+  }
+
+  async deleteUser(id: number): Promise<void> {
+    await this.userRepository.delete({
+      id: id,
     });
   }
 }
