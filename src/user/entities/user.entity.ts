@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'user' })
+@Entity({ name: 'user', schema: 'gow-server' })
 export class userEntity {
   @PrimaryGeneratedColumn({
     name: 'user_id',
