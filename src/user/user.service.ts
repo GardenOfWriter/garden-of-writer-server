@@ -4,13 +4,14 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { LoginUserDto } from 'src/auth/dto/login-user.dto';
 import {
   PASSWORD_REG_EXP,
   PASSWORD_REG_EXP_ERROR_MESSAGE,
 } from 'src/commons/reg-exp/reg-exp';
 import { JoinUserDto } from 'src/user/dto/join-user.dto';
 import { userEntity } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -55,6 +56,12 @@ export class UserService {
     await this.userRepository.save(user);
 
     return user;
+  }
+
+  async findByFields(
+    options: FindOneOptions<LoginUserDto | userEntity>,
+  ): Promise<userEntity | undefined> {
+    return await this.userRepository.findOne(options);
   }
 
   async findById(id: number): Promise<userEntity> {

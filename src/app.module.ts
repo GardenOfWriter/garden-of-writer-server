@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -23,6 +24,10 @@ import { UserModule } from './user/user.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: true,
+    }),
+    JwtModule.register({
+      secret: process.env.JWT_ACCESS_KEY,
+      signOptions: { expiresIn: '3d' },
     }),
     UserModule,
     AuthModule,
