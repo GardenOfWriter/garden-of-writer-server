@@ -1,0 +1,52 @@
+name: Deploy to cloudtype
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Connect deploy key
+        uses: cloudtype-github-actions/connect@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          ghtoken: ${{ secrets.GHP_TOKEN }}
+      - name: Deploy
+        uses: cloudtype-github-actions/deploy@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          project: cafejun17/gow
+          stage: main
+          yaml: |
+            name: garden-of-writer-server
+            app: node@18
+            options:
+              env:
+                - name: NODE_ENV
+                  value: development
+                - name: DB_TYPE
+                  value: ${{ secrets.DB_TYPE }}
+                - name: DB_SCHEMA
+                  value: ${{ secrets.DB_SCHEMA }}
+                - name: DB_HOST
+                  value: ${{ secrets.DB_HOST }}
+                - name: DB_PORT
+                  value: ${{ secrets.DB_PORT }}
+                - name: DB_USERNAME
+                  value: ${{ secrets.DB_USERNAME }}
+                - name: DB_PASSWORD
+                  value: ${{ secrets.DB_PASSWORD }}
+                - name: DB_DATABASE
+                  value: ${{ secrets.DB_DATABASE }}
+              ports: 3000
+              install: npm install
+              build: npm run build
+              start: node dist/main.js
+              strategy: rolling
+            context:
+              git:
+                url: git@github.com:${{ github.repository }}.git
+                ref: ${{ github.ref }}
