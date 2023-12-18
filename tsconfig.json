@@ -16,6 +16,11 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@app/commons": ["./src/commons"],
+      "@app/entities": ["./src/commons/entities"],
+      "@app/novel-board": ["./src/novel-room"]
+    }
   }
 }

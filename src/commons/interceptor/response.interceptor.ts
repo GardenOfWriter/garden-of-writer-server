@@ -8,31 +8,31 @@ import {
 import { Observable, map } from 'rxjs';
 import { getToDayISO8601 } from '../util/date.util';
 
-export interface MsgResponse<T> {
+export interface ICommonResponse<T> {
   statusCode: number;
   message: string;
-  result: T | null;
+  data: T | null;
   timestamp: string;
 }
 
 @Injectable()
 export class ResponseInterceptor<T>
-  implements NestInterceptor<T, MsgResponse<T>>
+  implements NestInterceptor<T, ICommonResponse<T>>
 {
   intercept(
     context: ExecutionContext,
     next: CallHandler<T>,
-  ): Observable<MsgResponse<T>> | Promise<Observable<MsgResponse<T>>> {
+  ): Observable<ICommonResponse<T>> | Promise<Observable<ICommonResponse<T>>> {
     return next.handle().pipe(
       map((result: T) => {
         const statusCode =
           context.switchToHttp().getResponse().statusCode || 200;
         const message = getSuccessResponseMessageForStatusCode(statusCode);
         const timestamp = getToDayISO8601();
-        const successResponse: MsgResponse<T> = {
+        const successResponse: ICommonResponse<T> = {
           statusCode,
           message,
-          result: result || null,
+          data: result || null,
           timestamp,
         };
         return successResponse;
