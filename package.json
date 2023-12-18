@@ -41,7 +41,8 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "ts-jenum": "^2.2.2",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "typeorm-naming-strategies": "^4.1.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -84,6 +85,10 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@app/entities(|/.*)$": "<rootDir>/src/commons/entities/$1",
+      "^@app/commons(|/.*)$": "<rootDir>/src/commons/$1"
+    }
   }
 }
