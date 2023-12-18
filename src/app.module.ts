@@ -10,7 +10,8 @@ import { ArgumentInvalidException } from './commons/exception/argument-invalid.e
 import { GlobalExceptionFilter } from './commons/filter/global-exception.filter';
 import { ResponseInterceptor } from './commons/interceptor/response.interceptor';
 import { UserModule } from './user/user.module';
-
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { NovelModule } from './novel/novel.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,12 +29,14 @@ import { UserModule } from './user/user.module';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
       logging: true,
+      namingStrategy: new SnakeNamingStrategy(),
     }),
     JwtModule.register({
       secret: process.env.JWT_ACCESS_KEY,
       signOptions: { expiresIn: '3d' },
     }),
     UserModule,
+    NovelModule,
     AuthModule,
   ],
   controllers: [AppController],

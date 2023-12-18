@@ -6,13 +6,14 @@ import {
   Logger,
 } from '@nestjs/common';
 import { getToDayISO8601 } from '../util/date.util';
-import { MsgResponse } from '../interceptor/response.interceptor';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { IBaseException } from '../exception/base.exception';
 
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
+    const request = ctx.getRequest<Request>();
     const response = ctx.getResponse<Response>();
     // TODO: 위 두개를 한꺼번에 합칠수 있는 방법은 없을까 ?
     const statusCode =
@@ -23,12 +24,14 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.message
         : 'INTERNAL SERVER ERROR';
-    const timestamp = getToDayISO8601();
-    const responseBody: MsgResponse<null> = {
+    response.status(statusCode);
+    const responseBody: IBaseException = {
+      errorCode: exception.response,
+      path: request.path,
       statusCode,
       message,
-      result: null,
-      timestamp,
+      data: null,
+      timestamp: getToDayISO8601(),
     };
     this.logger.error(`HTTP Error: ${statusCode} - Message: ${message}`);
     this.logger.error(`exception ${JSON.stringify(exception)}`);
