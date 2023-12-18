@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsIn, IsNumber, IsString } from 'class-validator';
-import { Builder } from 'builder-pattern';
+
 import {
   NovelStatusType,
   NoveStatusEnum,
