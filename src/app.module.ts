@@ -3,15 +3,16 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { NovelRoomModule } from 'src/novel-room/novel-room.module';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ArgumentInvalidException } from './commons/exception/argument-invalid.exception';
 import { GlobalExceptionFilter } from './commons/filter/global-exception.filter';
 import { ResponseInterceptor } from './commons/interceptor/response.interceptor';
-import { UserModule } from './user/user.module';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { NovelModule } from './novel/novel.module';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,7 +28,7 @@ import { NovelModule } from './novel/novel.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: false,
+      synchronize: true,
       logging: true,
       namingStrategy: new SnakeNamingStrategy(),
     }),
@@ -38,6 +39,7 @@ import { NovelModule } from './novel/novel.module';
     UserModule,
     NovelModule,
     AuthModule,
+    NovelRoomModule,
   ],
   controllers: [AppController],
   providers: [
