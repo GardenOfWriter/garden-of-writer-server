@@ -1,10 +1,13 @@
-import { Column } from 'typeorm';
-import { BigintValueTransformer } from './transformer/bigint-value.transformer';
+import { JoinColumn, ManyToOne } from 'typeorm';
 import { PrimaryGeneratedPkWithMetaTimeEntity } from './primary-generated-pk-with-meta-time.entity';
+import { userEntity } from '@app/user/entities/user.entity';
 
 export abstract class PrimaryAuditiedPK extends PrimaryGeneratedPkWithMetaTimeEntity {
-  @Column({ type: 'bigint', transformer: new BigintValueTransformer() })
-  createdBy: number;
-  @Column({ type: 'bigint', transformer: new BigintValueTransformer() })
-  updatedBy: string;
+  @ManyToOne((type) => userEntity)
+  @JoinColumn({ referencedColumnName: 'id' })
+  createdBy: userEntity;
+
+  @ManyToOne((type) => userEntity)
+  @JoinColumn({ referencedColumnName: 'id' })
+  updatedBy: userEntity;
 }

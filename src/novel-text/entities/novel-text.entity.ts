@@ -1,5 +1,6 @@
 import { Column, Entity } from 'typeorm';
 import { PrimaryAuditiedPK } from '../../commons/entities/primary-auditied-pk.entity';
+import { userEntity } from '../../user/entities/user.entity';
 import {
   NoveTextStatusEnum,
   NovelTextStatusType,
@@ -19,11 +20,18 @@ export class NovelTextEntity extends PrimaryAuditiedPK {
   @Column('bigint')
   chapterId: number;
 
-  static of(chapterId: number, status: NovelTextStatusType, content: string) {
-    const novel = new NovelTextEntity();
-    novel.chapterId = chapterId;
-    novel.status = status;
-    novel.content = content;
-    return novel;
+  static of(
+    chapterId: number,
+    status: NovelTextStatusType,
+    content: string,
+    user: userEntity,
+  ) {
+    const novelText = new NovelTextEntity();
+    novelText.chapterId = chapterId;
+    novelText.status = status;
+    novelText.content = content;
+    novelText.createdBy = user;
+    novelText.updatedBy = user;
+    return novelText;
   }
 }
