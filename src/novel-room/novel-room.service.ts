@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
 import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
+import { userEntity } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -14,13 +15,15 @@ export class NovelRoomService {
   constructor(
     @InjectRepository(NovelRoomEntity)
     private readonly novelRoomRepository: Repository<NovelRoomEntity>,
+    @InjectRepository(userEntity)
+    private readonly userRepository: Repository<userEntity>,
   ) {}
 
   async getAllRooms(): Promise<NovelRoomEntity[]> {
     return this.novelRoomRepository.find();
   }
 
-  async createRoom(
+  async createRoomTest(
     createNovelRoomDto: CreateNovelRoomDto,
   ): Promise<NovelRoomEntity> {
     const { title, subTitle } = createNovelRoomDto;
@@ -42,6 +45,23 @@ export class NovelRoomService {
     }
 
     const room = this.novelRoomRepository.create(createNovelRoomDto);
+    return await this.novelRoomRepository.save(room);
+  }
+
+  async createRoom(
+    createNovelRoomDto: CreateNovelRoomDto,
+  ): Promise<NovelRoomEntity> {
+    const user = await this.userRepository.findOne({
+      where: { id: createNovelRoomDto.userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('유저 정보를 찾을 수 없습니다.');
+    }
+
+    const room = this.novelRoomRepository.create(createNovelRoomDto);
+    room.user = user;
+
     return await this.novelRoomRepository.save(room);
   }
 

@@ -18,10 +18,20 @@ export class NovelRoomController {
   constructor(private readonly novelRoomService: NovelRoomService) {}
 
   @Post()
-  async createRoom(
+  async createRoomTest(
     @Body() createNovelRoomDto: CreateNovelRoomDto,
   ): Promise<NovelRoomEntity> {
-    return await this.novelRoomService.createRoom(createNovelRoomDto);
+    return await this.novelRoomService.createRoomTest(createNovelRoomDto);
+  }
+
+  @Post(':userId/create-room')
+  async createRoom(
+    @Body() createNovelRoomDto: CreateNovelRoomDto,
+    @Param('userId') userId: number,
+  ): Promise<NovelRoomEntity> {
+    createNovelRoomDto.userId = userId;
+    console.log(userId);
+    return this.novelRoomService.createRoom(createNovelRoomDto);
   }
 
   @Get()
@@ -42,8 +52,8 @@ export class NovelRoomController {
   @Patch(':id')
   async updateRoom(
     @Param('id') id: number,
-    @Body() UpdateNovelRoomDto: UpdateNovelRoomDto,
+    @Body() updateNovelRoomDto: UpdateNovelRoomDto,
   ): Promise<NovelRoomEntity> {
-    return this.novelRoomService.updateRoom(id, UpdateNovelRoomDto);
+    return this.novelRoomService.updateRoom(id, updateNovelRoomDto);
   }
 }

@@ -1,9 +1,11 @@
 import * as bcrypt from 'bcrypt';
+import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 import {
   BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -35,4 +37,7 @@ export class userEntity {
   private beforeInsert() {
     this.password = bcrypt.hashSync(this.password, 10);
   }
+
+  @OneToMany(() => NovelRoomEntity, (novelRoom) => novelRoom.user)
+  novelRooms: NovelRoomEntity[];
 }
