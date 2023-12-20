@@ -11,7 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { ArgumentInvalidException } from './commons/exception/argument-invalid.exception';
 import { GlobalExceptionFilter } from './commons/filter/global-exception.filter';
 import { ResponseInterceptor } from './commons/interceptor/response.interceptor';
-import { NovelModule } from './novel/novel.module';
+import { NovelTextModule } from './novel-text/novel-text.module';
 import { UserModule } from './user/user.module';
 @Module({
   imports: [
@@ -28,7 +28,7 @@ import { UserModule } from './user/user.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: false,
       logging: true,
       namingStrategy: new SnakeNamingStrategy(),
     }),
@@ -37,7 +37,7 @@ import { UserModule } from './user/user.module';
       signOptions: { expiresIn: '3d' },
     }),
     UserModule,
-    NovelModule,
+    NovelTextModule,
     AuthModule,
     NovelRoomModule,
   ],
