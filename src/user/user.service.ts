@@ -21,7 +21,6 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<userEntity[]> {
-    console.log('모든 유저 조회');
     return this.userRepository.find();
   }
 

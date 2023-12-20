@@ -19,7 +19,7 @@ export class UserController {
     return this.userService.findById(+id);
   }
 
-  @Get(':list')
+  @Get()
   async findAll(): Promise<userEntity[]> {
     return this.userService.findAll();
   }

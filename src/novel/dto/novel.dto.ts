@@ -1,11 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsIn, IsNumber, IsString } from 'class-validator';
-
+import { IsIn, IsNumber, IsString } from 'class-validator';
 import {
   NovelStatusType,
   NoveStatusEnum,
 } from '../entities/enum/novel-status.enum';
-import { NovelEntity } from '../entities/novel.entity';
 
 export class NovelDto {
   @ApiProperty({
