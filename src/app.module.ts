@@ -12,7 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { ArgumentInvalidException } from './commons/exception/argument-invalid.exception';
 import { GlobalExceptionFilter } from './commons/filter/global-exception.filter';
 import { ResponseInterceptor } from './commons/interceptor/response.interceptor';
-import { NovelModule } from './novel/novel.module';
+import { NovelTextModule } from './novel-text/novel-text.module';
 import { UserModule } from './user/user.module';
 @Module({
   imports: [
@@ -36,7 +36,7 @@ import { UserModule } from './user/user.module';
     PassportModule,
     JwtModule.register({}),
     UserModule,
-    NovelModule,
+    NovelTextModule,
     AuthModule,
     NovelRoomModule,
   ],
