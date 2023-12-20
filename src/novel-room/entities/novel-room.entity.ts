@@ -1,5 +1,6 @@
 import { novelRoomType } from 'src/novel-room/entities/enum/novel-room-type.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { userEntity } from 'src/user/entities/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'novel-room', schema: 'gow-server' })
 export class NovelRoomEntity {
@@ -35,4 +36,7 @@ export class NovelRoomEntity {
   //줄거리
   @Column('varchar', { length: 255, nullable: true })
   summary: number | null;
+
+  @ManyToOne(() => userEntity, (user) => user.novelRooms)
+  user: userEntity;
 }

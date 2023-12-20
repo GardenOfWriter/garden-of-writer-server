@@ -17,4 +17,7 @@ export class CreateNovelRoomDto {
   @IsNotEmpty()
   @IsEnum(novelRoomType)
   type: novelRoomType;
+
+  @IsNotEmpty()
+  userId: number;
 }
