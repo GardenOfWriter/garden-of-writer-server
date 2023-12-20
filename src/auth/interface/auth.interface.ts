@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { userEntity } from 'src/user/entities/user.entity';
 
-export interface Payload {
+export interface TokenPayload {
   id: number;
   email: string;
 }

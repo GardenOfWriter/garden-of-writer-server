@@ -18,9 +18,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/commons": ["./src/commons"],
-      "@app/entities": ["./src/commons/entities"],
-      "@app/novel-board": ["./src/novel-room"]
+      "@app/auth/*": ["./src/auth/*"],
+      "@app/commons/*": ["./src/commons/*"],
+      "@app/entities/*": ["./src/commons/entities/*"],
+      "@app/novel-board/*": ["./src/novel-room/*"],
+      "@app/*": ["./src/*"]
     }
   }
 }

@@ -2,6 +2,7 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NovelRoomModule } from 'src/novel-room/novel-room.module';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
@@ -32,10 +33,8 @@ import { UserModule } from './user/user.module';
       logging: true,
       namingStrategy: new SnakeNamingStrategy(),
     }),
-    JwtModule.register({
-      secret: process.env.JWT_ACCESS_KEY,
-      signOptions: { expiresIn: '3d' },
-    }),
+    PassportModule,
+    JwtModule.register({}),
     UserModule,
     NovelTextModule,
     AuthModule,
