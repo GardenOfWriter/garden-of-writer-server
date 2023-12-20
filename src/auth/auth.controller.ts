@@ -1,8 +1,19 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { CurrentUser } from '@app/commons/decorator/current-user.decorater';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBasicAuth, ApiBearerAuth } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginUserDto } from 'src/auth/dto/login-user.dto';
 import { RequestUser } from 'src/auth/interface/auth.interface';
+import { JwtGuard } from './guard/jwt.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -28,5 +39,13 @@ export class AuthController {
   async logout(@Req() request: RequestUser, @Res() response: Response) {
     response.setHeader('Set-Cookie', this.authService.logoutUser());
     return response.sendStatus(200);
+  }
+
+  @ApiBearerAuth('Authorization')
+  @UseGuards(JwtGuard)
+  @Get('guard')
+  async guardTest(@CurrentUser() user) {
+    console.log('user', user);
+    return 'success';
   }
 }
