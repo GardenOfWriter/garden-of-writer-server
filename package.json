@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@casl/ability": "^6.5.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",
@@ -33,7 +34,9 @@
     "class-validator": "^0.14.0",
     "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
+    "i": "^0.3.7",
     "mysql2": "^3.6.5",
+    "npm": "^10.2.5",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
