@@ -9,6 +9,8 @@ import {
   UseGuards,
   ParseIntPipe,
   SerializeOptions,
+  Req,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateNovel } from './decorator/create-novel.decorator';

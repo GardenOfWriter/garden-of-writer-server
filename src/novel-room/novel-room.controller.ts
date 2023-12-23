@@ -6,32 +6,49 @@ import {
   Param,
   Patch,
   Post,
+  SerializeOptions,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
 import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 import { NovelRoomService } from 'src/novel-room/novel-room.service';
-
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { CurrentUser } from '@app/commons/decorator/current-user.decorater';
+import { userEntity } from '@app/user/entities/user.entity';
+import { JwtGuard } from '@app/auth/guard/jwt.guard';
+import { TransactionInterceptor } from '../commons/interceptor/transaction.interceptor';
+import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
+import { QueryRunner as QR } from 'typeorm';
+@ApiTags('소설 공방')
 @Controller('novel-room')
+@ApiBearerAuth('Authorization')
+@SerializeOptions({
+  excludePrefixes: ['_'],
+})
+@UseGuards(JwtGuard)
 export class NovelRoomController {
   constructor(private readonly novelRoomService: NovelRoomService) {}
 
   @Post()
   async createRoomTest(
     @Body() createNovelRoomDto: CreateNovelRoomDto,
-  ): Promise<NovelRoomEntity> {
-    return await this.novelRoomService.createRoomTest(createNovelRoomDto);
+  ): Promise<void> {
+    await this.novelRoomService.createRoomTest(createNovelRoomDto);
+    return;
   }
-
-  @Post(':userId/create-room')
+  @UseInterceptors(TransactionInterceptor)
+  @Post('/create-room')
   async createRoom(
     @Body() createNovelRoomDto: CreateNovelRoomDto,
-    @Param('userId') userId: number,
-  ): Promise<NovelRoomEntity> {
-    createNovelRoomDto.userId = userId;
-    console.log(userId);
-    return this.novelRoomService.createRoom(createNovelRoomDto);
+    @CurrentUser() user: userEntity,
+    @QueryRunner() qr?: QR,
+  ): Promise<string> {
+    createNovelRoomDto.setUserId(user);
+    await this.novelRoomService.createRoomTest(createNovelRoomDto);
+    return;
   }
 
   @Get()

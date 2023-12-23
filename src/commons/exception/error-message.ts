@@ -1,7 +1,11 @@
 import { Enum, EnumType } from 'ts-jenum';
+import { CoreErrorMessage } from './core-error-message.interface';
 
 @Enum('message')
-export class ErrorMessage extends EnumType<ErrorMessage>() {
+export class ErrorMessage
+  extends EnumType<ErrorMessage>()
+  implements CoreErrorMessage
+{
   static readonly ARGUMENT_INVALID = new ErrorMessage(
     '4001',
     '잘못된 파라미터 입니다.',

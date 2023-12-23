@@ -24,15 +24,16 @@ export class AuthController {
   @Post('/login')
   async login(
     @Body() loginUserDto: LoginUserDto,
-    @Res() res: Response,
+    // @Res() res: Response,
   ): Promise<any> {
     const jwt = await this.authService.validateUser(loginUserDto);
-    res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
-    res.cookie('accessToken', jwt.accessToken, {
-      httpOnly: true,
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-    });
-    return res.json(jwt);
+    // res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
+    // res.cookie('accessToken', jwt.accessToken, {
+    //   httpOnly: true,
+    //   maxAge: 3 * 24 * 60 * 60 * 1000,
+    // });
+    return jwt;
+    // return res.json(jwt);
   }
 
   @Post('logout')

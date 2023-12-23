@@ -31,12 +31,30 @@ export class NovelRoomEntity {
 
   //등장인물
   @Column('varchar', { length: 255, nullable: true })
-  character: number | null;
+  character: string | null;
 
   //줄거리
   @Column('varchar', { length: 255, nullable: true })
-  summary: number | null;
+  summary: string | null;
 
   @ManyToOne(() => userEntity, (user) => user.novelRooms)
   user: userEntity;
+
+  static of(
+    type: novelRoomType,
+    title: string,
+    subTitle: string,
+    category: string,
+    character: string,
+    summary: string,
+  ) {
+    const room = new NovelRoomEntity();
+    room.type = type;
+    room.title = title;
+    room.subTitle = subTitle;
+    room.category = category;
+    room.character = character;
+    room.summary = summary;
+    return room;
+  }
 }

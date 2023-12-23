@@ -65,6 +65,7 @@ export class UserService {
 
   async findById(id: number): Promise<userEntity> {
     return await this.userRepository.findOne({
+      select: ['id', 'email', 'nickname'],
       where: { id },
     });
   }
