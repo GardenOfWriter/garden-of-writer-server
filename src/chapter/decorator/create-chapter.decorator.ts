@@ -1,0 +1,20 @@
+import { applyDecorators } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
+import { SwaggerExceptionDto } from 'src/commons/decorator/swagger/swagger.exception';
+import { CreateChapterRequestDto } from '../dto/request/create-chapter.dto';
+
+export function CreateNovel(): MethodDecorator {
+  return applyDecorators(
+    ApiOperation({
+      summary: '회차 생성 API',
+    }),
+    ApiOkResponse({ type: CreateChapterRequestDto }),
+    ApiBadRequestResponse({ type: SwaggerExceptionDto }),
+    ApiResponse({ schema: {}, status: 2000 }),
+  );
+}

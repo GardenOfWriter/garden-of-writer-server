@@ -16,7 +16,13 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: TokenPayload, done: VerifiedCallback) {
-    const user = await this.userService.findById(payload.id);
+    const user = await this.userService.findByFields({
+      select: ['id', 'email', 'nickname'],
+      where: {
+        id: payload.id,
+      },
+    });
+
     if (!user) {
       return done(new UserNotExistsException(), false);
     }

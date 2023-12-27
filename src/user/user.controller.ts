@@ -10,8 +10,9 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('/join')
-  async create(@Body() userData: JoinUserDto): Promise<userEntity> {
-    return await this.userService.create(userData);
+  async create(@Body() userData: JoinUserDto): Promise<void> {
+    await this.userService.create(userData);
+    return;
   }
 
   //post맨에서 user/{id}로 get해야 됨.

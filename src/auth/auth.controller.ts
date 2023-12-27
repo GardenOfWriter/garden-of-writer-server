@@ -24,7 +24,7 @@ export class AuthController {
   @Post('/login')
   async login(
     @Body() loginUserDto: LoginUserDto,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
     const jwt = await this.authService.validateUser(loginUserDto);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
@@ -32,7 +32,7 @@ export class AuthController {
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
-    return res.json(jwt);
+    return jwt;
   }
 
   @Post('logout')

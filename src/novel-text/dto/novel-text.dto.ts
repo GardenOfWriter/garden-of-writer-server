@@ -16,7 +16,7 @@ export class NovelTextDto {
 
   @ApiProperty({
     example: '안녕하세요 참여 작가입니다.',
-    description: '여기는 작성된 소설에 대한 텍스트',
+    description: '여기는 작성된 소설에 대한 텍스트 글',
   })
   @IsString()
   content: string;
