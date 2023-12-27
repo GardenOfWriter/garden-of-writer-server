@@ -18,6 +18,11 @@ async function bootstrap() {
     }),
   );
   // 직렬화를 위해 필요
+  app.enableCors({
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  });
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   await app.listen(3000);
   process.on('SIGINT', async () => {
