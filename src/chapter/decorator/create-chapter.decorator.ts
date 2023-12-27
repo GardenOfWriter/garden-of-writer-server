@@ -11,7 +11,7 @@ import { CreateChapterRequestDto } from '../dto/request/create-chapter.dto';
 export function CreateNovel(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '회차 생성 API',
+      summary: '회차 연재 신청 API',
     }),
     ApiOkResponse({ type: CreateChapterRequestDto }),
     ApiBadRequestResponse({ type: SwaggerExceptionDto }),
