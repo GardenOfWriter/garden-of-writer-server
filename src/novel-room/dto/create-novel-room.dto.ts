@@ -58,12 +58,15 @@ export class CreateNovelRoomDto {
   //   description: '유저 ID',
   // })
   // @IsNotEmpty()
-  private userId: number;
+  private _user: userEntity;
 
   setUserId(user: userEntity) {
-    this.userId = user.id;
+    this._user = user;
   }
-
+  getUser(): userEntity {
+    return this._user;
+  }
+  // request dto -> toEntity -> of method -> entity
   toEntity(): Partial<NovelRoomEntity> {
     return NovelRoomEntity.of(
       this.type,
@@ -72,6 +75,7 @@ export class CreateNovelRoomDto {
       this.category,
       this.character,
       this.summary,
+      this._user,
     );
   }
 }

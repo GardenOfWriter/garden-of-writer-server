@@ -1,13 +1,27 @@
+import { PrimaryGeneratedPkWithMetaTimeEntity } from '@app/commons/entities/primary-generated-pk-with-meta-time.entity';
 import { novelRoomType } from 'src/novel-room/entities/enum/novel-room-type.enum';
 import { userEntity } from 'src/user/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { NovelWriterEntity } from '../../novel-writer/entities/novel-writer.entity';
+import { NovelAttendBoardEntity } from '../../novel-attend-board/entities/novel-attend-board.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  OneToMany,
+} from 'typeorm';
+import {
+  NovelRoomStatusEnum,
+  NovelRoomStatusType,
+} from './enum/novel-room-status.enum';
 
 @Entity({ name: 'novel-room', schema: 'gow-server' })
-export class NovelRoomEntity {
-  @PrimaryGeneratedColumn({
-    name: 'room_id',
-  })
-  id: number;
+export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
+  // @PrimaryGeneratedColumn({
+  //   name: 'room_id',
+  // })
+  // id: number;
 
   //작가정원
   @Column({
@@ -37,8 +51,28 @@ export class NovelRoomEntity {
   @Column('varchar', { length: 255, nullable: true })
   summary: string | null;
 
+  // 연재 완료일
+  @Column('timestamp', { nullable: true })
+  complatedAt: Date;
+
+  // 소설 공방 상태
+  @Column({
+    type: 'enum', //
+    enum: NovelRoomStatusEnum,
+    default: NovelRoomStatusEnum.SERIES,
+  })
+  status: NovelRoomStatusType;
+  /**
+   *  추후에 createdBy로 옮기는걸 제안
+   */
   @ManyToOne(() => userEntity, (user) => user.novelRooms)
   user: userEntity;
+
+  @OneToMany((_type) => NovelWriterEntity, (writer) => writer.novelRoom)
+  novelWriter: NovelWriterEntity[];
+
+  @OneToOne((_type) => NovelAttendBoardEntity, (board) => board.noveRoom)
+  novelAttendBoard: NovelAttendBoardEntity;
 
   static of(
     type: novelRoomType,
@@ -47,6 +81,7 @@ export class NovelRoomEntity {
     category: string,
     character: string,
     summary: string,
+    user: userEntity,
   ) {
     const room = new NovelRoomEntity();
     room.type = type;
@@ -55,6 +90,7 @@ export class NovelRoomEntity {
     room.category = category;
     room.character = character;
     room.summary = summary;
+    room.user = user;
     return room;
   }
 }

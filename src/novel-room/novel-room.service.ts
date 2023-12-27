@@ -1,13 +1,23 @@
+import { NovelWriterCategoryEnum } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { dot } from 'node:test/reporters';
 import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
 import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 import { userEntity } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
-import { NovelWriterStatusEnum } from '../novel-writer/entities/enums/novel-writer.enum';
+import { In, Repository } from 'typeorm';
+import {
+  NovelWriterStatusEnum,
+  NovelWriterStatusType,
+} from '../novel-writer/entities/enums/novel-writer-status.enum';
+import {
+  FindAttendQueryDto,
+  NovelRoomAttendQueryEnum,
+} from './dto/request/find-attend-query.dto';
+import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
 import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-subtitle.exception';
 import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title.exception';
 import { NovelRoomNotFoundeException } from './exceptions/not-found.exception';
@@ -15,6 +25,9 @@ import { NovelRoomNotFoundeException } from './exceptions/not-found.exception';
 @Injectable()
 export class NovelRoomService {
   constructor(
+    /**
+     * TODO : repository layer로 분리하는걸 확인
+     */
     @InjectRepository(NovelRoomEntity)
     private readonly novelRoomRepository: Repository<NovelRoomEntity>,
     @InjectRepository(userEntity)
@@ -23,8 +36,27 @@ export class NovelRoomService {
     private readonly novelWriterRepository: NovelWriterRepository,
   ) {}
 
-  async getAllRooms(): Promise<NovelRoomEntity[]> {
-    return this.novelRoomRepository.find();
+  async getAllRooms(user: userEntity, dto: FindAttendQueryDto): Promise<any> {
+    /**
+     *  참여중 미참여중 필터링
+     */
+    const roomFilter = this.filterQueryRoomStatus(dto);
+    const rooms = await this.novelRoomRepository.find({
+      relations: ['novelWriter', 'novelWriter.user'],
+      where: {
+        novelWriter: {
+          user: { id: user.id },
+          status: In(roomFilter),
+        },
+      },
+    });
+
+    if (!rooms || rooms.length === 0) {
+      return [];
+    }
+    return rooms.map(
+      (room: NovelRoomEntity) => new FindAttendStatusNovelRoomDto(user, room),
+    );
   }
   async createRoomTest(createNovelRoomDto: CreateNovelRoomDto): Promise<void> {
     const { title, subTitle } = createNovelRoomDto;
@@ -46,16 +78,20 @@ export class NovelRoomService {
       throw new NovelRoomDuplicationSubTitleException();
     }
 
-    const room = this.novelRoomRepository.create(createNovelRoomDto);
-    const saveRoom = await this.novelRoomRepository.save(room);
+    // const room = this.novelRoomRepository.create(createNovelRoomDto.toEntity());
+    const saveRoom = await this.novelRoomRepository.save(
+      createNovelRoomDto.toEntity(),
+    );
+
     /**
-     *  방 생성후 대표작가로 novelWriter 로 할당
+     *  소설 공방 생성후 대표작가로 novelWriter 로 할당
      */
-    await this.novelWriterRepository.addRow(
+    await this.novelWriterRepository.saveRow(
       NovelWriterEntity.of(
         saveRoom.id,
-        NovelWriterStatusEnum.REPRESENTATIVE_WRITER,
-        room.user,
+        NovelWriterCategoryEnum.REPRESENTATIVE_WRITER,
+        NovelWriterStatusEnum.ATTENDING,
+        createNovelRoomDto.getUser(),
       ),
     );
   }
@@ -108,5 +144,12 @@ export class NovelRoomService {
     }
 
     return await this.novelRoomRepository.save(room);
+  }
+  private filterQueryRoomStatus(
+    dto: FindAttendQueryDto,
+  ): NovelWriterStatusType[] {
+    return dto.roomStatus === NovelRoomAttendQueryEnum.NOT_PARTICIPATING
+      ? ['attending_reject', 'attending_review', 'exit']
+      : ['attending'];
   }
 }

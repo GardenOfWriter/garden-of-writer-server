@@ -1,21 +1,31 @@
-import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { userEntity } from '@app/user/entities/user.entity';
 import { PickType } from '@nestjs/swagger';
 import { NovelWirterDto } from '../novel-writer.dto';
 import {
+  NovelWriterCategoryEnum,
+  NovelWriterCategoryType,
+} from '../../entities/enums/novel-writer-category.enum';
+import {
   NovelWriterStatusEnum,
   NovelWriterStatusType,
-} from '@app/novel-writer/entities/enums/novel-writer.enum';
+} from '@app/novel-writer/entities/enums/novel-writer-status.enum';
 
+/**
+ *  참여 작가로 조인
+ */
 export class CreateNovelWriterRequestDto extends PickType(NovelWirterDto, [
-  'status',
   'novelRoomId',
 ]) {
-  toEntity(user: userEntity): Partial<NovelWriterEntity> {
+  toEntity(
+    user: userEntity,
+    category: NovelWriterCategoryType,
+    status: NovelWriterStatusType,
+  ): Partial<NovelWriterEntity> {
     const entity = NovelWriterEntity.of(
       this.novelRoomId,
-      NovelWriterStatusEnum.PARTICIPATING_WRITER,
+      category,
+      status,
       user,
     );
     return entity;

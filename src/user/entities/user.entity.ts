@@ -22,8 +22,10 @@ export class userEntity {
 
   @Column({ length: 255, unique: true })
   nickname: string;
-
-  @Column({ length: 255 })
+  /**
+   *  패스워드를 조회할 필요는 없어보임
+   */
+  @Column({ length: 255, select: false })
   password: string;
 
   @CreateDateColumn()

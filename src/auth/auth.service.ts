@@ -20,6 +20,7 @@ export class AuthService {
     dto: LoginUserDto,
   ): Promise<{ accessToken: string } | undefined> {
     const user: userEntity = await this.userService.findByFields({
+      select: ['id', 'email', 'password'], // 패스워드 컬럼은 select 가 기본 false 되어있어서 find 할때 명시를 해줘야함
       where: { email: dto.email },
     });
     /**

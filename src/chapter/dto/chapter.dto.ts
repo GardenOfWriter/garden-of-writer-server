@@ -1,12 +1,9 @@
-import {
-  NovelTextStatusType,
-  NoveTextStatusEnum,
-} from '@app/novel-text/entities/enum/novel-text-status.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNumber, IsString } from 'class-validator';
-import { ManyToOne } from 'typeorm';
-import { ChapterStatusEnum } from '../../novel-board/entities/enum/novel-board-status.enum';
-import { ChapterStatusType } from '../entities/enum/chapter-status.enum';
+import {
+  ChapterStatusEnum,
+  ChapterStatusType,
+} from '../entities/enums/chapter-status.enum';
 
 export class ChapterDto {
   @ApiProperty({

@@ -24,7 +24,7 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  async create(userData: JoinUserDto): Promise<userEntity> {
+  async create(userData: JoinUserDto): Promise<void> {
     const { email, nickname, password } = userData;
 
     const user = new userEntity();
@@ -51,14 +51,13 @@ export class UserService {
     if (PASSWORD_REG_EXP.test(user.password) === false) {
       throw new BadRequestException(PASSWORD_REG_EXP_ERROR_MESSAGE);
     }
-
     await this.userRepository.save(user);
-
-    return user;
+    return;
   }
 
   async findByFields(
-    options: FindOneOptions<LoginUserDto | userEntity>,
+    // options: FindOneOptions<LoginUserDto | userEntity>, // TODO : 타입이 교집합이 되기때문에 확인이 필요
+    options: FindOneOptions<userEntity>,
   ): Promise<userEntity | undefined> {
     return await this.userRepository.findOne(options);
   }

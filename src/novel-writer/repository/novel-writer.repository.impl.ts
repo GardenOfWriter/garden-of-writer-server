@@ -1,3 +1,4 @@
+import { NovelRoomEntity } from '@app/novel-board/entities/novel-room.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { NovelWriterEntity } from '../entities/novel-writer.entity';
@@ -9,6 +10,30 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     @InjectRepository(NovelWriterEntity)
     private dataSource: Repository<NovelWriterEntity>,
   ) {}
+
+  async findOneByUserIdAndNovelRoomId(
+    userId: number,
+    novelRoomId: number,
+  ): Promise<NovelWriterEntity> {
+    return await this.dataSource.findOne({
+      where: {
+        user: {
+          id: userId,
+        },
+        novelRoom: {
+          id: novelRoomId,
+        },
+      },
+    });
+  }
+  // async findByUserIdWithWriter(userId: number): Promise<NovelRoomEntity[]> {
+  //   return await this.dataSource.find({
+  //     relations: ['user'],
+  //     where: {
+  //       novelRoom: { id: novelRoomId },
+  //     },
+  //   });
+  // }
   findByNovelRoomId(novelRoomId: number): Promise<NovelWriterEntity[]> {
     return this.dataSource
       .createQueryBuilder('novelWriter')
@@ -28,7 +53,7 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     return await this.dataSource.find(options);
   }
 
-  async addRow(entity: Partial<NovelWriterEntity>): Promise<void> {
+  async saveRow(entity: Partial<NovelWriterEntity>): Promise<void> {
     await this.dataSource.save(entity);
     return;
   }

@@ -17,6 +17,7 @@ import { NovelTextModule } from './novel-text/novel-text.module';
 import { UserModule } from './user/user.module';
 import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { ChapterModule } from './chapter/chapter.module';
+import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -44,6 +45,7 @@ import { ChapterModule } from './chapter/chapter.module';
     NovelRoomModule,
     NovelWriterModule,
     ChapterModule,
+    NovelAttendBoardModule,
   ],
   controllers: [AppController],
   providers: [

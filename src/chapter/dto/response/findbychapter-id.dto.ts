@@ -2,7 +2,7 @@ import { NovelTextStatusType } from '@app/novel-text/entities/enum/novel-text-st
 import { SerializeOptions } from '@nestjs/common';
 import { Exclude, Expose } from 'class-transformer';
 import { ChapterEntity } from '../../entities/chapter.entity';
-import { ChapterStatusType } from '@app/chapter/entities/enum/chapter-status.enum';
+import { ChapterStatusType } from '@app/chapter/entities/enums/chapter-status.enum';
 
 @SerializeOptions({
   excludePrefixes: ['_'],
