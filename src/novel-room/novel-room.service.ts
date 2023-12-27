@@ -1,9 +1,8 @@
 import { NovelWriterCategoryEnum } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { dot } from 'node:test/reporters';
 import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
 import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
@@ -20,7 +19,7 @@ import {
 import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
 import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-subtitle.exception';
 import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title.exception';
-import { NovelRoomNotFoundeException } from './exceptions/not-found.exception';
+import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
 
 @Injectable()
 export class NovelRoomService {
@@ -58,7 +57,7 @@ export class NovelRoomService {
       (room: NovelRoomEntity) => new FindAttendStatusNovelRoomDto(user, room),
     );
   }
-  async createRoomTest(createNovelRoomDto: CreateNovelRoomDto): Promise<void> {
+  async createRoom(createNovelRoomDto: CreateNovelRoomDto): Promise<void> {
     const { title, subTitle } = createNovelRoomDto;
     /**
      *  성능상 이슈 findOne 보다 exist 이 리소스 소비가 덜 사용됨
@@ -118,7 +117,7 @@ export class NovelRoomService {
       where: { id },
     });
     if (!room) {
-      throw new NovelRoomNotFoundeException();
+      throw new NovelRoomNotFoundException();
     }
     return room;
   }

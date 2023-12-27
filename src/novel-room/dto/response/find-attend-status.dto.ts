@@ -1,15 +1,15 @@
-import { Expose } from 'class-transformer';
-import { NovelRoomEntity } from '../../entities/novel-room.entity';
-import { userEntity } from '../../../user/entities/user.entity';
-import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
 import { NovelRoomStatusType } from '@app/novel-board/entities/enum/novel-room-status.enum';
+import { Expose } from 'class-transformer';
+import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
+import { userEntity } from '../../../user/entities/user.entity';
+import { NovelRoomEntity } from '../../entities/novel-room.entity';
 
 export class FindAttendStatusNovelRoomDto {
   private _no: number;
   private _category: string;
   private _title: string;
   private _createdAt: Date;
-  private _complatedAt: Date; // 완결일
+  private _completedAt: Date; // 완결일
   private _writers: NovelWriterEntity[];
   private _type: string;
   private _currentWriter: any;
@@ -19,7 +19,7 @@ export class FindAttendStatusNovelRoomDto {
     this._category = room.category;
     this._title = room.title;
     this._createdAt = room.createdAt;
-    this._complatedAt = room.complatedAt;
+    this._completedAt = room.completedAt;
     this._type = room.type;
     this._writers = room.novelWriter;
     this._me = room.novelWriter.filter(
@@ -42,7 +42,7 @@ export class FindAttendStatusNovelRoomDto {
   }
   @Expose()
   get completionAt(): Date {
-    return this._complatedAt;
+    return this._completedAt;
   }
   @Expose()
   get writerStatus(): string {

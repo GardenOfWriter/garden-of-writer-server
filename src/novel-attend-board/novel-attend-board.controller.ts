@@ -1,6 +1,8 @@
 import { JwtGuard } from '@app/auth/guard/jwt.guard';
+import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
 import {
+  Body,
   Controller,
   Get,
   Post,
@@ -9,12 +11,9 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { NovelAttendBoardService } from './novel-attend-board.service';
-import { Body } from '@nestjs/common';
-import { NovelAttnedBoardDto } from './dto/novel-attend-board.dto';
-import { CurrentUser } from '@app/commons/decorator/current-user.decorater';
 import { userEntity } from '../user/entities/user.entity';
 import { CreateNovelAttnedBoardDto } from './dto/request/create-board.dto';
+import { NovelAttendBoardService } from './novel-attend-board.service';
 
 @ApiTags('소설공방참여 게시글')
 @Controller('novel-attend-board')

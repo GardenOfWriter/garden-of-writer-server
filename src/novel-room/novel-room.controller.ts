@@ -14,15 +14,15 @@ import {
 import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
 import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 
+import { JwtGuard } from '@app/auth/guard/jwt.guard';
+import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
+import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
+import { userEntity } from '@app/user/entities/user.entity';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 import { NovelRoomService } from 'src/novel-room/novel-room.service';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CurrentUser } from '@app/commons/decorator/current-user.decorater';
-import { userEntity } from '@app/user/entities/user.entity';
-import { JwtGuard } from '@app/auth/guard/jwt.guard';
-import { TransactionInterceptor } from '../commons/interceptor/transaction.interceptor';
-import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { QueryRunner as QR } from 'typeorm';
+import { TransactionInterceptor } from '../commons/interceptor/transaction.interceptor';
 import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
 @ApiTags('소설 공방')
 @Controller('novel-room')
@@ -33,17 +33,7 @@ import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
 @UseGuards(JwtGuard)
 export class NovelRoomController {
   constructor(private readonly novelRoomService: NovelRoomService) {}
-  @UseInterceptors(TransactionInterceptor)
-  @Post()
-  async createRoomTest(
-    @Body() createNovelRoomDto: CreateNovelRoomDto,
-    @CurrentUser() user: userEntity,
-    @QueryRunner() qr?: QR,
-  ): Promise<void> {
-    createNovelRoomDto.setUserId(user);
-    await this.novelRoomService.createRoomTest(createNovelRoomDto);
-    return;
-  }
+
   @UseInterceptors(TransactionInterceptor)
   @Post('/create-room')
   async createRoom(
@@ -52,7 +42,7 @@ export class NovelRoomController {
     @QueryRunner() qr?: QR,
   ): Promise<void> {
     createNovelRoomDto.setUserId(user);
-    await this.novelRoomService.createRoomTest(createNovelRoomDto);
+    await this.novelRoomService.createRoom(createNovelRoomDto);
     return;
   }
   @ApiOperation({

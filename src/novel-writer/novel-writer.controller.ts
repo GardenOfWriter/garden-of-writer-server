@@ -1,26 +1,25 @@
 import {
   Body,
   Controller,
-  Post,
-  Put,
-  Query,
-  Get,
   Delete,
-  UseGuards,
+  Get,
   ParseIntPipe,
+  Post,
+  Query,
   SerializeOptions,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { JwtGuard } from '../auth/guard/jwt.guard';
-import { CurrentUser } from '@app/commons/decorator/current-user.decorater';
-import { userEntity } from '../user/entities/user.entity';
+import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Param } from '@nestjs/common';
-import { NovelWriterService } from './novel-writer.service';
+import { JwtGuard } from '../auth/guard/jwt.guard';
+import { userEntity } from '../user/entities/user.entity';
 import { CreateNovelWriterRequestDto } from './dto/request/create-novel-writer.dto';
+import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
 import { NovelWriterCategoryEnum } from './entities/enums/novel-writer-category.enum';
 import { NovelWriterStatusEnum } from './entities/enums/novel-writer-status.enum';
-import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
+import { NovelWriterService } from './novel-writer.service';
 
 @ApiTags('작가 리스트')
 @Controller('writer')

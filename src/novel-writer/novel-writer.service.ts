@@ -1,15 +1,13 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
-import { NovelWriterRepository } from './repository/novel-writer.repository';
-import { NovelWriterEntity } from './entities/novel-writer.entity';
+import { userEntity } from '../user/entities/user.entity';
+import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
 import { FindByNovelRoomIdResponseDto } from './dto/response/find-novel-room-id.dto';
 import { FindByNovelWriterDetails } from './dto/response/find-writers-details.dto';
+import { NovelWriterEntity } from './entities/novel-writer.entity';
 import { AlreadyExistWriterExcetpion } from './exceptions/already-exist-writer.excetpion';
-import { userEntity } from '../user/entities/user.entity';
-import { NovelWriterCategoryEnum } from './entities/enums/novel-writer-category.enum';
 import { NotAccessParticiateWriterExcetpion } from './exceptions/not-access-particiate-writer.excetpion';
-import { NovelWriterStatusType } from './entities/enums/novel-writer-status.enum';
-import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
+import { NovelWriterRepository } from './repository/novel-writer.repository';
 
 @Injectable()
 export class NovelWriterService {

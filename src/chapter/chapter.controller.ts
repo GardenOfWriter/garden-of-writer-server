@@ -1,24 +1,22 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
+  ParseIntPipe,
   Post,
   Put,
   Query,
-  Get,
-  Delete,
-  UseGuards,
-  ParseIntPipe,
   SerializeOptions,
-  Req,
-  UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateNovel } from './decorator/create-chapter.decorator';
 
-import { JwtGuard } from '../auth/guard/jwt.guard';
-import { CurrentUser } from '@app/commons/decorator/current-user.decorater';
-import { userEntity } from '../user/entities/user.entity';
+import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Param } from '@nestjs/common';
+import { JwtGuard } from '../auth/guard/jwt.guard';
+import { userEntity } from '../user/entities/user.entity';
 import { ChapterService } from './chapter.service';
 import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
 import { UpdateChapterRequestDto } from './dto/request/update-chapter.dto';

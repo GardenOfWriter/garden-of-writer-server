@@ -1,4 +1,4 @@
-import { CurrentUser } from '@app/commons/decorator/current-user.decorater';
+import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import {
   Body,
   Controller,
@@ -8,7 +8,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBasicAuth, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginUserDto } from 'src/auth/dto/login-user.dto';

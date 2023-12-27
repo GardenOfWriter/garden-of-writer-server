@@ -1,26 +1,24 @@
+import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import {
   Body,
   Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
   Post,
   Put,
   Query,
-  Get,
-  Delete,
-  UseGuards,
-  ParseIntPipe,
   SerializeOptions,
-  Req,
-  UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtGuard } from '../auth/guard/jwt.guard';
+import { userEntity } from '../user/entities/user.entity';
 import { CreateNovel } from './decorator/create-novel.decorator';
 import { CreateNovelTextRequestDto } from './dto/request/create-novel.dto';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
 import { NovelTextService } from './novel-text.service';
-import { JwtGuard } from '../auth/guard/jwt.guard';
-import { CurrentUser } from '@app/commons/decorator/current-user.decorater';
-import { userEntity } from '../user/entities/user.entity';
-import { Param } from '@nestjs/common';
 
 @ApiTags('소설글쓰기')
 @Controller('novel-text')

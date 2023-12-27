@@ -49,7 +49,7 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
 
   // 연재 완료일
   @Column('timestamp', { nullable: true })
-  complatedAt: Date;
+  completedAt: Date;
 
   // 소설 공방 상태
   @Column({
