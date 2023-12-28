@@ -14,10 +14,10 @@ import { GlobalExceptionFilter } from './commons/filter/global-exception.filter'
 import { ResponseInterceptor } from './commons/interceptor/response.interceptor';
 import { NovelTextModule } from './novel-text/novel-text.module';
 
-import { UserModule } from './user/user.module';
-import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { ChapterModule } from './chapter/chapter.module';
 import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.module';
+import { NovelWriterModule } from './novel-writer/novel-writer.module';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,7 +33,7 @@ import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: false,
+      synchronize: true,
       logging: true,
       namingStrategy: new SnakeNamingStrategy(),
     }),

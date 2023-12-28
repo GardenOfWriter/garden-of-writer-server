@@ -32,6 +32,6 @@ import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-wr
     },
   ],
   controllers: [NovelRoomController],
-  exports: ['novelRoomType', NovelRoomService],
+  exports: ['novelRoomTypeEnum', NovelRoomService],
 })
 export class NovelRoomModule {}
