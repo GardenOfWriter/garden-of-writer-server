@@ -1,7 +1,6 @@
-import { BaseEntity } from '@app/commons/entities/base.entity';
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { NovelRoomErrorMessage } from './message/novel-room.message';
+import { HttpStatus } from '@nestjs/common';
 import { BaseException } from '../../commons/exception/base.exception';
+import { NovelRoomErrorMessage } from './message/novel-room.message';
 
 export class NovelRoomDuplicationTitleException extends BaseException {
   constructor() {

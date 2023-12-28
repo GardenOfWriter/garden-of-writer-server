@@ -1,8 +1,8 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { NovelTextEntity } from './entities/novel-text.entity';
 import { NovelTextController } from './novel-text.controller';
 import { NovelTextService } from './novel-text.service';
-import { NovelTextEntity } from './entities/novel-text.entity';
 import { NovelTextRepository } from './repository/novel-text.repository';
 import { NovelTextRepositoryImpl } from './repository/novel-text.repository.impl';
 

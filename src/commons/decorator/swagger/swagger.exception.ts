@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IBaseException } from 'src/commons/exception/base.exception';
 
 export class SwaggerExceptionDto {
   @ApiProperty({ required: true, description: '에러메세지', example: '0001' })

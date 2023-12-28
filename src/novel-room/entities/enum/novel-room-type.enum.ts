@@ -1,7 +1,10 @@
-export enum novelRoomType {
-  Solo = 'solo',
-  Group2 = 'group2',
-  Group3 = 'group3',
-  Group4 = 'group4',
-  Group5 = 'group5',
-}
+export const novelRoomTypeEnum = {
+  SOLO: 'solo',
+  GROUP2: 'group2',
+  GROUP3: 'group3',
+  GROUP4: 'group4',
+  GROUP5: 'group5',
+};
+
+export type NovelRoomType =
+  (typeof novelRoomTypeEnum)[keyof typeof novelRoomTypeEnum];

@@ -1,6 +1,6 @@
 import { NovelTextStatusType } from '@app/novel-text/entities/enum/novel-text-status.enum';
 import { SerializeOptions } from '@nestjs/common';
-import { Exclude, Expose } from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { NovelTextEntity } from '../../entities/novel-text.entity';
 
 @SerializeOptions({

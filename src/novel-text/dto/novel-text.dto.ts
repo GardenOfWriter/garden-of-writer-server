@@ -1,17 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNumber, IsString } from 'class-validator';
 import {
-  NoveTextStatusEnum,
+  NovelTextStatusEnum,
   NovelTextStatusType,
 } from '../entities/enum/novel-text-status.enum';
 
 export class NovelTextDto {
   @ApiProperty({
-    enum: NoveTextStatusEnum,
+    enum: NovelTextStatusEnum,
     example: 'temp_save',
     description: 'writing (임시저장) | complete(작성완료) ',
   })
-  @IsIn(Object.values(NoveTextStatusEnum))
+  @IsIn(Object.values(NovelTextStatusEnum))
   status: NovelTextStatusType;
 
   @ApiProperty({

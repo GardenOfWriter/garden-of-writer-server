@@ -2,15 +2,15 @@ import { Column, Entity } from 'typeorm';
 import { PrimaryAuditiedPK } from '../../commons/entities/primary-auditied-pk.entity';
 import { userEntity } from '../../user/entities/user.entity';
 import {
-  NoveTextStatusEnum,
+  NovelTextStatusEnum,
   NovelTextStatusType,
 } from './enum/novel-text-status.enum';
 @Entity({ name: 'novel-text', schema: 'gow-server' })
 export class NovelTextEntity extends PrimaryAuditiedPK {
   @Column({
     type: 'enum',
-    enum: Object.values(NoveTextStatusEnum),
-    default: NoveTextStatusEnum.TEMP_SAVE,
+    enum: Object.values(NovelTextStatusEnum),
+    default: NovelTextStatusEnum.TEMP_SAVE,
   })
   status: NovelTextStatusType;
 

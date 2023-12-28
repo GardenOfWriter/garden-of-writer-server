@@ -9,7 +9,7 @@ export class JoinUserDto {
   @IsEmail()
   readonly email: string;
   @ApiProperty({
-    example: 'niclname',
+    example: 'nickname',
     description: '유저 닉네임',
   })
   @IsString()
