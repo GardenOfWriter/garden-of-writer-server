@@ -1,7 +1,10 @@
 import { userEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { novelRoomType } from 'src/novel-room/entities/enum/novel-room-type.enum';
+import {
+  NovelRoomType,
+  novelRoomTypeEnum,
+} from 'src/novel-room/entities/enum/novel-room-type.enum';
 import { NovelRoomEntity } from '../entities/novel-room.entity';
 
 export class CreateNovelRoomDto {
@@ -30,13 +33,13 @@ export class CreateNovelRoomDto {
   category: string;
 
   @ApiProperty({
-    enum: novelRoomType,
+    enum: novelRoomTypeEnum,
     example: 'group2',
     description: '작가 정원',
   })
   @IsNotEmpty()
-  @IsEnum(novelRoomType)
-  type: novelRoomType;
+  @IsEnum(novelRoomTypeEnum)
+  type: NovelRoomType;
 
   @ApiProperty({
     example: '등장 인물',
@@ -46,7 +49,7 @@ export class CreateNovelRoomDto {
   character: string;
 
   @ApiProperty({
-    enum: novelRoomType,
+    enum: novelRoomTypeEnum,
     example: '줄거리',
     description: '줄거리',
   })

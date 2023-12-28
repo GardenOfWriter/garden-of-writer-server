@@ -1,10 +1,9 @@
-import { userEntity } from '../../../user/entities/user.entity';
-import { NovelRoomEntity } from '../../../novel-room/entities/novel-room.entity';
+import { NovelRoomType } from '@app/novel-board/entities/enum/novel-room-type.enum';
 import { Expose } from 'class-transformer';
-import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
-import { NovelWriterStatusEnum } from '../../../novel-writer/entities/enums/novel-writer-status.enum';
+import { NovelRoomEntity } from '../../../novel-room/entities/novel-room.entity';
 import { NovelWriterCategoryEnum } from '../../../novel-writer/entities/enums/novel-writer-category.enum';
-import { novelRoomType } from '@app/novel-board/entities/enum/novel-room-type.enum';
+import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
+import { userEntity } from '../../../user/entities/user.entity';
 
 export class FindAllNovelAttendBoardDto {
   private _roomTitle: string;
@@ -13,7 +12,7 @@ export class FindAllNovelAttendBoardDto {
   private _boardTitle: string;
   private _writers: NovelWriterEntity[];
   private _category: string;
-  private _type: novelRoomType;
+  private _type: NovelRoomType;
   constructor(user: userEntity, room: NovelRoomEntity) {
     this._roomTitle = room.title;
     this._boardTitle = room.novelAttendBoard?.title;
