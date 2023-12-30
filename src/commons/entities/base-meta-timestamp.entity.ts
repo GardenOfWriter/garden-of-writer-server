@@ -1,6 +1,6 @@
 import { BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-export abstract class BaseMetaTimeStampEntity extends BaseEntity {
+export abstract class BaseMetaTimeStampEntity {
   @CreateDateColumn({ type: 'timestamp', comment: '생성시간 ' })
   createdAt: Date;
 

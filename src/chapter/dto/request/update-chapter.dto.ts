@@ -6,7 +6,7 @@ import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
 
 export class UpdateChapterRequestDto extends PickType(ChapterDto, [
   'status',
-  'name',
+  'title',
   'novelRoomId',
 ]) {
   @ApiProperty({
@@ -20,7 +20,7 @@ export class UpdateChapterRequestDto extends PickType(ChapterDto, [
     const entity = ChapterEntity.of(
       this.novelRoomId,
       this.status,
-      this.name,
+      this.title,
       user,
     );
     return entity;

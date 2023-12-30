@@ -1,6 +1,10 @@
+import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.repository';
 import { NovelWriterCategoryEnum } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
-import { NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
+import {
+  NovelWriterRepository,
+  NovelWriterRepositoryToken,
+} from '@app/novel-writer/repository/novel-writer.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
@@ -8,18 +12,15 @@ import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 import { userEntity } from 'src/user/entities/user.entity';
 import { In, Repository } from 'typeorm';
-import {
-  NovelWriterStatusEnum,
-  NovelWriterStatusType,
-} from '../novel-writer/entities/enums/novel-writer-status.enum';
-import {
-  FindAttendQueryDto,
-  NovelRoomAttendQueryEnum,
-} from './dto/request/find-attend-query.dto';
+import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
 import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
 import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-subtitle.exception';
 import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title.exception';
 import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
+import { ChapterRepository } from '../chapter/repository/chapter.repository';
+import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
+import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.enum';
+import { NovelWriterStatusEnum } from '../novel-writer/entities/enums/novel-writer-status.enum';
 
 @Injectable()
 export class NovelRoomService {
@@ -31,15 +32,17 @@ export class NovelRoomService {
     private readonly novelRoomRepository: Repository<NovelRoomEntity>,
     @InjectRepository(userEntity)
     private readonly userRepository: Repository<userEntity>,
-    @Inject(NovelWriterRepository)
+    @Inject(NovelWriterRepositoryToken)
     private readonly novelWriterRepository: NovelWriterRepository,
+    @Inject(ChapterRepositoryToken)
+    private readonly chapterRepository: ChapterRepository,
   ) {}
 
   async getAllRooms(user: userEntity, dto: FindAttendQueryDto): Promise<any> {
     /**
      *  참여중 미참여중 필터링
      */
-    const roomFilter = this.filterQueryRoomStatus(dto);
+    const roomFilter = dto.queryConvertStatus();
     const rooms = await this.novelRoomRepository.find({
       relations: ['novelWriter', 'novelWriter.user'],
       where: {
@@ -76,22 +79,19 @@ export class NovelRoomService {
     if (checkSubTitle) {
       throw new NovelRoomDuplicationSubTitleException();
     }
-
+    // 삭제 필요
     // const room = this.novelRoomRepository.create(createNovelRoomDto.toEntity());
     const saveRoom = await this.novelRoomRepository.save(
       createNovelRoomDto.toEntity(),
     );
 
     /**
-     *  소설 공방 생성후 대표작가로 novelWriter 로 할당
+     *  소설 공방 생성후 트리거 발생
+     *  1. novelWriter테이블 대표 작가 할당
+     *  2. 프롤로그 회차 자동 생성
      */
-    await this.novelWriterRepository.saveRow(
-      NovelWriterEntity.of(
-        saveRoom.id,
-        NovelWriterCategoryEnum.REPRESENTATIVE_WRITER,
-        NovelWriterStatusEnum.ATTENDING,
-        createNovelRoomDto.getUser(),
-      ),
+    await Promise.allSettled(
+      this.saveRoomTrigger(saveRoom, createNovelRoomDto),
     );
   }
 
@@ -144,11 +144,34 @@ export class NovelRoomService {
 
     return await this.novelRoomRepository.save(room);
   }
-  private filterQueryRoomStatus(
-    dto: FindAttendQueryDto,
-  ): NovelWriterStatusType[] {
-    return dto.roomStatus === NovelRoomAttendQueryEnum.NOT_PARTICIPATING
-      ? ['attending_reject', 'attending_review', 'exit']
-      : ['attending'];
+  private saveRoomTrigger(
+    room: NovelRoomEntity,
+    dto: CreateNovelRoomDto,
+  ): any[] {
+    const writer = NovelWriterEntity.of(
+      room.id,
+      NovelWriterCategoryEnum.REPRESENTATIVE_WRITER,
+      NovelWriterStatusEnum.ATTENDING,
+      dto.getUser(),
+    );
+    writer.changeStatue(NovelWriterStatusEnum.ATTENDING);
+    return [
+      this.novelWriterRepository.saveRow(
+        NovelWriterEntity.of(
+          room.id,
+          NovelWriterCategoryEnum.REPRESENTATIVE_WRITER,
+          NovelWriterStatusEnum.ATTENDING,
+          dto.getUser(),
+        ),
+      ),
+      this.chapterRepository.saveRow(
+        ChapterEntity.of(
+          room.id,
+          ChapterStatusEnum.WRITING,
+          '프롤로그',
+          dto.getUser(),
+        ),
+      ),
+    ];
   }
 }

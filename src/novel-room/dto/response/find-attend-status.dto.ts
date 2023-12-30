@@ -12,10 +12,12 @@ export class FindAttendStatusNovelRoomDto {
   private _completedAt: Date; // 완결일
   private _writers: NovelWriterEntity[];
   private _type: string;
+  private _id: number;
   private _currentWriter: any;
   private _status: NovelRoomStatusType;
   private _me: NovelWriterEntity;
   constructor(user: userEntity, room: NovelRoomEntity) {
+    this._id = room.id;
     this._category = room.category;
     this._title = room.title;
     this._createdAt = room.createdAt;
@@ -27,7 +29,10 @@ export class FindAttendStatusNovelRoomDto {
     )[0];
     this._status = room.status;
   }
-
+  @Expose()
+  get id(): number {
+    return this._id;
+  }
   @Expose({ name: 'category' })
   get category(): string {
     return this._category;

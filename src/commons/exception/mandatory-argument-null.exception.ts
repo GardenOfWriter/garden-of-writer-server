@@ -1,8 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
-import { ErrorMessage } from './error-message';
+import { ValidationErrorMessage } from './error-message';
 
 export class MandatoryArgumentNullException extends BadRequestException {
   constructor() {
-    super(ErrorMessage.MANDATORY_ARGUMENT_IS_NULL);
+    super(ValidationErrorMessage.MANDATORY_ARGUMENT_IS_NULL);
   }
 }

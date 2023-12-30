@@ -13,6 +13,7 @@ export interface ICommonResponse<T> {
   message: string;
   data: T | null;
   timestamp: string;
+  meta?: any;
 }
 
 @Injectable()
@@ -24,23 +25,32 @@ export class ResponseInterceptor<T>
     next: CallHandler<T>,
   ): Observable<ICommonResponse<T>> | Promise<Observable<ICommonResponse<T>>> {
     return next.handle().pipe(
-      map((result: T) => {
+      map((result: any) => {
         const statusCode =
           context.switchToHttp().getResponse().statusCode || 200;
         const message = getSuccessResponseMessageForStatusCode(statusCode);
         const timestamp = getToDayISO8601();
+        let meta = undefined;
+        if (result?.meta) {
+          const { items, meta: resMeta } = result;
+          result = items;
+          meta = resMeta;
+        }
         const successResponse: ICommonResponse<T> = {
           statusCode,
           message,
           data: result || null,
           timestamp,
+          meta: meta || undefined,
         };
         return successResponse;
       }),
     );
   }
 }
-function getSuccessResponseMessageForStatusCode(statusCode: number): string {
+function getSuccessResponseMessageForStatusCode(
+  statusCode: HttpStatus,
+): string {
   switch (statusCode) {
     case HttpStatus.OK:
       return 'OK';

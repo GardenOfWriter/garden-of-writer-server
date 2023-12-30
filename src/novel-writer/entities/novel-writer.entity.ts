@@ -1,3 +1,4 @@
+import { getToDay, getToDayISO8601 } from '@app/commons/util/date.util';
 import { NovelRoomEntity } from '@app/novel-board/entities/novel-room.entity';
 import { userEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
@@ -14,9 +15,6 @@ import {
 
 @Entity({ name: 'novel-writer', schema: 'gow-server' })
 export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
-  @Column('int', { nullable: true })
-  priority: number;
-
   @Column({
     type: 'enum',
     enum: Object.values(NovelWriterCategoryEnum),
@@ -33,11 +31,13 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
 
   @Column()
   novelRoomId: number;
-  /**
-   *  참여 신청 일
-   */
-  @Column('timestamp', { nullable: true })
-  attendedAt: Date;
+
+  @Column('boolean', { comment: '현재 작성 여부', nullable: true })
+  currentlyWriting: boolean;
+
+  @Column('int', { comment: '현재 작성 여부', nullable: true })
+  writingSeq: number;
+
   /**
    *  참여 승인/반려일 일
    */
@@ -58,6 +58,31 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @ManyToOne(() => NovelRoomEntity, (room) => room.id)
   novelRoom: NovelRoomEntity;
 
+  isRepresentativeWriter(): boolean {
+    return this.category == NovelWriterCategoryEnum.PARTICIPATING_WRITER;
+  }
+
+  changeStatue(status: NovelWriterStatusType): void {
+    switch (status) {
+      case 'attending':
+        this.notifiedAt = getToDay();
+        break;
+      case 'attendingReject':
+        this.notifiedAt = getToDay();
+        break;
+      case 'exit':
+        this.exitedAt = getToDay();
+        break;
+    }
+    this.status = status;
+  }
+
+  setSeq(seq: number) {
+    if (seq <= 0) {
+      throw new Error('seq value cannot be less than or equal to 0');
+    }
+    this.writingSeq = seq;
+  }
   static of(
     novelRoomId: number,
     category: NovelWriterCategoryType,
@@ -70,13 +95,5 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     writer.category = category;
     writer.status = status;
     return writer;
-  }
-
-  isRepresentativeWriter(): boolean {
-    return this.category == NovelWriterCategoryEnum.PARTICIPATING_WRITER;
-  }
-  changeStatue(status: NovelWriterStatusType): void {
-    this.status = status;
-    this.notifiedAt = new Date();
   }
 }

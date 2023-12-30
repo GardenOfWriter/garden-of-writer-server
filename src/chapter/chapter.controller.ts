@@ -20,6 +20,10 @@ import { userEntity } from '../user/entities/user.entity';
 import { ChapterService } from './chapter.service';
 import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
 import { UpdateChapterRequestDto } from './dto/request/update-chapter.dto';
+import { FindChapter } from './decorator/find-chapter.decorator';
+import { FindByNovelRoomIdDto } from './dto/request/findby-novel-room-id.dto';
+import { ApplyChapterDto } from './dto/request/apply-chapter.dto';
+import { ChangeTitleDto } from './dto/request/change-title.dto';
 
 @ApiTags('소설 회차')
 @Controller('chapter')
@@ -31,12 +35,10 @@ import { UpdateChapterRequestDto } from './dto/request/update-chapter.dto';
 export class ChapterController {
   constructor(private chapterService: ChapterService) {}
 
-  @ApiOperation({
-    summary: '해당 회차 소설 글쓰기 정보 조회하기',
-  })
+  @FindChapter()
   @Get('')
-  async findNovelText(@Query('chapter_id') chapterId: number) {
-    return await this.chapterService.findChapterText(chapterId);
+  async findChpater(@Query() dto: FindByNovelRoomIdDto) {
+    return await this.chapterService.findChapterText(dto);
   }
 
   @CreateNovel()
@@ -45,26 +47,40 @@ export class ChapterController {
     @CurrentUser() user: userEntity,
     @Body() dto: CreateChapterRequestDto,
   ) {
-    return this.chapterService.create(dto.toEntity(user));
+    return this.chapterService.save(dto.toEntity(user));
   }
 
   @ApiOperation({
-    summary: '소설 글쓰기 수정 하기 API ',
+    summary: '회차 연재 승인 신청하기',
   })
-  @Put(':id')
-  update(
-    @Param('id', ParseIntPipe) id,
-    @CurrentUser() user: userEntity,
-    @Body() dto: UpdateChapterRequestDto,
-  ) {
-    return this.chapterService.update(id, dto.toEntity(user));
+  @Put('/apply/:id')
+  applyChapter(@Param() dto: ApplyChapterDto, @CurrentUser() user: userEntity) {
+    return this.chapterService.applyChapter(dto.id);
+  }
+  @ApiOperation({
+    summary: '회차 제목 수정하기',
+  })
+  @Put('/title/:id')
+  change(@Param('id', ParseIntPipe) id: number, @Body() dto: ChangeTitleDto) {
+    return this.chapterService.changeTitle(id, dto);
   }
 
-  @Delete(':id')
-  async delete(
-    @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: userEntity,
-  ) {
-    return await this.chapterService.delete(id);
-  }
+  // @ApiOperation({
+  //   summary: '소설 글쓰기 수정 하기 API ',
+  // })
+  // @Put(':id')
+  // update(
+  //   @Param('id', ParseIntPipe) id,
+  //   @CurrentUser() user: userEntity,
+  //   @Body() dto: UpdateChapterRequestDto,
+  // ) {
+  //   return this.chapterService.update(id, dto.toEntity(user));
+  // }
+  // @Delete(':id')
+  // async delete(
+  //   @Param('id', ParseIntPipe) id: number,
+  //   @CurrentUser() user: userEntity,
+  // ) {
+  //   return await this.chapterService.delete(id);
+  // }
 }

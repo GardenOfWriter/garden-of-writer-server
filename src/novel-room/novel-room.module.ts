@@ -8,7 +8,10 @@ import { NovelRoomService } from 'src/novel-room/novel-room.service';
 import { userEntity } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 
-import { NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
+import { NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
+import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.repository';
+import { ChapterRepositoryImpl } from '@app/chapter/repository/chapter.repository.impl';
+import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
 import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-writer.repository.impl';
 
 @Module({
@@ -18,13 +21,18 @@ import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-wr
       Repository<NovelRoomEntity>,
       userEntity,
       NovelWriterEntity,
+      ChapterEntity,
     ]),
   ],
   providers: [
     NovelRoomService,
     {
-      provide: NovelWriterRepository,
+      provide: NovelWriterRepositoryToken,
       useClass: NovelWriterRepositoryImpl,
+    },
+    {
+      provide: ChapterRepositoryToken,
+      useClass: ChapterRepositoryImpl,
     },
     {
       provide: 'novelRoomTypeEnum',

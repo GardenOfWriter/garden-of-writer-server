@@ -3,9 +3,6 @@ import { SerializeOptions } from '@nestjs/common';
 import { Expose } from 'class-transformer';
 import { NovelTextEntity } from '../../entities/novel-text.entity';
 
-@SerializeOptions({
-  excludePrefixes: ['_'],
-})
 export class FindByChapterIdResponseDto {
   private _id: number;
   private _chapterId: number;

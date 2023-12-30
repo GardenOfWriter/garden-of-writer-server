@@ -1,20 +1,33 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
+import { In } from 'typeorm';
 
 import { userEntity } from '../user/entities/user.entity';
+import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
 import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
 import { FindByNovelRoomIdResponseDto } from './dto/response/find-novel-room-id.dto';
 import { FindByNovelWriterDetails } from './dto/response/find-writers-details.dto';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
 import { AlreadyExistWriterExcetpion } from './exceptions/already-exist-writer.excetpion';
 import { NotAccessParticiateWriterExcetpion } from './exceptions/not-access-particiate-writer.excetpion';
-import { NovelWriterRepository } from './repository/novel-writer.repository';
+import { NovelRoomStatusEnum } from '../novel-room/entities/enum/novel-room-status.enum';
+import {
+  NovelWriterRepository,
+  NovelWriterRepositoryToken,
+} from './repository/novel-writer.repository';
+import { NovelWriterStatusEnum } from './entities/enums/novel-writer-status.enum';
+import { BadChangeWriterIdSeqExcetpion } from './exceptions/bad-change-writer-id-seq.exception';
 
 @Injectable()
 export class NovelWriterService {
   private logger = new Logger(NovelWriterService.name);
 
   constructor(
-    @Inject(NovelWriterRepository)
+    @Inject(NovelWriterRepositoryToken)
     private novelWriterRepository: NovelWriterRepository,
   ) {}
   async create(entity: Partial<NovelWriterEntity>): Promise<void> {
@@ -71,7 +84,7 @@ export class NovelWriterService {
       (writer) => writer.user.id === user.id,
     )[0];
     /**
-     * 자신이 대표작가인지 확인 아닐경우 접근 불가
+     * 대표작가인지 확인 아닐경우 접근 불가
      */
     if (currentWriter.isRepresentativeWriter()) {
       throw new NotAccessParticiateWriterExcetpion();
@@ -79,15 +92,41 @@ export class NovelWriterService {
     return writers.map((writer) => new FindByNovelWriterDetails(writer));
   }
   async changeWriterStatus(
+    id: number,
     dto: UpdateNovelWriterStatusRequestDto,
   ): Promise<void> {
-    const writer =
-      await this.novelWriterRepository.findOneByUserIdAndNovelRoomId(
-        dto.userId,
-        dto.novelRoomId,
+    const writer = await this.novelWriterRepository.findOneByOptions({
+      where: {
+        id,
+      },
+    });
+    const roomWriterCnt =
+      await this.novelWriterRepository.findBynovelRoomIdAttendingCount(
+        writer.novelRoomId,
       );
+
     writer.changeStatue(dto.status);
+    writer.setSeq(roomWriterCnt + 1);
     await this.novelWriterRepository.saveRow(writer);
     return;
+  }
+  async changeWriterSeq(dto: ChangeWriterSeqRequestDto) {
+    const writers = await this.novelWriterRepository.findByoptions({
+      where: {
+        id: In(dto.writerIdSeq),
+        novelRoom: { id: dto.novelRoomId },
+        status: NovelWriterStatusEnum.ATTENDING,
+      },
+    });
+    if (!dto.checkRoomAttendWriter(writers)) {
+      throw new BadChangeWriterIdSeqExcetpion();
+    }
+    const updateSeq = writers.map((writer) => {
+      console.log('writer=', writer);
+      writer.setSeq(dto.getIndexSeq(writer.id));
+      return writer;
+    });
+
+    await this.novelWriterRepository.saveRows(updateSeq);
   }
 }

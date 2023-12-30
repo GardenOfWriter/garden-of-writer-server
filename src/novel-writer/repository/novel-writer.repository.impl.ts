@@ -1,15 +1,31 @@
 import { NovelRoomEntity } from '@app/novel-board/entities/novel-room.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { DeepPartial, FindOneOptions, Repository } from 'typeorm';
 import { NovelWriterEntity } from '../entities/novel-writer.entity';
 
 import { NovelWriterRepository } from './novel-writer.repository';
+import { NovelWriterStatusEnum } from '../entities/enums/novel-writer-status.enum';
+import { NovelRoomStatusEnum } from '../../novel-room/entities/enum/novel-room-status.enum';
 
 export class NovelWriterRepositoryImpl implements NovelWriterRepository {
   constructor(
     @InjectRepository(NovelWriterEntity)
     private dataSource: Repository<NovelWriterEntity>,
   ) {}
+  findBynovelRoomIdAttendingCount(novelRoomId: number): Promise<number> {
+    return this.dataSource.count({
+      where: {
+        novelRoomId,
+        status: NovelWriterStatusEnum.ATTENDING,
+      },
+    });
+  }
+
+  findOneByOptions(
+    options: FindOneOptions<NovelWriterEntity>,
+  ): Promise<NovelWriterEntity> {
+    return this.dataSource.findOne(options);
+  }
 
   async findOneByUserIdAndNovelRoomId(
     userId: number,
@@ -26,26 +42,28 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
       },
     });
   }
-  // async findByUserIdWithWriter(userId: number): Promise<NovelRoomEntity[]> {
-  //   return await this.dataSource.find({
-  //     relations: ['user'],
-  //     where: {
-  //       novelRoom: { id: novelRoomId },
-  //     },
-  //   });
-  // }
+
   findByNovelRoomId(novelRoomId: number): Promise<NovelWriterEntity[]> {
-    return this.dataSource
-      .createQueryBuilder('novelWriter')
-      .select([
-        'novelWriter.id',
-        'novelWriter.status',
-        'user.id',
-        'user.nickname',
-      ])
-      .leftJoin('novelWriter.user', 'user')
-      .where('novelWriter.novelRoom = :novelRoomId', { novelRoomId })
-      .getMany();
+    return this.dataSource.find({
+      select: [
+        'id',
+        'status',
+        'category',
+        'writingSeq',
+        'currentlyWriting',
+        'user',
+      ],
+      relations: ['user'],
+      where: {
+        status: NovelWriterStatusEnum.ATTENDING,
+        novelRoom: {
+          id: novelRoomId,
+        },
+      },
+      order: {
+        writingSeq: 'ASC',
+      },
+    });
   }
   async findByoptions(
     options: FindOneOptions<NovelWriterEntity>,
@@ -55,6 +73,11 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
 
   async saveRow(entity: Partial<NovelWriterEntity>): Promise<void> {
     await this.dataSource.save(entity);
+    return;
+  }
+
+  async saveRows(entities: Partial<NovelWriterEntity[]>): Promise<void> {
+    await this.dataSource.save(entities);
     return;
   }
   async updateRow(

@@ -7,10 +7,17 @@ import {
 
 export class ChapterDto {
   @ApiProperty({
+    example: 1,
+    description: '회차 ID',
+  })
+  @IsNumber()
+  id: number;
+
+  @ApiProperty({
     enum: ChapterStatusEnum,
     example: 'writing',
     description:
-      'writing(작성중) | review(연재검토중) | approve(연재승인) || reject(연재 거절) ',
+      'writing (작성중) || review (연재검토중) || approve (연재승인) || reject (연재 거절) ',
   })
   @IsIn(Object.values(ChapterStatusEnum))
   status: ChapterStatusType;
@@ -20,7 +27,7 @@ export class ChapterDto {
     description: '회차 제목',
   })
   @IsString()
-  name: string;
+  title: string;
 
   @ApiProperty({
     example: 1,

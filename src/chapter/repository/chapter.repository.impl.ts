@@ -1,4 +1,6 @@
+import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 import { InjectRepository } from '@nestjs/typeorm';
+import { skip } from 'node:test';
 import { FindOneOptions, Repository } from 'typeorm';
 import { ChapterEntity } from '../entities/chapter.entity';
 import { ChapterRepository } from './chapter.repository';
@@ -8,13 +10,43 @@ export class ChapterRepositoryImpl implements ChapterRepository {
     @InjectRepository(ChapterEntity)
     private dataSource: Repository<ChapterEntity>,
   ) {}
+  async saveRow(entity: Partial<ChapterEntity>): Promise<void> {
+    await this.dataSource.save(entity);
+  }
+  async findOneByOptions(
+    options: FindOneOptions<ChapterEntity>,
+  ): Promise<ChapterEntity> {
+    return await this.dataSource.findOne(options);
+  }
+  async chapterCount(noveRoomId: number): Promise<number> {
+    return await this.dataSource.count({
+      where: {
+        novelRoom: { id: noveRoomId },
+      },
+    });
+  }
+  findChpaterByRoomIdAndCount(
+    novelRoomId: number,
+    pagination: BasePaginationRequest,
+  ): Promise<[ChapterEntity[], number]> {
+    return this.dataSource.findAndCount({
+      take: pagination.take,
+      skip: pagination.skip,
+      where: {
+        novelRoom: { id: novelRoomId },
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+  }
   async findByoptions(
     options: FindOneOptions<ChapterEntity>,
   ): Promise<ChapterEntity[]> {
     return await this.dataSource.find(options);
   }
 
-  async addRow(entity: Partial<ChapterEntity>): Promise<void> {
+  async save(entity: Partial<ChapterEntity>): Promise<void> {
     await this.dataSource.save(entity);
     return;
   }
