@@ -3,16 +3,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
 import { NovelWriterController } from './novel-writer.controller';
 import { NovelWriterService } from './novel-writer.service';
-import { NovelWriterRepository } from './repository/novel-writer.repository';
+import { NovelWriterRepositoryToken } from './repository/novel-writer.repository';
 import { NovelWriterRepositoryImpl } from './repository/novel-writer.repository.impl';
+import { WriterManagementController } from './writer-management.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([NovelWriterEntity])],
-  controllers: [NovelWriterController],
+  controllers: [NovelWriterController, WriterManagementController],
   providers: [
     NovelWriterService,
     {
-      provide: NovelWriterRepository,
+      provide: NovelWriterRepositoryToken,
       useClass: NovelWriterRepositoryImpl,
     },
   ],

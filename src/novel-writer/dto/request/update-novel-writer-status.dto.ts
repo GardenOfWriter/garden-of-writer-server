@@ -11,12 +11,5 @@ import { NovelWriterStatusType } from '@app/novel-writer/entities/enums/novel-wr
 
 export class UpdateNovelWriterStatusRequestDto extends PickType(
   NovelWirterDto,
-  ['novelRoomId', 'status'],
-) {
-  @ApiProperty({
-    example: 1,
-    description: '수정 Id',
-  })
-  @IsNumber()
-  userId: number;
-}
+  ['status'],
+) {}

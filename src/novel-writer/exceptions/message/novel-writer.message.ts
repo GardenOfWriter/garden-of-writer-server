@@ -14,6 +14,11 @@ export class NovelWriterExceptionMsg
     '4601',
     '참여 작가는 접근할수 없습니다.',
   );
+
+  static readonly BAD_CHANGE_WRITERID_SEQ = new NovelWriterExceptionMsg(
+    '4602',
+    '소설 공방에 참여중이지 않는 writerId 값을 전달받았습니다.',
+  );
   private constructor(
     readonly _errorCode: string,
     readonly _message: string,

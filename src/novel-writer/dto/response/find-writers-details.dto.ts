@@ -8,17 +8,24 @@ export class FindByNovelWriterDetails {
   private _status: NovelWriterStatusType;
   private _category: NovelWriterCategoryType;
   private _createdAt: Date;
-  private _attendedAt: Date;
   private _notifiedAt: Date;
   private _user: userEntity;
+  private _exitAt: Date;
+  private _id: number;
 
   constructor(writer: NovelWriterEntity) {
+    this._id = writer.id;
     this._category = writer.category;
     this._status = writer.status;
     this._user = writer.user;
-    this._attendedAt = writer.attendedAt;
     this._createdAt = writer.createdAt;
     this._notifiedAt = writer.notifiedAt;
+    this._exitAt = writer.exitedAt;
+  }
+
+  @Expose({ name: 'id' })
+  get id(): number {
+    return this._id;
   }
 
   @Expose({ name: 'userId' })
@@ -37,10 +44,7 @@ export class FindByNovelWriterDetails {
   get nickname(): string {
     return this._user.nickname;
   }
-  @Expose()
-  get attendingAt(): Date {
-    return this._attendedAt;
-  }
+
   @Expose()
   get createdAt(): Date {
     return this._createdAt;
@@ -48,5 +52,9 @@ export class FindByNovelWriterDetails {
   @Expose()
   get notifiedAt(): Date {
     return this._notifiedAt;
+  }
+  @Expose()
+  get exitAt(): Date {
+    return this._exitAt;
   }
 }

@@ -24,9 +24,12 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.message
         : 'INTERNAL SERVER ERROR';
+
     response.status(statusCode);
+
     const responseBody: IBaseException = {
-      errorCode: exception.response,
+      errorCode:
+        exception?.response || 'Unknow Error Contact System Adminstrator',
       path: request.path,
       statusCode,
       message,

@@ -1,4 +1,4 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { Module, ValidationError, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
@@ -18,6 +18,7 @@ import { ChapterModule } from './chapter/chapter.module';
 import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.module';
 import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { UserModule } from './user/user.module';
+import { ChapterSubscriber } from './chapter/subscriber/chapter.subscriber';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -33,9 +34,11 @@ import { UserModule } from './user/user.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: false,
       logging: true,
       namingStrategy: new SnakeNamingStrategy(),
+      autoLoadEntities: true,
+      subscribers: [ChapterSubscriber],
     }),
     PassportModule,
     JwtModule.register({}),
@@ -60,7 +63,9 @@ import { UserModule } from './user/user.module';
           whitelist: true,
           forbidNonWhitelisted: true,
           transform: true,
-          exceptionFactory: (_error) => new ArgumentInvalidException(),
+          exceptionFactory: (_error: ValidationError[]) => {
+            new ArgumentInvalidException();
+          },
         }),
     },
     {
