@@ -41,6 +41,8 @@ jobs:
                   value: ${{ secrets.DB_PASSWORD }}
                 - name: DB_DATABASE
                   value: ${{ secrets.DB_DATABASE }}
+                - name: JWT_ACCESS_KEY
+                  value: ${{ secrets.JWT_ACCESS_KEY }}
               ports: 3000
               install: npm install
               build: npm run build
