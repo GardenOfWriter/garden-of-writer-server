@@ -11,9 +11,6 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { NovelWriterStatusEnum } from '../../entities/enums/novel-writer-status.enum';
 
-@SerializeOptions({
-  excludePrefixes: ['_'],
-})
 export class FindByNovelRoomIdResponseDto {
   private _status: NovelWriterStatusType;
   private _user: userEntity;

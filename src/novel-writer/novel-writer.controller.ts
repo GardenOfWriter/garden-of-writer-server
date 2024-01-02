@@ -34,8 +34,11 @@ export class NovelWriterController {
 
   @FindWriter()
   @Get('')
-  async findNovelWirters(@Query('novelRoomId') novelRoomId: number) {
-    return await this.novelWriterService.findByNoveRoomId(novelRoomId);
+  async findNovelWirters(
+    @Query('novelRoomId') novelRoomId: number,
+    @CurrentUser() user: userEntity,
+  ) {
+    return await this.novelWriterService.findByNoveRoomId(novelRoomId, user);
   }
 
   @ApiOperation({
@@ -63,7 +66,7 @@ export class NovelWriterController {
     @Body() dto: ChangeWriterSeqRequestDto,
     @CurrentUser() user: userEntity,
   ) {
-    return await this.novelWriterService.changeWriterSeq(dto);
+    return await this.novelWriterService.changeWriterSeq(dto, user);
   }
 
   @ApiOperation({

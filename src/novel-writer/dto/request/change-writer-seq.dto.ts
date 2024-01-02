@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { NovelWriterEntity } from '../../entities/novel-writer.entity';
 import {
   ArrayMaxSize,
@@ -7,8 +7,11 @@ import {
   IsNumber,
   ValidateNested,
 } from 'class-validator';
+import { NovelWirterDto } from '../novel-writer.dto';
 
-export class ChangeWriterSeqRequestDto {
+export class ChangeWriterSeqRequestDto extends PickType(NovelWirterDto, [
+  'novelRoomId',
+]) {
   @ApiProperty({
     example: [17, 18, 19, 20, 21],
     description: '작가 순서를 담은 WriterId의 array',
@@ -20,8 +23,8 @@ export class ChangeWriterSeqRequestDto {
   writerIdSeq: number[];
 
   @ApiProperty({
-    example: [17, 18, 19, 20, 21],
-    description: '작가 순서를 담은 WriterId의 array',
+    example: 1,
+    description: '소설 공방 row Id',
   })
   @IsNumber()
   novelRoomId: number;

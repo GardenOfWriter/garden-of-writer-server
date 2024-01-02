@@ -12,6 +12,10 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { userEntity } from '../user/entities/user.entity';
+import {
+  CreateNovelAttendBoard,
+  FindNovelAttendBoard,
+} from './decorator/novel-attend-board.swagger';
 import { CreateNovelAttnedBoardDto } from './dto/request/create-board.dto';
 import { NovelAttendBoardService } from './novel-attend-board.service';
 
@@ -25,13 +29,14 @@ import { NovelAttendBoardService } from './novel-attend-board.service';
 @Controller()
 export class NovelAttendBoardController {
   constructor(private novelAttendBoardService: NovelAttendBoardService) {}
-
+  @FindNovelAttendBoard()
   @Get('')
   findAll(@CurrentUser() user: userEntity) {
     return this.novelAttendBoardService.findAll(user);
   }
 
   @UseInterceptors(TransactionInterceptor)
+  @CreateNovelAttendBoard()
   @Post('')
   create(@Body() dto: CreateNovelAttnedBoardDto) {
     return this.novelAttendBoardService.create(dto.toEntity());

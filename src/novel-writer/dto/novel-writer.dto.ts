@@ -10,7 +10,10 @@ export class NovelWirterDto {
   @ApiProperty({
     enum: NovelWriterStatusEnum,
     example: NovelWriterStatusEnum.ATTENDING,
-    description: '작가 참여 상태',
+    description: `${NovelWriterStatusEnum.ATTENDING} : 참여중,
+                  ${NovelWriterStatusEnum.ATTENDING_REJECT} : 참여 반려,
+                  ${NovelWriterStatusEnum.ATTENDING_REVIEW} : 참여 검토,
+                  ${NovelWriterStatusEnum.EXIT} : 퇴장`,
   })
   @IsIn(Object.values(NovelWriterStatusEnum))
   status: NovelWriterStatusType;
@@ -19,7 +22,6 @@ export class NovelWirterDto {
     example: '회차 제목',
     description: '회차 제목',
   })
-  z;
   @IsString()
   name: string;
 

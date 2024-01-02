@@ -64,23 +64,4 @@ export class ChapterController {
   change(@Param('id', ParseIntPipe) id: number, @Body() dto: ChangeTitleDto) {
     return this.chapterService.changeTitle(id, dto);
   }
-
-  // @ApiOperation({
-  //   summary: '소설 글쓰기 수정 하기 API ',
-  // })
-  // @Put(':id')
-  // update(
-  //   @Param('id', ParseIntPipe) id,
-  //   @CurrentUser() user: userEntity,
-  //   @Body() dto: UpdateChapterRequestDto,
-  // ) {
-  //   return this.chapterService.update(id, dto.toEntity(user));
-  // }
-  // @Delete(':id')
-  // async delete(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   @CurrentUser() user: userEntity,
-  // ) {
-  //   return await this.chapterService.delete(id);
-  // }
 }
