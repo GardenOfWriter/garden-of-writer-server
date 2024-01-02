@@ -14,7 +14,6 @@ import { FindByNovelWriterDetails } from './dto/response/find-writers-details.dt
 import { NovelWriterEntity } from './entities/novel-writer.entity';
 import { AlreadyExistWriterExcetpion } from './exceptions/already-exist-writer.excetpion';
 import { NotAccessParticiateWriterExcetpion } from './exceptions/not-access-particiate-writer.excetpion';
-import { NovelRoomStatusEnum } from '../novel-room/entities/enum/novel-room-status.enum';
 import {
   NovelWriterRepository,
   NovelWriterRepositoryToken,
@@ -34,14 +33,14 @@ export class NovelWriterService {
     /**
      *  TODO 참여 작가로 참여하는건 2개를 초과해서는 안됨
      */
-    const writer = await this.novelWriterRepository.findByoptions({
+    const writers = await this.novelWriterRepository.findByoptions({
       where: {
         novelRoom: { id: entity.novelRoom.id },
         user: { id: entity.user.id },
       },
     });
-    this.logger.log('writer check', JSON.stringify(writer));
-    if (writer.length > 0) {
+    this.logger.log('writer check', JSON.stringify(writers));
+    if (writers.length > 0) {
       throw new AlreadyExistWriterExcetpion();
     }
     await this.novelWriterRepository.saveRow(entity);
@@ -62,9 +61,11 @@ export class NovelWriterService {
     return;
   }
 
-  async findByNoveRoomId(novelRoomId: number) {
+  async findByNoveRoomId(novelRoomId: number, user: userEntity) {
     const writers =
       await this.novelWriterRepository.findByNovelRoomId(novelRoomId);
+
+    this.writerPemissionCheck(writers, user);
     return writers.map((writer) => new FindByNovelRoomIdResponseDto(writer));
   }
   async findByNovelRoomIdDetails(
@@ -77,18 +78,7 @@ export class NovelWriterService {
         novelRoom: { id: novelRoomId },
       },
     });
-    /**
-     * 작가 리스트에서 자신이 해당 소설공방에 대한 정보를 가져오기
-     */
-    const currentWriter: NovelWriterEntity = writers.filter(
-      (writer) => writer.user.id === user.id,
-    )[0];
-    /**
-     * 대표작가인지 확인 아닐경우 접근 불가
-     */
-    if (currentWriter.isRepresentativeWriter()) {
-      throw new NotAccessParticiateWriterExcetpion();
-    }
+    this.writerPemissionCheck(writers, user);
     return writers.map((writer) => new FindByNovelWriterDetails(writer));
   }
   async changeWriterStatus(
@@ -110,7 +100,7 @@ export class NovelWriterService {
     await this.novelWriterRepository.saveRow(writer);
     return;
   }
-  async changeWriterSeq(dto: ChangeWriterSeqRequestDto) {
+  async changeWriterSeq(dto: ChangeWriterSeqRequestDto, user: userEntity) {
     const writers = await this.novelWriterRepository.findByoptions({
       where: {
         id: In(dto.writerIdSeq),
@@ -121,12 +111,32 @@ export class NovelWriterService {
     if (!dto.checkRoomAttendWriter(writers)) {
       throw new BadChangeWriterIdSeqExcetpion();
     }
+
+    this.writerPemissionCheck(writers, user);
     const updateSeq = writers.map((writer) => {
-      console.log('writer=', writer);
       writer.setSeq(dto.getIndexSeq(writer.id));
       return writer;
     });
 
     await this.novelWriterRepository.saveRows(updateSeq);
+  }
+
+  /**
+   * 작가 리스트에서 자신이 해당 소설공방에 대한 정보를 가져오기
+   */
+
+  private writerPemissionCheck(writers: NovelWriterEntity[], user: userEntity) {
+    const currentWriter = this.filterCurrentWriter(writers, user);
+    this.logger.debug('currentWriter =', currentWriter);
+    if (!currentWriter || !currentWriter.isRepresentativeWriter()) {
+      throw new NotAccessParticiateWriterExcetpion();
+    }
+  }
+  private filterCurrentWriter(
+    writers: NovelWriterEntity[],
+    user: userEntity,
+  ): NovelWriterEntity {
+    const writer = writers.filter((writer) => writer.user.id === user.id);
+    return writer[0];
   }
 }

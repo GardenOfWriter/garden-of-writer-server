@@ -5,7 +5,7 @@ import { NovelAttendBoardEntity } from '../entities/novel-attend-board.entity';
 export class NovelAttnedBoardDto {
   @ApiProperty({
     example: 1,
-    description: '소설공방 Id',
+    description: '소설공방 row Id',
   })
   @IsNumber()
   novelRoomId: number;

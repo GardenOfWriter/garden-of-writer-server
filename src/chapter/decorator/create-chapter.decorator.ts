@@ -13,8 +13,5 @@ export function CreateNovel(): MethodDecorator {
     ApiOperation({
       summary: '회차 연재 신청',
     }),
-    ApiOkResponse({ type: CreateChapterRequestDto }),
-    ApiBadRequestResponse({ type: SwaggerExceptionDto }),
-    ApiResponse({ schema: {}, status: 2000 }),
   );
 }

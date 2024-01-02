@@ -59,7 +59,7 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   novelRoom: NovelRoomEntity;
 
   isRepresentativeWriter(): boolean {
-    return this.category == NovelWriterCategoryEnum.PARTICIPATING_WRITER;
+    return this.category === NovelWriterCategoryEnum.REPRESENTATIVE_WRITER;
   }
 
   changeStatue(status: NovelWriterStatusType): void {

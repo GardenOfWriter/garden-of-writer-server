@@ -1,5 +1,4 @@
 import { PickType } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
 import { NovelAttnedBoardDto } from '../novel-attend-board.dto';
 import { NovelAttendBoardEntity } from '../../entities/novel-attend-board.entity';
 

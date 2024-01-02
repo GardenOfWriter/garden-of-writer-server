@@ -12,7 +12,7 @@ export class NovelWriterExceptionMsg
   );
   static readonly NOT_ACCESS_PARTICIATE_WRITER = new NovelWriterExceptionMsg(
     '4601',
-    '참여 작가는 접근할수 없습니다.',
+    '해당 작가는 접근할수 없습니다.',
   );
 
   static readonly BAD_CHANGE_WRITERID_SEQ = new NovelWriterExceptionMsg(

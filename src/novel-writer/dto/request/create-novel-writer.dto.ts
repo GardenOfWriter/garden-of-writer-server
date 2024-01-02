@@ -2,14 +2,8 @@ import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entit
 import { userEntity } from '@app/user/entities/user.entity';
 import { PickType } from '@nestjs/swagger';
 import { NovelWirterDto } from '../novel-writer.dto';
-import {
-  NovelWriterCategoryEnum,
-  NovelWriterCategoryType,
-} from '../../entities/enums/novel-writer-category.enum';
-import {
-  NovelWriterStatusEnum,
-  NovelWriterStatusType,
-} from '@app/novel-writer/entities/enums/novel-writer-status.enum';
+import { NovelWriterCategoryType } from '../../entities/enums/novel-writer-category.enum';
+import { NovelWriterStatusType } from '@app/novel-writer/entities/enums/novel-writer-status.enum';
 
 /**
  *  참여 작가로 조인
