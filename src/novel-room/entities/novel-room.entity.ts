@@ -1,5 +1,9 @@
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '@app/commons/entities/primary-generated-pk-with-meta-time.entity';
 import {
+  NovelRoomCategory,
+  novelRoomCategoryEnum,
+} from '@app/novel-board/entities/enum/novel-room-category.enum';
+import {
   NovelRoomType,
   novelRoomTypeEnum,
 } from 'src/novel-room/entities/enum/novel-room-type.enum';
@@ -36,8 +40,12 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   subTitle: string;
 
   //카테고리
-  @Column('varchar', { length: 255 })
-  category: string;
+  @Column({
+    type: 'enum', //
+    enum: novelRoomCategoryEnum,
+    default: novelRoomCategoryEnum.NORMAL,
+  })
+  category: NovelRoomCategory;
 
   //등장인물
   @Column('varchar', { length: 255, nullable: true })
