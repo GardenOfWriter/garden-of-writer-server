@@ -6,7 +6,7 @@ import { NovelRoomEntity } from '../../entities/novel-room.entity';
 
 export class FindAttendStatusNovelRoomDto {
   private _no: number;
-  private _category: string;
+  private _category: number;
   private _title: string;
   private _createdAt: Date;
   private _completedAt: Date; // 완결일
@@ -34,7 +34,7 @@ export class FindAttendStatusNovelRoomDto {
     return this._id;
   }
   @Expose({ name: 'category' })
-  get category(): string {
+  get category(): number {
     return this._category;
   }
   @Expose({ name: 'title' })

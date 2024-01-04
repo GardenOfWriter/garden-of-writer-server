@@ -1,3 +1,5 @@
+import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
+import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.enum';
 import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.repository';
 import { NovelWriterCategoryEnum } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
@@ -12,15 +14,13 @@ import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 import { userEntity } from 'src/user/entities/user.entity';
 import { In, Repository } from 'typeorm';
+import { ChapterRepository } from '../chapter/repository/chapter.repository';
+import { NovelWriterStatusEnum } from '../novel-writer/entities/enums/novel-writer-status.enum';
 import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
 import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
 import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-subtitle.exception';
 import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title.exception';
 import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
-import { ChapterRepository } from '../chapter/repository/chapter.repository';
-import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
-import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.enum';
-import { NovelWriterStatusEnum } from '../novel-writer/entities/enums/novel-writer-status.enum';
 
 @Injectable()
 export class NovelRoomService {

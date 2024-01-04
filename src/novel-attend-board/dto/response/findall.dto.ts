@@ -5,7 +5,6 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { NovelRoomEntity } from '../../../novel-room/entities/novel-room.entity';
-import { NovelWriterCategoryEnum } from '../../../novel-writer/entities/enums/novel-writer-category.enum';
 import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
 import { userEntity } from '../../../user/entities/user.entity';
 
@@ -15,7 +14,7 @@ export class FindAllNovelAttendBoardDto {
   private _viewCount: number;
   private _boardTitle: string;
   private _writers: NovelWriterEntity[];
-  private _category: string;
+  private _category: number;
   private _type: NovelRoomType;
   constructor(user: userEntity, room: NovelRoomEntity) {
     this._roomTitle = room.title;
