@@ -82,7 +82,7 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     type: NovelRoomType,
     title: string,
     subTitle: string,
-    category: string,
+    category: NovelRoomCategory,
     character: string,
     summary: string,
     user: userEntity,

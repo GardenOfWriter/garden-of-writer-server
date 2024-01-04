@@ -1,3 +1,4 @@
+import { NovelRoomCategory } from '@app/novel-board/entities/enum/novel-room-category.enum';
 import { userEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
@@ -30,7 +31,7 @@ export class CreateNovelRoomDto {
   })
   @IsNotEmpty()
   @IsString()
-  category: string;
+  category: NovelRoomCategory;
 
   @ApiProperty({
     enum: novelRoomTypeEnum,
