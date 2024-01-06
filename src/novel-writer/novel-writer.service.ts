@@ -20,12 +20,19 @@ import {
 } from './repository/novel-writer.repository';
 import { NovelWriterStatusEnum } from './entities/enums/novel-writer-status.enum';
 import { BadChangeWriterIdSeqExcetpion } from './exceptions/bad-change-writer-id-seq.exception';
+import {
+  EmailService,
+  EmailServiceToken,
+} from '@app/commons/email/email.service';
+import { EmailTemplate } from '@app/commons/email/enums/teamplate.enums';
 
 @Injectable()
 export class NovelWriterService {
   private logger = new Logger(NovelWriterService.name);
 
   constructor(
+    @Inject(EmailServiceToken)
+    private emailService: EmailService,
     @Inject(NovelWriterRepositoryToken)
     private novelWriterRepository: NovelWriterRepository,
   ) {}
@@ -86,6 +93,7 @@ export class NovelWriterService {
     dto: UpdateNovelWriterStatusRequestDto,
   ): Promise<void> {
     const writer = await this.novelWriterRepository.findOneByOptions({
+      relations: ['user', 'novelRoom'],
       where: {
         id,
       },
@@ -94,10 +102,15 @@ export class NovelWriterService {
       await this.novelWriterRepository.findBynovelRoomIdAttendingCount(
         writer.novelRoomId,
       );
-
     writer.changeStatue(dto.status);
     writer.setSeq(roomWriterCnt + 1);
     await this.novelWriterRepository.saveRow(writer);
+    try {
+      await this.changeSendEmail(writer);
+    } catch (error) {
+      console.error(error);
+    }
+
     return;
   }
   async changeWriterSeq(dto: ChangeWriterSeqRequestDto, user: userEntity) {
@@ -138,5 +151,23 @@ export class NovelWriterService {
   ): NovelWriterEntity {
     const writer = writers.filter((writer) => writer.user.id === user.id);
     return writer[0];
+  }
+  private async changeSendEmail(writer: NovelWriterEntity) {
+    if (
+      writer.status === NovelWriterStatusEnum.ATTENDING ||
+      writer.status === NovelWriterStatusEnum.ATTENDING_REJECT
+    ) {
+      const template =
+        writer.status == NovelWriterStatusEnum.ATTENDING
+          ? EmailTemplate.WRITER_ATTENDING
+          : EmailTemplate.WRITER_REJECT;
+      await this.emailService.sendEmail(
+        writer.user.email,
+        template.title,
+        ' ',
+        template,
+        { username: writer.user.nickname, room: writer.novelRoom.title },
+      );
+    }
   }
 }
