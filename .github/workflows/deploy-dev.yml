@@ -43,6 +43,14 @@ jobs:
                   value: ${{ secrets.DB_DATABASE }}
                 - name: JWT_ACCESS_KEY
                   value: ${{ secrets.JWT_ACCESS_KEY }}
+                - name: MAIL_USER
+                  value: ${{ secrets.MAIL_USER }}
+                - name: MAIL_CLIENT_ID
+                  value: ${{ secrets.MAIL_CLIENT_ID }}
+                - name: MAIL_CLIENT_SECRET
+                  value: ${{ secrets.MAIL_CLIENT_SECRET }}
+                - name: MAIL_REFRESH_TOKEN
+                  value: ${{ secrets.MAIL_REFRESH_TOKEN }}
               ports: 3000
               install: npm install
               build: npm run build
