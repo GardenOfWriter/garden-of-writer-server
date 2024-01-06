@@ -19,6 +19,10 @@ import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.
 import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { UserModule } from './user/user.module';
 import { ChapterSubscriber } from './chapter/subscriber/chapter.subscriber';
+import { EmailServiceToken } from './commons/email/email.service';
+import { EmailServiceImpl } from './commons/email/email.service.impl';
+import { EmailModule } from './commons/email/emai.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,6 +44,7 @@ import { ChapterSubscriber } from './chapter/subscriber/chapter.subscriber';
       autoLoadEntities: true,
       subscribers: [ChapterSubscriber],
     }),
+    EmailModule,
     PassportModule,
     JwtModule.register({}),
     UserModule,
@@ -53,6 +58,10 @@ import { ChapterSubscriber } from './chapter/subscriber/chapter.subscriber';
   controllers: [AppController],
   providers: [
     AppService,
+    {
+      provide: EmailServiceToken,
+      useClass: EmailServiceImpl,
+    },
     {
       provide: APP_PIPE,
       useFactory: () =>
@@ -77,5 +86,6 @@ import { ChapterSubscriber } from './chapter/subscriber/chapter.subscriber';
       useClass: GlobalExceptionFilter,
     },
   ],
+  exports: [],
 })
 export class AppModule {}
