@@ -14,25 +14,28 @@ import { AuthService } from 'src/auth/auth.service';
 import { LoginUserDto } from 'src/auth/dto/login-user.dto';
 import { RequestUser } from 'src/auth/interface/auth.interface';
 import { JwtGuard } from './guard/jwt.guard';
+import { NovelWriterService } from '../novel-writer/novel-writer.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService, //
+    private readonly authService: AuthService,
+    private readonly writerService: NovelWriterService,
   ) {}
 
   @Post('/login')
   async login(
-    @Body() loginUserDto: LoginUserDto,
+    @Body() dto: LoginUserDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
-    const jwt = await this.authService.validateUser(loginUserDto);
+    const jwt = await this.authService.validateUser(dto);
+    const hasRoom = await this.writerService.checkRoomParticiate(dto.email);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
     res.cookie('accessToken', jwt.accessToken, {
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
-    return jwt;
+    return { ...jwt, hasRoom };
   }
 
   @Post('logout')

@@ -7,10 +7,18 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtGuard } from './guard/jwt.guard';
 import { AccessTokenStrategy } from './strategy/access-token.strategy';
+import { NovelWriterModule } from '@app/novel-writer/novel-writer.module';
+import { NovelWriterService } from '@app/novel-writer/novel-writer.service';
+import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
+import { EmailModule } from '@app/commons/email/emai.module';
+import { NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
+import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-writer.repository.impl';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([userEntity]),
+    EmailModule,
+    NovelWriterModule,
+    TypeOrmModule.forFeature([userEntity, NovelWriterEntity]),
     JwtModule.register({
       secret: 'SECRET_KEY',
       signOptions: { expiresIn: '3d' },
@@ -18,7 +26,17 @@ import { AccessTokenStrategy } from './strategy/access-token.strategy';
   ],
 
   exports: [TypeOrmModule, JwtGuard],
-  providers: [AuthService, UserService, JwtGuard, AccessTokenStrategy],
+  providers: [
+    AuthService,
+    UserService,
+    JwtGuard,
+    AccessTokenStrategy,
+    NovelWriterService,
+    {
+      provide: NovelWriterRepositoryToken,
+      useClass: NovelWriterRepositoryImpl,
+    },
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}
