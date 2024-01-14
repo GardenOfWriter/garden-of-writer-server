@@ -8,31 +8,50 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginUserDto } from 'src/auth/dto/login-user.dto';
 import { RequestUser } from 'src/auth/interface/auth.interface';
 import { JwtGuard } from './guard/jwt.guard';
+import { NovelWriterService } from '../novel-writer/novel-writer.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService, //
+    private readonly authService: AuthService,
+    private readonly writerService: NovelWriterService,
   ) {}
+  @ApiOperation({
+    summary: '로그인',
+  })
+  @ApiResponse({
+    schema: {
+      properties: {
+        accessToken: {
+          description: '로그인 토큰',
+        },
 
+        hasRoom: {
+          description:
+            '소셜 공방 참여 이력 값, 참여 이력이 있음 treu,참여 이력이 없음 : false',
+        },
+      },
+    },
+  })
   @Post('/login')
   async login(
-    @Body() loginUserDto: LoginUserDto,
+    @Body() dto: LoginUserDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
-    const jwt = await this.authService.validateUser(loginUserDto);
+    const jwt = await this.authService.validateUser(dto);
+    const hasRoom = await this.writerService.checkRoomParticiate(dto.email);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
     res.cookie('accessToken', jwt.accessToken, {
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
-    return jwt;
+    return { ...jwt, hasRoom };
   }
 
   @Post('logout')

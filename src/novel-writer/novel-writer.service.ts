@@ -75,6 +75,16 @@ export class NovelWriterService {
     this.writerPemissionCheck(writers, user);
     return writers.map((writer) => new FindByNovelRoomIdResponseDto(writer));
   }
+  async checkRoomParticiate(email: string): Promise<boolean> {
+    const writers = await this.novelWriterRepository.findByoptions({
+      where: {
+        user: {
+          email,
+        },
+      },
+    });
+    return writers.length === 0 ? false : true;
+  }
   async findByNovelRoomIdDetails(
     user: userEntity,
     novelRoomId: number,
