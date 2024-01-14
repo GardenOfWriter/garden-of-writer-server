@@ -8,7 +8,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { LoginUserDto } from 'src/auth/dto/login-user.dto';
@@ -22,7 +22,23 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly writerService: NovelWriterService,
   ) {}
+  @ApiOperation({
+    summary: '로그인',
+  })
+  @ApiResponse({
+    schema: {
+      properties: {
+        accessToken: {
+          description: '로그인 토큰',
+        },
 
+        hasRoom: {
+          description:
+            '소셜 공방 참여 이력 값, 참여 이력이 있음 treu,참여 이력이 없음 : false',
+        },
+      },
+    },
+  })
   @Post('/login')
   async login(
     @Body() dto: LoginUserDto,
