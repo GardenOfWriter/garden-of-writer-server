@@ -21,6 +21,7 @@ import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.
 import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-subtitle.exception';
 import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title.exception';
 import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
+import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 
 @Injectable()
 export class NovelRoomService {
@@ -43,7 +44,7 @@ export class NovelRoomService {
      *  참여중 미참여중 필터링
      */
     const roomFilter = dto.queryConvertStatus();
-    const rooms = await this.novelRoomRepository.find({
+    const [rooms, totalCount] = await this.novelRoomRepository.findAndCount({
       relations: ['novelWriter', 'novelWriter.user'],
       where: {
         novelWriter: {
@@ -51,14 +52,17 @@ export class NovelRoomService {
           status: In(roomFilter),
         },
       },
+      take: dto.take,
+      skip: dto.skip,
     });
 
     if (!rooms || rooms.length === 0) {
       return [];
     }
-    return rooms.map(
+    const items = rooms.map(
       (room: NovelRoomEntity) => new FindAttendStatusNovelRoomDto(user, room),
     );
+    return new PagingationResponse(totalCount, dto.chuckSize, items);
   }
   async createRoom(createNovelRoomDto: CreateNovelRoomDto): Promise<void> {
     const { title, subTitle } = createNovelRoomDto;
