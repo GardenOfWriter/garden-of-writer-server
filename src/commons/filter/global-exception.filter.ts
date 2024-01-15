@@ -24,7 +24,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.message
         : 'INTERNAL SERVER ERROR';
-
+    // const data = exception instanceof HttpException ? exception.data : null;
+    console.log('exception = ', exception?.data);
     response.status(statusCode);
 
     const responseBody: IBaseException = {
@@ -34,6 +35,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       statusCode,
       message,
       data: null,
+      validate: exception?.validate,
       timestamp: getToDayISO8601(),
     };
     this.logger.error(`HTTP Error: ${statusCode} - Message: ${message}`);
