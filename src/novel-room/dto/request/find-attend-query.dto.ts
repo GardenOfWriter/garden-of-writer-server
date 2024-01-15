@@ -1,3 +1,4 @@
+import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 import { NovelWriterStatusType } from '@app/novel-writer/entities/enums/novel-writer-status.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString } from 'class-validator';
@@ -10,7 +11,7 @@ export const NovelRoomAttendQueryEnum = {
 export type NovelRoomAttendQueryType =
   (typeof NovelRoomAttendQueryEnum)[keyof typeof NovelRoomAttendQueryEnum];
 
-export class FindAttendQueryDto {
+export class FindAttendQueryDto extends BasePaginationRequest {
   @ApiProperty({
     enum: NovelRoomAttendQueryEnum,
     example: NovelRoomAttendQueryEnum.PARTICIPATING,
