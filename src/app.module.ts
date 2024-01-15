@@ -72,8 +72,11 @@ import { EmailModule } from './commons/email/emai.module';
           whitelist: true,
           forbidNonWhitelisted: true,
           transform: true,
-          exceptionFactory: (_error: ValidationError[]) => {
-            new ArgumentInvalidException();
+          exceptionFactory: (errors: ValidationError[]) => {
+            const constraints = errors.map((_error) =>
+              Object.values(_error.constraints),
+            )[0];
+            throw new ArgumentInvalidException(constraints);
           },
         }),
     },

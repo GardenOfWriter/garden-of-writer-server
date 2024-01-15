@@ -16,7 +16,9 @@ export class FindAttendQueryDto {
     example: NovelRoomAttendQueryEnum.PARTICIPATING,
     description: '참여 | 미참여 ',
   })
-  @IsEnum(Object.values(NovelRoomAttendQueryEnum))
+  @IsEnum(Object.values(NovelRoomAttendQueryEnum), {
+    message: `roomStatus 는 ${NovelRoomAttendQueryEnum.NOT_PARTICIPATING} 과 ${NovelRoomAttendQueryEnum.PARTICIPATING} 입력 가능합니다.`,
+  })
   @IsString({ message: '룸 참여 상태를 입력해 주세요' })
   roomStatus: NovelRoomAttendQueryType;
 
