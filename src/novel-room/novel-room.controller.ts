@@ -14,7 +14,10 @@ import {
 import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
 import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 
+import { CaslGuard } from '@app/auth/guard/casl.guard';
 import { JwtGuard } from '@app/auth/guard/jwt.guard';
+import { ActionEnum, AppAbility } from '@app/commons/abilities/ability.factory';
+import { CaslAbility } from '@app/commons/decorator/casl.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { userEntity } from '@app/user/entities/user.entity';
@@ -34,6 +37,9 @@ import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
 export class NovelRoomController {
   constructor(private readonly novelRoomService: NovelRoomService) {}
 
+  @ApiOperation({
+    summary: '소설 공방 개설',
+  })
   @UseInterceptors(TransactionInterceptor)
   @Post('/create-room')
   async createRoom(
@@ -56,17 +62,35 @@ export class NovelRoomController {
     return this.novelRoomService.getAllRooms(user, query);
   }
 
+  @ApiOperation({
+    summary: '소설공방 조회',
+  })
   @Get(':id')
   getRoomById(@Param('id') id: string) {
     return this.novelRoomService.getById(+id);
   }
 
+  @ApiOperation({
+    summary: '소설 공방 삭제(방장만 가능)',
+  })
   @Delete(':id')
-  async deleteRoom(@Param('id') id: string): Promise<void> {
-    return this.novelRoomService.deleteRoom(+id);
+  @UseGuards(CaslGuard)
+  async deleteRoom(
+    @Param('id') id: string, //
+    @CaslAbility() ability: AppAbility,
+    user: userEntity,
+    room: NovelRoomEntity,
+  ): Promise<void> {
+    if (ability && ability.can(ActionEnum.Delete, 'all')) {
+      await this.novelRoomService.deleteRoom(user, room);
+    }
   }
 
+  @ApiOperation({
+    summary: '소설 공방 수정(방장만 가능)',
+  })
   @Patch(':id')
+  @UseGuards(CaslGuard)
   async updateRoom(
     @Param('id') id: number,
     @Body() updateNovelRoomDto: UpdateNovelRoomDto,

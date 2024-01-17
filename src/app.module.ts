@@ -15,13 +15,13 @@ import { ResponseInterceptor } from './commons/interceptor/response.interceptor'
 import { NovelTextModule } from './novel-text/novel-text.module';
 
 import { ChapterModule } from './chapter/chapter.module';
+import { ChapterSubscriber } from './chapter/subscriber/chapter.subscriber';
+import { EmailModule } from './commons/email/emai.module';
+import { EmailServiceToken } from './commons/email/email.service';
+import { EmailServiceImpl } from './commons/email/email.service.impl';
 import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.module';
 import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { UserModule } from './user/user.module';
-import { ChapterSubscriber } from './chapter/subscriber/chapter.subscriber';
-import { EmailServiceToken } from './commons/email/email.service';
-import { EmailServiceImpl } from './commons/email/email.service.impl';
-import { EmailModule } from './commons/email/emai.module';
 
 @Module({
   imports: [

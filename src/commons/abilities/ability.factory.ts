@@ -1,3 +1,4 @@
+import { NovelRoomEntity } from '@app/novel-board/entities/novel-room.entity';
 import {
   Ability,
   AbilityBuilder,
@@ -6,6 +7,8 @@ import {
   InferSubjects,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { userEntity } from '../../user/entities/user.entity';
 
 export enum ActionEnum {
@@ -16,13 +19,16 @@ export enum ActionEnum {
   Create = 'create',
 }
 
-export type Subjects = InferSubjects<typeof userEntity> | 'all';
+export type Subjects = InferSubjects<typeof userEntity | 'Room'> | 'all';
 
 export type AppAbility = Ability<[ActionEnum, Subjects]>;
 
 @Injectable()
 export class AbilityFactory {
-  constructor() {}
+  constructor(
+    @InjectRepository(NovelRoomEntity)
+    private readonly roomRepository: Repository<NovelRoomEntity>,
+  ) {}
 
   createForUser(user: userEntity) {
     const { can, build, cannot } = new AbilityBuilder(
