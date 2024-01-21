@@ -1,13 +1,15 @@
 import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
 import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.enum';
 import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.repository';
+import { ActionsFactory } from '@app/commons/abilities/action.factory';
+import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { NovelWriterCategoryEnum } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import {
   NovelWriterRepository,
   NovelWriterRepositoryToken,
 } from '@app/novel-writer/repository/novel-writer.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
 import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
@@ -21,7 +23,6 @@ import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.
 import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-subtitle.exception';
 import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title.exception';
 import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
-import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 
 @Injectable()
 export class NovelRoomService {
@@ -37,6 +38,7 @@ export class NovelRoomService {
     private readonly novelWriterRepository: NovelWriterRepository,
     @Inject(ChapterRepositoryToken)
     private readonly chapterRepository: ChapterRepository,
+    private readonly actionFactory: ActionsFactory,
   ) {}
 
   async getAllRooms(user: userEntity, dto: FindAttendQueryDto): Promise<any> {
@@ -126,10 +128,23 @@ export class NovelRoomService {
     return room;
   }
 
-  async deleteRoom(id: number): Promise<void> {
-    await this.novelRoomRepository.delete({
-      id: id,
-    });
+  async deleteRoom(
+    user: userEntity,
+    novelRoom: NovelRoomEntity,
+  ): Promise<void> {
+    const isOwner = await this.actionFactory.canDeleteRoom(user);
+
+    if (isOwner) {
+      const room = await this.novelRoomRepository.findOne({
+        where: { id: novelRoom.id },
+      });
+
+      if (!room) {
+        throw new NotFoundException('방 정보를 찾을 수 없습니다.');
+      }
+
+      await this.novelRoomRepository.delete(room.id);
+    }
   }
 
   async updateRoom(

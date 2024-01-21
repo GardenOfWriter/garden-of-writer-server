@@ -1,8 +1,9 @@
+import { CaslGuard } from '@app/auth/guard/casl.guard';
 import { Module } from '@nestjs/common';
-import { AbilityFactory } from './actions.factory';
+import { AbilityFactory } from './ability.factory';
 
 @Module({
-  providers: [AbilityFactory],
+  providers: [AbilityFactory, CaslGuard],
   exports: [AbilityFactory],
 })
 export class AbilityModule {}

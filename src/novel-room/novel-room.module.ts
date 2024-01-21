@@ -8,10 +8,11 @@ import { NovelRoomService } from 'src/novel-room/novel-room.service';
 import { userEntity } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 
-import { NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
+import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
 import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.repository';
 import { ChapterRepositoryImpl } from '@app/chapter/repository/chapter.repository.impl';
-import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
+import { AbilityFactory } from '@app/commons/abilities/ability.factory';
+import { NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
 import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-writer.repository.impl';
 
 @Module({
@@ -25,6 +26,7 @@ import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-wr
     ]),
   ],
   providers: [
+    AbilityFactory,
     NovelRoomService,
     {
       provide: NovelWriterRepositoryToken,
