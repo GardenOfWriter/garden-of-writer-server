@@ -9,7 +9,7 @@ import {
   NovelWriterRepository,
   NovelWriterRepositoryToken,
 } from '@app/novel-writer/repository/novel-writer.repository';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
 import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
@@ -140,7 +140,7 @@ export class NovelRoomService {
       });
 
       if (!room) {
-        throw new NotFoundException('방 정보를 찾을 수 없습니다.');
+        throw new NovelRoomNotFoundException();
       }
 
       await this.novelRoomRepository.delete(room.id);
