@@ -14,7 +14,6 @@ import { ChapterRepositoryImpl } from '@app/chapter/repository/chapter.repositor
 import { AbilityFactory } from '@app/commons/abilities/ability.factory';
 import { NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
 import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-writer.repository.impl';
-import { ActionsFactory } from '@app/commons/abilities/action.factory';
 
 @Module({
   imports: [
@@ -41,7 +40,6 @@ import { ActionsFactory } from '@app/commons/abilities/action.factory';
       provide: 'novelRoomTypeEnum',
       useValue: novelRoomTypeEnum,
     },
-    ActionsFactory,
   ],
   controllers: [NovelRoomController],
   exports: ['novelRoomTypeEnum', NovelRoomService],
