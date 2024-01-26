@@ -1,4 +1,4 @@
-import { NovelRoomEntity } from '@app/novel-board/entities/novel-room.entity';
+import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import {
   Ability,
   AbilityBuilder,

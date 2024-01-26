@@ -1,5 +1,5 @@
 import { getToDay, getToDayISO8601 } from '@app/commons/util/date.util';
-import { NovelRoomEntity } from '@app/novel-board/entities/novel-room.entity';
+import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { userEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '../../commons/entities/primary-generated-pk-with-meta-time.entity';

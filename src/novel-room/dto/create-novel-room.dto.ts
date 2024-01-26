@@ -1,4 +1,4 @@
-import { NovelRoomCategory } from '@app/novel-board/entities/enum/novel-room-category.enum';
+import { NovelRoomCategory } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { userEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';

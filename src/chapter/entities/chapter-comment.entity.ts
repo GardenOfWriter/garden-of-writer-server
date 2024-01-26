@@ -1,4 +1,4 @@
-import { NovelRoomEntity } from '@app/novel-board/entities/novel-room.entity';
+import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { userEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { PrimaryAuditiedPK } from '../../commons/entities/primary-auditied-pk.entity';
