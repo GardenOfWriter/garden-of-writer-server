@@ -1,4 +1,4 @@
-import { NovelRoomEntity } from '@app/novel-board/entities/novel-room.entity';
+import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, FindOneOptions, Repository } from 'typeorm';
 import { NovelWriterEntity } from '../entities/novel-writer.entity';

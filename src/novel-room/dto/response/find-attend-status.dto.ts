@@ -1,4 +1,4 @@
-import { NovelRoomStatusType } from '@app/novel-board/entities/enum/novel-room-status.enum';
+import { NovelRoomStatusType } from '@app/novel-room/entities/enum/novel-room-status.enum';
 import { Expose } from 'class-transformer';
 import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
 import { userEntity } from '../../../user/entities/user.entity';

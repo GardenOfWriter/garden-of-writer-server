@@ -1,7 +1,7 @@
 import {
   NovelRoomType,
   novelRoomTypeEnum,
-} from '@app/novel-board/entities/enum/novel-room-type.enum';
+} from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { NovelRoomEntity } from '../../../novel-room/entities/novel-room.entity';

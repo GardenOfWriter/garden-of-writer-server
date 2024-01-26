@@ -2,7 +2,7 @@ import { PrimaryGeneratedPkWithMetaTimeEntity } from '@app/commons/entities/prim
 import {
   NovelRoomCategory,
   novelRoomCategoryEnum,
-} from '@app/novel-board/entities/enum/novel-room-category.enum';
+} from '@app/novel-room/entities/enum/novel-room-category.enum';
 import {
   NovelRoomType,
   novelRoomTypeEnum,
