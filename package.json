@@ -96,7 +96,15 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^@app/entities(|/.*)$": "<rootDir>/src/commons/entities/$1",
-      "^@app/commons(|/.*)$": "<rootDir>/src/commons/$1"
+      "^@app/auth(|/.*)$": "<rootDir>/src/auth/$1",
+      "^@app/commons(|/.*)$": "<rootDir>/src/commons/$1",
+      "^@app/novel-attend-board(|/.*)$": "<rootDir>/src/novel-attend-board/$1",
+      "^@app/chapter(|/.*)$": "<rootDir>/src/chapter/$1",
+      "^@app/novel-room(|/.*)$": "<rootDir>/src/novel-room/$1",
+      "^@app/novel-tag(|/.*)$": "<rootDir>/src/novel-tag/$1",
+      "^@app/novel-text(|/.*)$": "<rootDir>/src/novel-text/$1",
+      "^@app/novel-writer(|/.*)$": "<rootDir>/src/novel-writer/$1",
+      "^@app/user(|/.*)$": "<rootDir>/src/user/$1"
     }
   }
 }
