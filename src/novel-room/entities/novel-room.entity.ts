@@ -6,8 +6,8 @@ import {
 import {
   NovelRoomType,
   novelRoomTypeEnum,
-} from 'src/novel-room/entities/enum/novel-room-type.enum';
-import { userEntity } from 'src/user/entities/user.entity';
+} from '@app/novel-room/entities/enum/novel-room-type.enum';
+import { UserEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { NovelAttendBoardEntity } from '../../novel-attend-board/entities/novel-attend-board.entity';
 import { NovelWriterEntity } from '../../novel-writer/entities/novel-writer.entity';
@@ -69,8 +69,8 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   /**
    *  추후에 createdBy로 옮기는걸 제안
    */
-  @ManyToOne(() => userEntity, (user) => user.novelRooms)
-  user: userEntity;
+  @ManyToOne(() => UserEntity, (user) => user.novelRooms)
+  user: UserEntity;
 
   @OneToMany((_type) => NovelWriterEntity, (writer) => writer.novelRoom)
   novelWriter: NovelWriterEntity[];
@@ -85,7 +85,7 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     category: NovelRoomCategory,
     character: string,
     summary: string,
-    user: userEntity,
+    user: UserEntity,
   ) {
     const room = new NovelRoomEntity();
     room.type = type;

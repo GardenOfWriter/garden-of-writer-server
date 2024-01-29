@@ -1,4 +1,3 @@
-import { userEntity } from '@app/user/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NovelAttendBoardEntity } from '../entities/novel-attend-board.entity';

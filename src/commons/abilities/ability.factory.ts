@@ -9,7 +9,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { userEntity } from '../../user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 export enum ActionEnum {
   Manager = 'manager',
@@ -19,7 +19,7 @@ export enum ActionEnum {
   Create = 'create',
 }
 
-export type Subjects = InferSubjects<typeof userEntity | 'Room'> | 'all';
+export type Subjects = InferSubjects<typeof UserEntity | 'Room'> | 'all';
 
 export type AppAbility = Ability<[ActionEnum, Subjects]>;
 
@@ -30,7 +30,7 @@ export class AbilityFactory {
     private readonly roomRepository: Repository<NovelRoomEntity>,
   ) {}
 
-  createForUser(user: userEntity) {
+  createForUser(user: UserEntity) {
     const { can, build, cannot } = new AbilityBuilder(
       Ability as AbilityClass<AppAbility>,
     );
@@ -38,8 +38,8 @@ export class AbilityFactory {
       can(ActionEnum.Manager, 'all');
     } else {
       can(ActionEnum.Read, 'all');
-      can(ActionEnum.Update, userEntity, { id: user.id });
-      can(ActionEnum.Delete, userEntity, { id: user.id });
+      can(ActionEnum.Update, UserEntity, { id: user.id });
+      can(ActionEnum.Delete, UserEntity, { id: user.id });
     }
     return build({
       detectSubjectType: (type) =>

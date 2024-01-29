@@ -1,6 +1,5 @@
 import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 import { InjectRepository } from '@nestjs/typeorm';
-import { skip } from 'node:test';
 import { FindOneOptions, Repository } from 'typeorm';
 import { ChapterEntity } from '../entities/chapter.entity';
 import { ChapterRepository } from './chapter.repository';

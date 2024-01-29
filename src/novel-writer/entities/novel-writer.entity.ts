@@ -1,6 +1,6 @@
-import { getToDay, getToDayISO8601 } from '@app/commons/util/date.util';
+import { getToDay } from '@app/commons/util/date.util';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
-import { userEntity } from '@app/user/entities/user.entity';
+import { UserEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '../../commons/entities/primary-generated-pk-with-meta-time.entity';
 
@@ -50,10 +50,10 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @Column('timestamp', { nullable: true })
   exitedAt: Date;
 
-  @ManyToOne(() => userEntity, (user) => user.id, {
+  @ManyToOne(() => UserEntity, (user) => user.id, {
     eager: true,
   })
-  user: userEntity;
+  user: UserEntity;
 
   @ManyToOne(() => NovelRoomEntity, (room) => room.id)
   novelRoom: NovelRoomEntity;
@@ -87,7 +87,7 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     novelRoomId: number,
     category: NovelWriterCategoryType,
     status: NovelWriterStatusType,
-    user: userEntity,
+    user: UserEntity,
   ) {
     const writer = new NovelWriterEntity();
     writer.novelRoom = { id: novelRoomId } as NovelRoomEntity;

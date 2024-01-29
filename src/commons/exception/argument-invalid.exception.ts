@@ -1,10 +1,6 @@
-import {
-  BadRequestException,
-  HttpStatus,
-  ValidationError,
-} from '@nestjs/common';
-import { ValidationErrorMessage } from './error-message';
+import { HttpStatus } from '@nestjs/common';
 import { BaseException } from './base.exception';
+import { ValidationErrorMessage } from './error-message';
 
 export class ArgumentInvalidException extends BaseException {
   constructor(error: any) {

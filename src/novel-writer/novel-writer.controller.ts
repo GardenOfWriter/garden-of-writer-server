@@ -14,13 +14,13 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Param } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
-import { userEntity } from '../user/entities/user.entity';
+import { UserEntity } from '../user/entities/user.entity';
+import { FindWriter } from './decorator/find-writer.decorator';
+import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
 import { CreateNovelWriterRequestDto } from './dto/request/create-novel-writer.dto';
 import { NovelWriterCategoryEnum } from './entities/enums/novel-writer-category.enum';
 import { NovelWriterStatusEnum } from './entities/enums/novel-writer-status.enum';
 import { NovelWriterService } from './novel-writer.service';
-import { FindWriter } from './decorator/find-writer.decorator';
-import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
 
 @ApiTags('작가 리스트')
 @Controller('writer')
@@ -36,7 +36,7 @@ export class NovelWriterController {
   @Get('')
   async findNovelWirters(
     @Query('novelRoomId') novelRoomId: number,
-    @CurrentUser() user: userEntity,
+    @CurrentUser() user: UserEntity,
   ) {
     return await this.novelWriterService.findByNoveRoomId(novelRoomId, user);
   }
@@ -46,7 +46,7 @@ export class NovelWriterController {
   })
   @Post('join')
   create(
-    @CurrentUser() user: userEntity,
+    @CurrentUser() user: UserEntity,
     @Body() dto: CreateNovelWriterRequestDto,
   ) {
     return this.novelWriterService.create(
@@ -64,7 +64,7 @@ export class NovelWriterController {
   @Post('change-seq')
   async changePriorty(
     @Body() dto: ChangeWriterSeqRequestDto,
-    @CurrentUser() user: userEntity,
+    @CurrentUser() user: UserEntity,
   ) {
     return await this.novelWriterService.changeWriterSeq(dto, user);
   }

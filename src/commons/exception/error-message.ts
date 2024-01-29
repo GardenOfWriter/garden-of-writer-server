@@ -1,4 +1,3 @@
-import { ValidationError } from '@nestjs/common';
 import { Enum, EnumType } from 'ts-jenum';
 import { CoreErrorMessage } from './core-error-message.interface';
 

@@ -1,8 +1,8 @@
-import { PickType, ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
-import { ChapterDto } from '../chapter.dto';
-import { userEntity } from '../../../user/entities/user.entity';
 import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
+import { ApiProperty, PickType } from '@nestjs/swagger';
+import { IsNumber } from 'class-validator';
+import { UserEntity } from '../../../user/entities/user.entity';
+import { ChapterDto } from '../chapter.dto';
 
 export class UpdateChapterRequestDto extends PickType(ChapterDto, [
   'status',
@@ -16,7 +16,7 @@ export class UpdateChapterRequestDto extends PickType(ChapterDto, [
   @IsNumber()
   id: number;
 
-  toEntity(user: userEntity): Partial<ChapterEntity> {
+  toEntity(user: UserEntity): Partial<ChapterEntity> {
     const entity = ChapterEntity.of(
       this.novelRoomId,
       this.status,

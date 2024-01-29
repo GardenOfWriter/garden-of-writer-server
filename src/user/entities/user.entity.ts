@@ -1,5 +1,5 @@
+import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import * as bcrypt from 'bcrypt';
-import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 import {
   BeforeInsert,
   Column,
@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 
 @Entity({ name: 'user', schema: 'gow-server' })
-export class userEntity {
+export class UserEntity {
   @PrimaryGeneratedColumn({
     name: 'user_id',
   })

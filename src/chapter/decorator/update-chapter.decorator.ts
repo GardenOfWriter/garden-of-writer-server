@@ -1,3 +1,4 @@
+import { SwaggerExceptionDto } from '@app/commons/decorator/swagger/swagger.exception';
 import { applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -5,7 +6,6 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
-import { SwaggerExceptionDto } from 'src/commons/decorator/swagger/swagger.exception';
 import { UpdateChapterRequestDto } from '../dto/request/update-chapter.dto';
 
 export function CreateNovel(): MethodDecorator {

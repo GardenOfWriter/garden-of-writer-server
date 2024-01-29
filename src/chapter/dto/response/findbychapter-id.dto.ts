@@ -1,12 +1,10 @@
-import { NovelTextStatusType } from '@app/novel-text/entities/enum/novel-text-status.enum';
-import { SerializeOptions } from '@nestjs/common';
-import { Exclude, Expose } from 'class-transformer';
-import { ChapterEntity } from '../../entities/chapter.entity';
 import {
   ChapterStatusEnum,
   ChapterStatusType,
 } from '@app/chapter/entities/enums/chapter-status.enum';
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
+import { ChapterEntity } from '../../entities/chapter.entity';
 
 export class FindChapterByNovelRoomIdResponseDto {
   private _id: number;

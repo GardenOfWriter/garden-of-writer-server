@@ -1,30 +1,25 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { In } from 'typeorm';
 
-import { userEntity } from '../user/entities/user.entity';
-import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
-import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
-import { FindByNovelRoomIdResponseDto } from './dto/response/find-novel-room-id.dto';
-import { FindByNovelWriterDetails } from './dto/response/find-writers-details.dto';
-import { NovelWriterEntity } from './entities/novel-writer.entity';
-import { AlreadyExistWriterExcetpion } from './exceptions/already-exist-writer.excetpion';
-import { NotAccessParticiateWriterExcetpion } from './exceptions/not-access-particiate-writer.excetpion';
-import {
-  NovelWriterRepository,
-  NovelWriterRepositoryToken,
-} from './repository/novel-writer.repository';
-import { NovelWriterStatusEnum } from './entities/enums/novel-writer-status.enum';
-import { BadChangeWriterIdSeqExcetpion } from './exceptions/bad-change-writer-id-seq.exception';
 import {
   EmailService,
   EmailServiceToken,
 } from '@app/commons/email/email.service';
 import { EmailTemplate } from '@app/commons/email/enums/teamplate.enums';
+import { UserEntity } from '../user/entities/user.entity';
+import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
+import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
+import { FindByNovelRoomIdResponseDto } from './dto/response/find-novel-room-id.dto';
+import { FindByNovelWriterDetails } from './dto/response/find-writers-details.dto';
+import { NovelWriterStatusEnum } from './entities/enums/novel-writer-status.enum';
+import { NovelWriterEntity } from './entities/novel-writer.entity';
+import { AlreadyExistWriterExcetpion } from './exceptions/already-exist-writer.excetpion';
+import { BadChangeWriterIdSeqExcetpion } from './exceptions/bad-change-writer-id-seq.exception';
+import { NotAccessParticiateWriterExcetpion } from './exceptions/not-access-particiate-writer.excetpion';
+import {
+  NovelWriterRepository,
+  NovelWriterRepositoryToken,
+} from './repository/novel-writer.repository';
 
 @Injectable()
 export class NovelWriterService {
@@ -68,7 +63,7 @@ export class NovelWriterService {
     return;
   }
 
-  async findByNoveRoomId(novelRoomId: number, user: userEntity) {
+  async findByNoveRoomId(novelRoomId: number, user: UserEntity) {
     const writers =
       await this.novelWriterRepository.findByNovelRoomId(novelRoomId);
 
@@ -86,7 +81,7 @@ export class NovelWriterService {
     return writers.length === 0 ? false : true;
   }
   async findByNovelRoomIdDetails(
-    user: userEntity,
+    user: UserEntity,
     novelRoomId: number,
   ): Promise<FindByNovelWriterDetails[]> {
     const writers = await this.novelWriterRepository.findByoptions({
@@ -123,7 +118,7 @@ export class NovelWriterService {
 
     return;
   }
-  async changeWriterSeq(dto: ChangeWriterSeqRequestDto, user: userEntity) {
+  async changeWriterSeq(dto: ChangeWriterSeqRequestDto, user: UserEntity) {
     const writers = await this.novelWriterRepository.findByoptions({
       where: {
         id: In(dto.writerIdSeq),
@@ -148,7 +143,7 @@ export class NovelWriterService {
    * 작가 리스트에서 자신이 해당 소설공방에 대한 정보를 가져오기
    */
 
-  private writerPemissionCheck(writers: NovelWriterEntity[], user: userEntity) {
+  private writerPemissionCheck(writers: NovelWriterEntity[], user: UserEntity) {
     const currentWriter = this.filterCurrentWriter(writers, user);
     this.logger.debug('currentWriter =', currentWriter);
     if (!currentWriter || !currentWriter.isRepresentativeWriter()) {
@@ -157,7 +152,7 @@ export class NovelWriterService {
   }
   private filterCurrentWriter(
     writers: NovelWriterEntity[],
-    user: userEntity,
+    user: UserEntity,
   ): NovelWriterEntity {
     const writer = writers.filter((writer) => writer.user.id === user.id);
     return writer[0];

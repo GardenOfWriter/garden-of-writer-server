@@ -1,11 +1,11 @@
-import { JoinColumn, ManyToOne } from 'typeorm';
+import { UserEntity } from '@app/user/entities/user.entity';
+import { ManyToOne } from 'typeorm';
 import { PrimaryGeneratedPkWithMetaTimeEntity } from './primary-generated-pk-with-meta-time.entity';
-import { userEntity } from '@app/user/entities/user.entity';
 
 export abstract class PrimaryAuditiedPK extends PrimaryGeneratedPkWithMetaTimeEntity {
-  @ManyToOne((type) => userEntity)
-  createdBy: userEntity;
+  @ManyToOne((type) => UserEntity)
+  createdBy: UserEntity;
 
-  @ManyToOne((type) => userEntity)
-  updatedBy: userEntity;
+  @ManyToOne((type) => UserEntity)
+  updatedBy: UserEntity;
 }

@@ -1,20 +1,17 @@
+import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
-  ParseIntPipe,
-  Post,
   Put,
   Query,
   SerializeOptions,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { JwtGuard } from '../auth/guard/jwt.guard';
-import { userEntity } from '../user/entities/user.entity';
+import { UserEntity } from '../user/entities/user.entity';
 import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
 
 import { NovelWriterService } from './novel-writer.service';
@@ -45,7 +42,7 @@ export class WriterManagementController {
   })
   @Get('')
   async findWriterManagement(
-    @CurrentUser() user: userEntity,
+    @CurrentUser() user: UserEntity,
     @Query('novelRoomId') novelRoomId: number,
   ) {
     return await this.novelWriterService.findByNovelRoomIdDetails(

@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guard/jwt.guard';
-import { userEntity } from '../user/entities/user.entity';
+import { UserEntity } from '../user/entities/user.entity';
 import { CreateNovel } from './decorator/create-novel.decorator';
 import { CreateNovelTextRequestDto } from './dto/request/create-novel.dto';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
@@ -41,7 +41,7 @@ export class NovelTextController {
   @CreateNovel()
   @Post('')
   create(
-    @CurrentUser() user: userEntity,
+    @CurrentUser() user: UserEntity,
     @Body() dto: CreateNovelTextRequestDto,
   ) {
     return this.novelTextService.create(dto.toEntity(user));
@@ -53,7 +53,7 @@ export class NovelTextController {
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id,
-    @CurrentUser() user: userEntity,
+    @CurrentUser() user: UserEntity,
     @Body() dto: UpdateTextNovelRequestDto,
   ) {
     return this.novelTextService.update(id, dto.toEntity(user));
@@ -62,7 +62,7 @@ export class NovelTextController {
   @Delete(':id')
   async delete(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: userEntity,
+    @CurrentUser() user: UserEntity,
   ) {
     return await this.novelTextService.delete(id, user);
   }
