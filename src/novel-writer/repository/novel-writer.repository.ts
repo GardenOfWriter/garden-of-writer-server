@@ -1,6 +1,5 @@
 import { FindOneOptions } from 'typeorm';
 import { NovelWriterEntity } from '../entities/novel-writer.entity';
-import { NovelRoomEntity } from '../../novel-room/entities/novel-room.entity';
 
 export const NovelWriterRepositoryToken = 'NovelWriterRepository';
 

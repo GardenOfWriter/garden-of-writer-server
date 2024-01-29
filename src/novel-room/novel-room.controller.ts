@@ -1,3 +1,5 @@
+import { CreateNovelRoomDto } from '@app/novel-room/dto/create-novel-room.dto';
+import { UpdateNovelRoomDto } from '@app/novel-room/dto/update-novel-room.dto';
 import {
   Body,
   Controller,
@@ -11,8 +13,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
-import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 
 import { CaslGuard } from '@app/auth/guard/casl.guard';
 import { JwtGuard } from '@app/auth/guard/jwt.guard';
@@ -20,10 +20,10 @@ import { ActionEnum, AppAbility } from '@app/commons/abilities/ability.factory';
 import { CaslAbility } from '@app/commons/decorator/casl.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
-import { userEntity } from '@app/user/entities/user.entity';
+import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
+import { NovelRoomService } from '@app/novel-room/novel-room.service';
+import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
-import { NovelRoomService } from 'src/novel-room/novel-room.service';
 import { QueryRunner as QR } from 'typeorm';
 import { TransactionInterceptor } from '../commons/interceptor/transaction.interceptor';
 import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
@@ -44,7 +44,7 @@ export class NovelRoomController {
   @Post('/create-room')
   async createRoom(
     @Body() createNovelRoomDto: CreateNovelRoomDto,
-    @CurrentUser() user: userEntity,
+    @CurrentUser() user: UserEntity,
     @QueryRunner() qr?: QR,
   ): Promise<void> {
     createNovelRoomDto.setUserId(user);
@@ -56,7 +56,7 @@ export class NovelRoomController {
   })
   @Get()
   async getAll(
-    @CurrentUser() user: userEntity,
+    @CurrentUser() user: UserEntity,
     @Query() query: FindAttendQueryDto,
   ): Promise<NovelRoomEntity[]> {
     return this.novelRoomService.getAllRooms(user, query);
@@ -78,7 +78,7 @@ export class NovelRoomController {
   async deleteRoom(
     @Param('id') id: string, //
     @CaslAbility() ability: AppAbility,
-    user: userEntity,
+    user: UserEntity,
     room: NovelRoomEntity,
   ): Promise<void> {
     if (ability && ability.can(ActionEnum.Delete, 'all')) {

@@ -1,5 +1,5 @@
+import { UserEntity } from '@app/user/entities/user.entity';
 import { Request } from 'express';
-import { userEntity } from 'src/user/entities/user.entity';
 
 export interface TokenPayload {
   id: number;
@@ -7,5 +7,5 @@ export interface TokenPayload {
 }
 
 export interface RequestUser extends Request {
-  user: userEntity;
+  user: UserEntity;
 }

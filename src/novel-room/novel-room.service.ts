@@ -3,18 +3,18 @@ import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.en
 import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.repository';
 import { ActionsFactory } from '@app/commons/abilities/action.factory';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
+import { CreateNovelRoomDto } from '@app/novel-room/dto/create-novel-room.dto';
+import { UpdateNovelRoomDto } from '@app/novel-room/dto/update-novel-room.dto';
+import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { NovelWriterCategoryEnum } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import {
   NovelWriterRepository,
   NovelWriterRepositoryToken,
 } from '@app/novel-writer/repository/novel-writer.repository';
+import { UserEntity } from '@app/user/entities/user.entity';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
-import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
-import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
-import { userEntity } from 'src/user/entities/user.entity';
 import { In, Repository } from 'typeorm';
 import { ChapterRepository } from '../chapter/repository/chapter.repository';
 import { NovelWriterStatusEnum } from '../novel-writer/entities/enums/novel-writer-status.enum';
@@ -32,8 +32,8 @@ export class NovelRoomService {
      */
     @InjectRepository(NovelRoomEntity)
     private readonly novelRoomRepository: Repository<NovelRoomEntity>,
-    @InjectRepository(userEntity)
-    private readonly userRepository: Repository<userEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
     @Inject(NovelWriterRepositoryToken)
     private readonly novelWriterRepository: NovelWriterRepository,
     @Inject(ChapterRepositoryToken)
@@ -41,7 +41,7 @@ export class NovelRoomService {
     private readonly actionFactory: ActionsFactory,
   ) {}
 
-  async getAllRooms(user: userEntity, dto: FindAttendQueryDto): Promise<any> {
+  async getAllRooms(user: UserEntity, dto: FindAttendQueryDto): Promise<any> {
     /**
      *  참여중 미참여중 필터링
      */
@@ -129,7 +129,7 @@ export class NovelRoomService {
   }
 
   async deleteRoom(
-    user: userEntity,
+    user: UserEntity,
     novelRoom: NovelRoomEntity,
   ): Promise<void> {
     const isOwner = await this.actionFactory.canDeleteRoom(user);

@@ -1,10 +1,10 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { LoginUserDto } from '@app/auth/dto/login-user.dto';
+import { TokenPayload } from '@app/auth/interface/auth.interface';
+import { UserEntity } from '@app/user/entities/user.entity';
+import { UserService } from '@app/user/user.service';
+import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { LoginUserDto } from 'src/auth/dto/login-user.dto';
-import { TokenPayload } from 'src/auth/interface/auth.interface';
-import { userEntity } from 'src/user/entities/user.entity';
-import { UserService } from 'src/user/user.service';
 import { UserIncorrectEmailException } from './exceptions/user-incorrect-email.exception';
 import { UserIncorrectPasswordException } from './exceptions/user-incorrect-password.exception';
 
@@ -19,7 +19,7 @@ export class AuthService {
   async validateUser(
     dto: LoginUserDto,
   ): Promise<{ accessToken: string } | undefined> {
-    const user: userEntity = await this.userService.findByFields({
+    const user: UserEntity = await this.userService.findByFields({
       select: ['id', 'email', 'password'], // 패스워드 컬럼은 select 가 기본 false 되어있어서 find 할때 명시를 해줘야함
       where: { email: dto.email },
     });

@@ -1,15 +1,14 @@
-import { Controller, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { NovelRoomEntity } from '../novel-room/entities/novel-room.entity';
+import { UserEntity } from '../user/entities/user.entity';
+import { FindAllNovelAttendBoardDto } from './dto/response/findall.dto';
 import { NovelAttendBoardEntity } from './entities/novel-attend-board.entity';
 import {
   NovelAttendBoardRepository,
   NovelAttendBoardRepositryToken,
 } from './repository/novel-attend-board.repository';
-import { NovelRoomEntity } from '../novel-room/entities/novel-room.entity';
-import { Repository } from 'typeorm';
-import { NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
-import { userEntity } from '../user/entities/user.entity';
-import { FindAllNovelAttendBoardDto } from './dto/response/findall.dto';
 
 @Injectable()
 export class NovelAttendBoardService {
@@ -26,7 +25,7 @@ export class NovelAttendBoardService {
     return;
   }
 
-  async findAll(user: userEntity) {
+  async findAll(user: UserEntity) {
     const rooms = await this.novelRoomRepository
       .createQueryBuilder('nr')
       .select(['nr', 'nw', 'nad', 'user'])

@@ -1,4 +1,4 @@
-import { userEntity } from '@app/user/entities/user.entity';
+import { UserEntity } from '@app/user/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { AbilityFactory, ActionEnum } from './ability.factory';
 
@@ -8,12 +8,12 @@ export class ActionsFactory {
     private readonly abilityFactory: AbilityFactory, //
   ) {}
 
-  async canModifyRoom(user: userEntity): Promise<boolean> {
+  async canModifyRoom(user: UserEntity): Promise<boolean> {
     const ability = this.abilityFactory.createForUser(user);
     return ability.can(ActionEnum.Update, 'all');
   }
 
-  async canDeleteRoom(user: userEntity): Promise<boolean> {
+  async canDeleteRoom(user: UserEntity): Promise<boolean> {
     const ability = this.abilityFactory.createForUser(user);
     return ability.can(ActionEnum.Delete, 'all');
   }

@@ -1,7 +1,7 @@
 import { NovelRoomStatusType } from '@app/novel-room/entities/enum/novel-room-status.enum';
 import { Expose } from 'class-transformer';
 import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
-import { userEntity } from '../../../user/entities/user.entity';
+import { UserEntity } from '../../../user/entities/user.entity';
 import { NovelRoomEntity } from '../../entities/novel-room.entity';
 
 export class FindAttendStatusNovelRoomDto {
@@ -16,7 +16,7 @@ export class FindAttendStatusNovelRoomDto {
   private _currentWriter: any;
   private _status: NovelRoomStatusType;
   private _me: NovelWriterEntity;
-  constructor(user: userEntity, room: NovelRoomEntity) {
+  constructor(user: UserEntity, room: NovelRoomEntity) {
     this._id = room.id;
     this._category = room.category;
     this._title = room.title;

@@ -1,11 +1,9 @@
-import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeepPartial, FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { NovelWriterEntity } from '../entities/novel-writer.entity';
 
-import { NovelWriterRepository } from './novel-writer.repository';
 import { NovelWriterStatusEnum } from '../entities/enums/novel-writer-status.enum';
-import { NovelRoomStatusEnum } from '../../novel-room/entities/enum/novel-room-status.enum';
+import { NovelWriterRepository } from './novel-writer.repository';
 
 export class NovelWriterRepositoryImpl implements NovelWriterRepository {
   constructor(

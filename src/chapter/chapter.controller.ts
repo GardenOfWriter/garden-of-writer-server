@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   ParseIntPipe,
   Post,
@@ -16,14 +15,13 @@ import { CreateNovel } from './decorator/create-chapter.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Param } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
-import { userEntity } from '../user/entities/user.entity';
+import { UserEntity } from '../user/entities/user.entity';
 import { ChapterService } from './chapter.service';
-import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
-import { UpdateChapterRequestDto } from './dto/request/update-chapter.dto';
 import { FindChapter } from './decorator/find-chapter.decorator';
-import { FindByNovelRoomIdDto } from './dto/request/findby-novel-room-id.dto';
 import { ApplyChapterDto } from './dto/request/apply-chapter.dto';
 import { ChangeTitleDto } from './dto/request/change-title.dto';
+import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
+import { FindByNovelRoomIdDto } from './dto/request/findby-novel-room-id.dto';
 
 @ApiTags('소설 회차')
 @Controller('chapter')
@@ -44,7 +42,7 @@ export class ChapterController {
   @CreateNovel()
   @Post('')
   create(
-    @CurrentUser() user: userEntity,
+    @CurrentUser() user: UserEntity,
     @Body() dto: CreateChapterRequestDto,
   ) {
     return this.chapterService.save(dto.toEntity(user));
@@ -54,7 +52,7 @@ export class ChapterController {
     summary: '회차 연재 승인 신청하기',
   })
   @Put('/apply/:id')
-  applyChapter(@Param() dto: ApplyChapterDto, @CurrentUser() user: userEntity) {
+  applyChapter(@Param() dto: ApplyChapterDto, @CurrentUser() user: UserEntity) {
     return this.chapterService.applyChapter(dto.id);
   }
   @ApiOperation({

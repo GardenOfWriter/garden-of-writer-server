@@ -1,19 +1,17 @@
-import { SerializeOptions } from '@nestjs/common';
-import { Expose } from 'class-transformer';
-import { ChapterStatusType } from '@app/chapter/entities/enums/chapter-status.enum';
-import { NovelWriterEntity } from '../../entities/novel-writer.entity';
-import { NovelWriterStatusType } from '@app/novel-writer/entities/enums/novel-writer-status.enum';
-import { userEntity } from '@app/user/entities/user.entity';
 import {
   NovelWriterCategoryEnum,
   NovelWriterCategoryType,
 } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
+import { NovelWriterStatusType } from '@app/novel-writer/entities/enums/novel-writer-status.enum';
+import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 import { NovelWriterStatusEnum } from '../../entities/enums/novel-writer-status.enum';
+import { NovelWriterEntity } from '../../entities/novel-writer.entity';
 
 export class FindByNovelRoomIdResponseDto {
   private _status: NovelWriterStatusType;
-  private _user: userEntity;
+  private _user: UserEntity;
   private _category: NovelWriterCategoryType;
   private _id: number;
   private _writingSeq: number;

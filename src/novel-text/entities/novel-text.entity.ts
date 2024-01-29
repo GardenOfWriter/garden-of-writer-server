@@ -1,6 +1,6 @@
 import { Column, Entity } from 'typeorm';
 import { PrimaryAuditiedPK } from '../../commons/entities/primary-auditied-pk.entity';
-import { userEntity } from '../../user/entities/user.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 import {
   NovelTextStatusEnum,
   NovelTextStatusType,
@@ -24,7 +24,7 @@ export class NovelTextEntity extends PrimaryAuditiedPK {
     chapterId: number,
     status: NovelTextStatusType,
     content: string,
-    user: userEntity,
+    user: UserEntity,
   ) {
     const novelText = new NovelTextEntity();
     novelText.chapterId = chapterId;

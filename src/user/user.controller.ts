@@ -1,8 +1,8 @@
+import { JoinUserDto } from '@app/user/dto/join-user.dto';
+import { UserEntity } from '@app/user/entities/user.entity';
+import { UserService } from '@app/user/user.service';
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JoinUserDto } from 'src/user/dto/join-user.dto';
-import { userEntity } from 'src/user/entities/user.entity';
-import { UserService } from 'src/user/user.service';
 
 @ApiTags('유저')
 @Controller('user')
@@ -32,7 +32,7 @@ export class UserController {
     summary: '회원 목록 조회',
   })
   @Get()
-  async findAll(): Promise<userEntity[]> {
+  async findAll(): Promise<UserEntity[]> {
     return this.userService.findAll();
   }
 

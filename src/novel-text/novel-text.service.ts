@@ -1,10 +1,8 @@
-import { Inject, Injectable, Logger, ConflictException } from '@nestjs/common';
-import { CreateNovelTextRequestDto } from './dto/request/create-novel.dto';
-import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
-import { NovelTextRepository } from './repository/novel-text.repository';
-import { NovelTextEntity } from './entities/novel-text.entity';
-import { userEntity } from '../user/entities/user.entity';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { UserEntity } from '../user/entities/user.entity';
 import { FindByChapterIdResponseDto } from './dto/response/findbychapter-id.dto';
+import { NovelTextEntity } from './entities/novel-text.entity';
+import { NovelTextRepository } from './repository/novel-text.repository';
 
 @Injectable()
 export class NovelTextService {
@@ -23,7 +21,7 @@ export class NovelTextService {
     return;
   }
 
-  async delete(id: number, user: userEntity): Promise<void> {
+  async delete(id: number, user: UserEntity): Promise<void> {
     const novelText = await this.novelTextRepository.findByChapterId({
       where: { id },
     });

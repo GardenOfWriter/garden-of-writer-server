@@ -1,17 +1,17 @@
-import { Expose } from 'class-transformer';
-import { NovelWriterEntity } from '../../entities/novel-writer.entity';
-import { NovelWriterStatusType } from '@app/novel-writer/entities/enums/novel-writer-status.enum';
-import { userEntity } from '@app/user/entities/user.entity';
 import { NovelWriterCategoryType } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
+import { NovelWriterStatusType } from '@app/novel-writer/entities/enums/novel-writer-status.enum';
+import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 import { NovelWriterCategoryEnum } from '../../entities/enums/novel-writer-category.enum';
+import { NovelWriterEntity } from '../../entities/novel-writer.entity';
 
 export class FindByNovelWriterDetails {
   private _status: NovelWriterStatusType;
   private _category: NovelWriterCategoryType;
   private _createdAt: Date;
   private _notifiedAt: Date;
-  private _user: userEntity;
+  private _user: UserEntity;
   private _exitAt: Date;
   private _id: number;
 

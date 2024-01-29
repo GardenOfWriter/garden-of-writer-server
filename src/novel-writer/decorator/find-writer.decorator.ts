@@ -1,4 +1,3 @@
-import { FindByNovelRoomIdDto } from '@app/chapter/dto/request/findby-novel-room-id.dto';
 import { ApiCommonResponse } from '@app/commons/decorator/swagger/common-response.decorator';
 import { applyDecorators } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, getSchemaPath } from '@nestjs/swagger';

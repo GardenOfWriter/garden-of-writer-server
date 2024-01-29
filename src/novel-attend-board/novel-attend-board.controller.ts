@@ -11,7 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { userEntity } from '../user/entities/user.entity';
+import { UserEntity } from '../user/entities/user.entity';
 import {
   CreateNovelAttendBoard,
   FindNovelAttendBoard,
@@ -31,7 +31,7 @@ export class NovelAttendBoardController {
   constructor(private novelAttendBoardService: NovelAttendBoardService) {}
   @FindNovelAttendBoard()
   @Get('')
-  findAll(@CurrentUser() user: userEntity) {
+  findAll(@CurrentUser() user: UserEntity) {
     return this.novelAttendBoardService.findAll(user);
   }
 

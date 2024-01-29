@@ -1,11 +1,11 @@
 import { NovelRoomCategory } from '@app/novel-room/entities/enum/novel-room-category.enum';
-import { userEntity } from '@app/user/entities/user.entity';
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import {
   NovelRoomType,
   novelRoomTypeEnum,
-} from 'src/novel-room/entities/enum/novel-room-type.enum';
+} from '@app/novel-room/entities/enum/novel-room-type.enum';
+import { UserEntity } from '@app/user/entities/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { NovelRoomEntity } from '../entities/novel-room.entity';
 
 export class CreateNovelRoomDto {
@@ -62,12 +62,12 @@ export class CreateNovelRoomDto {
   //   description: '유저 ID',
   // })
   // @IsNotEmpty()
-  private _user: userEntity;
+  private _user: UserEntity;
 
-  setUserId(user: userEntity) {
+  setUserId(user: UserEntity) {
     this._user = user;
   }
-  getUser(): userEntity {
+  getUser(): UserEntity {
     return this._user;
   }
   // request dto -> toEntity -> of method -> entity

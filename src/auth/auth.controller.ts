@@ -1,3 +1,6 @@
+import { AuthService } from '@app/auth/auth.service';
+import { LoginUserDto } from '@app/auth/dto/login-user.dto';
+import { RequestUser } from '@app/auth/interface/auth.interface';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import {
   Body,
@@ -10,11 +13,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
-import { AuthService } from 'src/auth/auth.service';
-import { LoginUserDto } from 'src/auth/dto/login-user.dto';
-import { RequestUser } from 'src/auth/interface/auth.interface';
-import { JwtGuard } from './guard/jwt.guard';
 import { NovelWriterService } from '../novel-writer/novel-writer.service';
+import { JwtGuard } from './guard/jwt.guard';
 
 @Controller('auth')
 export class AuthController {

@@ -1,12 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
 import {
   EntitySubscriberInterface,
   EventSubscriber,
   InsertEvent,
-  Repository,
 } from 'typeorm';
 import { ChapterEntity } from '../entities/chapter.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @EventSubscriber()
 export class ChapterSubscriber

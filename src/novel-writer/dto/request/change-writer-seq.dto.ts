@@ -1,12 +1,6 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsNumber } from 'class-validator';
 import { NovelWriterEntity } from '../../entities/novel-writer.entity';
-import {
-  ArrayMaxSize,
-  ArrayMinSize,
-  IsArray,
-  IsNumber,
-  ValidateNested,
-} from 'class-validator';
 import { NovelWirterDto } from '../novel-writer.dto';
 
 export class ChangeWriterSeqRequestDto extends PickType(NovelWirterDto, [

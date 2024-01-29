@@ -1,5 +1,5 @@
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
-import { userEntity } from '@app/user/entities/user.entity';
+import { UserEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { PrimaryAuditiedPK } from '../../commons/entities/primary-auditied-pk.entity';
 import { ChapterCommentEntity } from './chapter-comment.entity';
@@ -42,7 +42,7 @@ export class ChapterEntity extends PrimaryAuditiedPK {
     novelRoom: number,
     status: ChapterStatusType,
     title: string,
-    user: userEntity,
+    user: UserEntity,
   ) {
     const chapter = new ChapterEntity();
     chapter.novelRoom = { id: novelRoom } as NovelRoomEntity;

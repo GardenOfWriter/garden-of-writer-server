@@ -1,6 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsNumberString, IsOptional, IsNumber } from 'class-validator';
 
 export class PagingationResponse<T> {
   @Exclude() private _chunkSize: number;
