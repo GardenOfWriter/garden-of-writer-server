@@ -1,16 +1,17 @@
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '@app/commons/entities/primary-generated-pk-with-meta-time.entity';
 import {
   NovelRoomCategory,
-  novelRoomCategoryEnum,
+  NovelRoomCategoryEnum,
 } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import {
   NovelRoomType,
-  novelRoomTypeEnum,
+  NovelRoomTypeEnum,
 } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { NovelAttendBoardEntity } from '../../novel-attend-board/entities/novel-attend-board.entity';
 import { NovelWriterEntity } from '../../novel-writer/entities/novel-writer.entity';
+
 import {
   NovelRoomStatusEnum,
   NovelRoomStatusType,
@@ -26,8 +27,8 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   //작가정원
   @Column({
     type: 'enum', //
-    enum: Object.values(novelRoomTypeEnum),
-    default: novelRoomTypeEnum.SOLO,
+    enum: Object.values(NovelRoomTypeEnum),
+    default: NovelRoomTypeEnum.SOLO,
   })
   type: NovelRoomType;
 
@@ -42,8 +43,8 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   //카테고리
   @Column({
     type: 'enum', //
-    enum: novelRoomCategoryEnum,
-    default: novelRoomCategoryEnum.NORMAL,
+    enum: NovelRoomCategoryEnum,
+    default: NovelRoomCategoryEnum.NORMAL,
   })
   category: NovelRoomCategory;
 

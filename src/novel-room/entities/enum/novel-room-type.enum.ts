@@ -1,4 +1,4 @@
-export const novelRoomTypeEnum = {
+export const NovelRoomTypeEnum = {
   SOLO: 'solo',
   GROUP2: 'group2',
   GROUP3: 'group3',
@@ -7,4 +7,4 @@ export const novelRoomTypeEnum = {
 } as const;
 
 export type NovelRoomType =
-  (typeof novelRoomTypeEnum)[keyof typeof novelRoomTypeEnum];
+  (typeof NovelRoomTypeEnum)[keyof typeof NovelRoomTypeEnum];

@@ -40,12 +40,12 @@ export class NovelRoomController {
   @ApiOperation({
     summary: '소설 공방 개설',
   })
-  @UseInterceptors(TransactionInterceptor)
+  // @UseInterceptors(TransactionInterceptor)
   @Post('/create-room')
   async createRoom(
     @Body() createNovelRoomDto: CreateNovelRoomDto,
     @CurrentUser() user: UserEntity,
-    @QueryRunner() qr?: QR,
+    // @QueryRunner() qr?: QR,
   ): Promise<void> {
     createNovelRoomDto.setUserId(user);
     await this.novelRoomService.createRoom(createNovelRoomDto);
@@ -82,7 +82,7 @@ export class NovelRoomController {
     room: NovelRoomEntity,
   ): Promise<void> {
     if (ability && ability.can(ActionEnum.Delete, 'all')) {
-      await this.novelRoomService.deleteRoom(user, room);
+      await this.novelRoomService.deleteRoom(room.id);
     }
   }
 

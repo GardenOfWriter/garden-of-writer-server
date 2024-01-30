@@ -1,4 +1,4 @@
-import { novelRoomTypeEnum } from '@app/novel-room/entities/enum/novel-room-type.enum';
+import { NovelRoomTypeEnum } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { NovelRoomController } from '@app/novel-room/novel-room.controller';
 import { NovelRoomService } from '@app/novel-room/novel-room.service';
@@ -39,7 +39,7 @@ import { UserEntity } from '@app/user/entities/user.entity';
     },
     {
       provide: 'novelRoomTypeEnum',
-      useValue: novelRoomTypeEnum,
+      useValue: NovelRoomTypeEnum,
     },
     ActionsFactory,
   ],
