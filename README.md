@@ -40,40 +40,40 @@
 
 ## 1. Repository Layer는 인터페이스로 분리하고 [도메인]Repository명으로 한다
 
-    ```typescript
-    export interface ChapterRepository {
-        saveRow(entity: Partial<ChapterEntity>): Promise<void>;
-        updateRow(id: number, entity: Partial<ChapterEntity>): Promise<void>;
-        deleteRow(id: number): Promise<void>;
-        findByoptions(
-            options: FindOneOptions<ChapterEntity>,
-        ): Promise<ChapterEntity[]>;
-        findChpaterByRoomIdAndCount(
-            novelRoomId: number,
-            pagination: BasePaginationRequest,
-        ): Promise<[ChapterEntity[], number]>;
-        findOneByOptions(
-            options: FindOneOptions<ChapterEntity>,
-        ): Promise<ChapterEntity>;
-        chapterCount(noveRoomId: number): Promise<number>;
-    }
-    ```
+```ts
+export interface ChapterRepository {
+  saveRow(entity: Partial<ChapterEntity>): Promise<void>;
+  updateRow(id: number, entity: Partial<ChapterEntity>): Promise<void>;
+  deleteRow(id: number): Promise<void>;
+  findByoptions(
+    options: FindOneOptions<ChapterEntity>,
+  ): Promise<ChapterEntity[]>;
+  findChpaterByRoomIdAndCount(
+    novelRoomId: number,
+    pagination: BasePaginationRequest,
+  ): Promise<[ChapterEntity[], number]>;
+  findOneByOptions(
+    options: FindOneOptions<ChapterEntity>,
+  ): Promise<ChapterEntity>;
+  chapterCount(noveRoomId: number): Promise<number>;
+}
+```
 
 ## 2. DI 할 Token 과 Module provide에 적용할 RepositoryProvdier 같이 정의한다
 
-    ```typescript
-        export const ChapterRepositoryToken = 'ChapterRepository';
+```ts
+export const ChapterRepositoryToken = 'ChapterRepository';
 
-        export const ChapterRepositoryProvider: Provider = {
-        provide: ChapterRepositoryToken,
-        useClass: ChapterRepositoryImpl,
-        };
-    ```
+export const ChapterRepositoryProvider: Provider = {
+  provide: ChapterRepositoryToken,
+  useClass: ChapterRepositoryImpl,
+};
+```
 
-## 2. Repository 구현 파일은 [도메인]RepositoryImpl 클래스로 정의한다
+## 3. Repository 구현 파일은 [도메인]RepositoryImpl 클래스로 정의한다
 
-    ```typescript
-        export class ChapterRepositoryImpl {
-            ......
-        }
-    ```
+```ts
+    export class ChapterRepositoryImpl {
+        ......
+    }
+```
