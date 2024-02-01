@@ -40,6 +40,7 @@ export class BaseException
 
   @ApiProperty()
   path: string;
+
   @ApiProperty()
   validate: string[];
 }

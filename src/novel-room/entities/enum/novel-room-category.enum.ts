@@ -1,4 +1,4 @@
-export const novelRoomCategoryEnum = {
+export const NovelRoomCategoryEnum = {
   NORMAL: 1,
   ROMANCE_DRAMA: 2,
   COMEDY: 3,
@@ -11,4 +11,4 @@ export const novelRoomCategoryEnum = {
 } as const;
 
 export type NovelRoomCategory =
-  (typeof novelRoomCategoryEnum)[keyof typeof novelRoomCategoryEnum];
+  (typeof NovelRoomCategoryEnum)[keyof typeof NovelRoomCategoryEnum];

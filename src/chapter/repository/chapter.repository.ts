@@ -1,9 +1,15 @@
 import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 import { FindOneOptions } from 'typeorm';
 import { ChapterEntity } from '../entities/chapter.entity';
+import { Provider } from '@nestjs/common';
+import { ChapterRepositoryImpl } from './chapter.repository.impl';
 
 export const ChapterRepositoryToken = 'ChapterRepository';
 
+export const ChapterRepositoryProvider: Provider = {
+  provide: ChapterRepositoryToken,
+  useClass: ChapterRepositoryImpl,
+};
 export interface ChapterRepository {
   saveRow(entity: Partial<ChapterEntity>): Promise<void>;
   updateRow(id: number, entity: Partial<ChapterEntity>): Promise<void>;

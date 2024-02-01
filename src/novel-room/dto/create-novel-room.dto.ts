@@ -1,7 +1,10 @@
-import { NovelRoomCategory } from '@app/novel-room/entities/enum/novel-room-category.enum';
+import {
+  NovelRoomCategory,
+  NovelRoomCategoryEnum,
+} from '@app/novel-room/entities/enum/novel-room-category.enum';
 import {
   NovelRoomType,
-  novelRoomTypeEnum,
+  NovelRoomTypeEnum,
 } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -13,7 +16,6 @@ export class CreateNovelRoomDto {
     example: '공방 1',
     description: '소설 공망 제목',
   })
-  @IsNotEmpty()
   @IsString()
   title: string;
 
@@ -21,25 +23,25 @@ export class CreateNovelRoomDto {
     example: '공방 한줄소개 1',
     description: '소설 한줄소개',
   })
-  @IsNotEmpty()
   @IsString()
   subTitle: string;
 
   @ApiProperty({
-    example: '공방 카테고리',
+    example: `${NovelRoomCategoryEnum.ACTION_MARTIAL_ARTS}`,
     description: '일반소설 | 코믹',
   })
-  @IsNotEmpty()
-  @IsString()
+  @IsEnum(NovelRoomCategoryEnum, {
+    message: 'category 는 1,2,3,4,5,6,7,8,9 에서 입력 가능합니다.',
+  })
   category: NovelRoomCategory;
 
   @ApiProperty({
-    enum: novelRoomTypeEnum,
+    enum: NovelRoomTypeEnum,
     example: 'group2',
     description: '작가 정원',
   })
   @IsNotEmpty()
-  @IsEnum(novelRoomTypeEnum)
+  @IsEnum(NovelRoomTypeEnum)
   type: NovelRoomType;
 
   @ApiProperty({
@@ -50,7 +52,6 @@ export class CreateNovelRoomDto {
   character: string;
 
   @ApiProperty({
-    enum: novelRoomTypeEnum,
     example: '줄거리',
     description: '줄거리',
   })

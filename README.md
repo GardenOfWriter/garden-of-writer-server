@@ -1,73 +1,79 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Restful URL 규칙 정의
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 1. url은 명사 중심으로 표현
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+    POST : /novel-room/create-room (X)
+    POST : /novel-room (O)
 
-## Description
+## 2. CRUD 는 HTTP method 표현
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+    GET    : /novel-room      -> Get All room
+    POST   : /novel-room      -> Create new room
+    GET    : /novel-room/{id} -> Get room for given id
+    PUT    : /novel-room      -> Update room for given id
+    DELETE : /novel-room      -> Delete room for given id
 
-## Installation
+## 3. /(slash)로 계층을 구분
 
-```bash
-$ npm install
+    PUT    : /novel-room/seq
+    GET    : /novel-room/writer
+    GET    : /novel-room/writer/{id}
+
+## 4. (\_)underbar 와 대문자 대신 (-)hyphens 및 소문자를 사용
+
+    /novel-Room (X)
+    /novel_room (X)
+    /novel-room (0)
+
+참조 : https://restfulapi.net/resource-naming/
+
+# Restful 요청 응답 데이터 규칙 정의
+
+## 1. 쿼리 Param,Body 요청 및 응답 데이터는 camelCase 를 사용한다
+
+    {
+        novelRoom: "test",
+        currnetWriter: "name"
+    }
+
+# Repository Layer 추상화
+
+## 1. Repository Layer는 인터페이스로 분리하고 [도메인]Repository명으로 한다
+
+```ts
+export interface ChapterRepository {
+  saveRow(entity: Partial<ChapterEntity>): Promise<void>;
+  updateRow(id: number, entity: Partial<ChapterEntity>): Promise<void>;
+  deleteRow(id: number): Promise<void>;
+  findByoptions(
+    options: FindOneOptions<ChapterEntity>,
+  ): Promise<ChapterEntity[]>;
+  findChpaterByRoomIdAndCount(
+    novelRoomId: number,
+    pagination: BasePaginationRequest,
+  ): Promise<[ChapterEntity[], number]>;
+  findOneByOptions(
+    options: FindOneOptions<ChapterEntity>,
+  ): Promise<ChapterEntity>;
+  chapterCount(noveRoomId: number): Promise<number>;
+}
 ```
 
-## Running the app
+## 2. DI 할 Token 과 Module provide에 적용할 RepositoryProvdier 같이 정의한다
 
-```bash
-# development
-$ npm run start
+```ts
+export const ChapterRepositoryToken = 'ChapterRepository';
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+export const ChapterRepositoryProvider: Provider = {
+  provide: ChapterRepositoryToken,
+  useClass: ChapterRepositoryImpl,
+};
 ```
 
-## Test
+## 3. Repository 구현 파일은 [도메인]RepositoryImpl 클래스로 정의한다
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```ts
+    export class ChapterRepositoryImpl {
+        ......
+    }
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).

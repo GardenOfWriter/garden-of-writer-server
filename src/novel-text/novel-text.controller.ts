@@ -34,7 +34,7 @@ export class NovelTextController {
     summary: '해당 회차 소설 글쓰기 정보 조회하기',
   })
   @Get('')
-  async findChpater(@Query('chapter_id') chapterId: number) {
+  async findChpater(@Query('chapterId') chapterId: number) {
     return await this.novelTextService.findChapterText(chapterId);
   }
 

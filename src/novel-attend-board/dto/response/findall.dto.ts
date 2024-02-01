@@ -1,6 +1,6 @@
 import {
   NovelRoomType,
-  novelRoomTypeEnum,
+  NovelRoomTypeEnum,
 } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
@@ -82,9 +82,9 @@ export class FindAllNovelAttendBoardDto {
     return this._writers.length;
   }
   @ApiProperty({
-    enum: novelRoomTypeEnum,
+    enum: NovelRoomTypeEnum,
     example: '소설 공방 타입',
-    description: `${novelRoomTypeEnum.SOLO} : 혼자 : ${novelRoomTypeEnum.GROUP2} : 2명 group3 : 3명`,
+    description: `${NovelRoomTypeEnum.SOLO} : 혼자 : ${NovelRoomTypeEnum.GROUP2} : 2명 group3 : 3명`,
   })
   @Expose()
   get roomType() {
