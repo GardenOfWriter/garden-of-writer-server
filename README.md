@@ -7,15 +7,15 @@
 
 ## 2. CRUD 는 HTTP method 표현
 
-    GET    : /novel-room -> Get All room
-    POST   : /novel-room -> Create new room
-    GET    : /novel-room -> Get room for given id
-    PUT    : /novel-room -> Update room for given id
-    DELETE : /novel-room -> Delete room for given id
+    GET    : /novel-room      -> Get All room
+    POST   : /novel-room      -> Create new room
+    GET    : /novel-room/{id} -> Get room for given id
+    PUT    : /novel-room      -> Update room for given id
+    DELETE : /novel-room      -> Delete room for given id
 
 ## 3. /(slash)로 계층을 구분
 
-    GET    : /novel-room/seq
+    PUT    : /novel-room/seq
     GET    : /novel-room/writer
     GET    : /novel-room/writer/{id}
 
