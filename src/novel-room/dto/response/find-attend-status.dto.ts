@@ -11,7 +11,7 @@ export class FindAttendStatusNovelRoomDto {
   private _createdAt: Date;
   private _completedAt: Date; // 완결일
   private _writers: NovelWriterEntity[];
-  private _type: string;
+  private _type: number;
   private _id: number;
   private _currentWriter: any;
   private _status: NovelRoomStatusType;
@@ -58,7 +58,7 @@ export class FindAttendStatusNovelRoomDto {
    *  작가 정원 타입 계산
    *    */
   @Expose({ name: 'type' })
-  get type(): string {
+  get type(): number {
     return this._type;
   }
   /**
