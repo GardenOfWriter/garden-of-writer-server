@@ -3,6 +3,7 @@ import { Expose } from 'class-transformer';
 import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
 import { NovelRoomEntity } from '../../entities/novel-room.entity';
+import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enum';
 
 export class FindAttendStatusNovelRoomDto {
   private _no: number;
@@ -11,7 +12,7 @@ export class FindAttendStatusNovelRoomDto {
   private _createdAt: Date;
   private _completedAt: Date; // 완결일
   private _writers: NovelWriterEntity[];
-  private _type: number;
+  private _type: NovelRoomType;
   private _id: number;
   private _currentWriter: any;
   private _status: NovelRoomStatusType;
@@ -58,7 +59,11 @@ export class FindAttendStatusNovelRoomDto {
    *  작가 정원 타입 계산
    *    */
   @Expose({ name: 'type' })
+<<<<<<< HEAD
   get type(): number {
+=======
+  get type(): NovelRoomType {
+>>>>>>> 359524b ([bug]roomtype 응답 객체 fix)
     return this._type;
   }
   /**
