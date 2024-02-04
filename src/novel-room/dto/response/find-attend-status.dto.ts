@@ -59,11 +59,7 @@ export class FindAttendStatusNovelRoomDto {
    *  작가 정원 타입 계산
    *    */
   @Expose({ name: 'type' })
-<<<<<<< HEAD
-  get type(): number {
-=======
   get type(): NovelRoomType {
->>>>>>> 359524b ([bug]roomtype 응답 객체 fix)
     return this._type;
   }
   /**
