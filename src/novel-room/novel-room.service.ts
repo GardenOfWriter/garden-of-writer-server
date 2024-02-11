@@ -22,6 +22,7 @@ import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-su
 import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title.exception';
 import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
 import { UserEntity } from '@app/user/entities/user.entity';
+import { FindByRoomIdDetailDto } from './dto/response/findbyid-detail.dto';
 
 @Injectable()
 export class NovelRoomService {
@@ -39,7 +40,7 @@ export class NovelRoomService {
     private readonly chapterRepository: ChapterRepository,
   ) {}
 
-  async getAllRooms(user: UserEntity, dto: FindAttendQueryDto): Promise<any> {
+  async findAllRooms(user: UserEntity, dto: FindAttendQueryDto): Promise<any> {
     /**
      *  참여중 미참여중 필터링
      */
@@ -97,31 +98,14 @@ export class NovelRoomService {
     );
   }
 
-  // async createRoom(
-  //   createNovelRoomDto: CreateNovelRoomDto,
-  // ): Promise<NovelRoomEntity> {
-  //   const user = await this.userRepository.findOne({
-  //     where: { id: createNovelRoomDto.userId },
-  //   });
-
-  //   if (!user) {
-  //     throw new NotFoundException('유저 정보를 찾을 수 없습니다.');
-  //   }
-
-  //   const room = this.novelRoomRepository.create(createNovelRoomDto);
-  //   room.user = user;
-
-  //   return await this.novelRoomRepository.save(room);
-  // }
-
-  async getById(id: number): Promise<NovelRoomEntity> {
+  async getById(id: number): Promise<FindByRoomIdDetailDto> {
     const room = await this.novelRoomRepository.findOne({
       where: { id },
     });
     if (!room) {
       throw new NovelRoomNotFoundException();
     }
-    return room;
+    return new FindByRoomIdDetailDto(room);
   }
 
   async deleteRoom(id: number): Promise<void> {
@@ -134,7 +118,11 @@ export class NovelRoomService {
     id: number,
     updateNovelRoomDto: UpdateNovelRoomDto,
   ): Promise<NovelRoomEntity> {
-    const room = await this.getById(id);
+    const room = await this.novelRoomRepository.findOne({
+      where: {
+        id,
+      },
+    });
 
     if (updateNovelRoomDto.subTitle) {
       room.subTitle = updateNovelRoomDto.subTitle;

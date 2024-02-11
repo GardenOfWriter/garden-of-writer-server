@@ -27,7 +27,7 @@ export class FindByNovelWriterDetails {
 
   @ApiProperty({
     example: 1,
-    description: '작가 row Id',
+    description: '참여 작가 row Id',
   })
   @Expose({ name: 'id' })
   get id(): number {

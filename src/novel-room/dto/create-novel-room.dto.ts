@@ -1,5 +1,5 @@
 import {
-  NovelRoomCategory,
+  NovelRoomCategoryType,
   NovelRoomCategoryEnum,
 } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import {
@@ -33,7 +33,7 @@ export class CreateNovelRoomDto {
   @IsEnum(NovelRoomCategoryEnum, {
     message: 'category 는 1,2,3,4,5,6,7,8,9 에서 입력 가능합니다.',
   })
-  category: NovelRoomCategory;
+  category: NovelRoomCategoryType;
 
   @ApiProperty({
     enum: NovelRoomTypeEnum,
