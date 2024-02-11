@@ -1,6 +1,6 @@
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '@app/commons/entities/primary-generated-pk-with-meta-time.entity';
 import {
-  NovelRoomCategory,
+  NovelRoomCategoryType,
   NovelRoomCategoryEnum,
 } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import {
@@ -46,7 +46,7 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     enum: NovelRoomCategoryEnum,
     default: NovelRoomCategoryEnum.NORMAL,
   })
-  category: NovelRoomCategory;
+  category: NovelRoomCategoryType;
 
   //등장인물
   @Column('varchar', { length: 255, nullable: true })
@@ -83,7 +83,7 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     type: NovelRoomType,
     title: string,
     subTitle: string,
-    category: NovelRoomCategory,
+    category: NovelRoomCategoryType,
     character: string,
     summary: string,
     user: UserEntity,
