@@ -37,7 +37,7 @@ export class CreateNovelRoomDto {
 
   @ApiProperty({
     enum: NovelRoomTypeEnum,
-    example: 'group2',
+    example: NovelRoomTypeEnum.GROUP2,
     description: '작가 정원',
   })
   @IsNotEmpty()
