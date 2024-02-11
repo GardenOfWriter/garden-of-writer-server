@@ -33,7 +33,6 @@ export class NovelAttendBoardService {
       .leftJoin('nr.novelAttendBoard', 'nad')
       .leftJoin('nw.user', 'user')
       .getMany();
-    console.log('rooms=', rooms);
     return rooms.map((room) => new FindAllNovelAttendBoardDto(user, room));
   }
 }

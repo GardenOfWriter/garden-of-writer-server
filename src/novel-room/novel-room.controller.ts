@@ -6,6 +6,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -67,8 +68,8 @@ export class NovelRoomController {
 
   @FindByDetailNovelRoom()
   @Get(':id')
-  getRoomById(@Param('id') id: string) {
-    return this.novelRoomService.getById(+id);
+  getRoomById(@Param('id', ParseIntPipe) id: number) {
+    return this.novelRoomService.getById(id);
   }
 
   @ApiOperation({

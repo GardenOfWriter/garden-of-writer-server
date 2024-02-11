@@ -9,6 +9,7 @@ import {
 } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Expose } from 'class-transformer';
 
 export class FindByRoomIdDetailDto {
   private _createdAt: Date;
@@ -32,12 +33,15 @@ export class FindByRoomIdDetailDto {
     this._summary = room.summary;
     this._status = room.status;
     this._completedAt = room.completedAt;
+    this._createdAt = room.createdAt;
+    this._updatedAt = room.updatedAt;
   }
 
   @ApiProperty({
     example: 1,
     description: '공방 row id',
   })
+  @Expose()
   get id() {
     return this._id;
   }
@@ -51,6 +55,7 @@ export class FindByRoomIdDetailDto {
                            4명 : ${NovelRoomTypeEnum.GROUP4},
                            5명 : ${NovelRoomTypeEnum.GROUP5}`,
   })
+  @Expose()
   get type() {
     return this._type;
   }
@@ -66,6 +71,7 @@ export class FindByRoomIdDetailDto {
                             스포츠/학원 : ${NovelRoomCategoryEnum.SPORTS_ACADEMY},
                             공포/추리 : ${NovelRoomCategoryEnum.HORROR_DETECTIVE}`,
   })
+  @Expose()
   get category() {
     return this._category;
   }
@@ -74,6 +80,7 @@ export class FindByRoomIdDetailDto {
     example: '등장인물1',
     description: '등장인물',
   })
+  @Expose()
   get character() {
     return this._character;
   }
@@ -82,6 +89,7 @@ export class FindByRoomIdDetailDto {
     example: '줄거리',
     description: '줄거리',
   })
+  @Expose()
   get summary() {
     return this._summary;
   }
@@ -89,6 +97,7 @@ export class FindByRoomIdDetailDto {
     example: '공방 제목',
     description: '공방 제목',
   })
+  @Expose()
   get title() {
     return this._title;
   }
@@ -96,6 +105,7 @@ export class FindByRoomIdDetailDto {
     example: 1,
     description: '한줄소개',
   })
+  @Expose()
   get subTitle() {
     return this._subTitle;
   }
@@ -104,6 +114,7 @@ export class FindByRoomIdDetailDto {
     example: new Date(),
     description: '공방 생성일',
   })
+  @Expose()
   get createdAt() {
     return this._createdAt;
   }
@@ -112,6 +123,7 @@ export class FindByRoomIdDetailDto {
     example: new Date(),
     description: '공방 수정일',
   })
+  @Expose()
   get updatedAt() {
     return this._updatedAt;
   }
