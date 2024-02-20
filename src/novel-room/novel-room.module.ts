@@ -12,6 +12,7 @@ import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.reposito
 import { ChapterRepositoryImpl } from '@app/chapter/repository/chapter.repository.impl';
 import { AbilityFactory } from '@app/commons/abilities/ability.factory';
 import { ActionsFactory } from '@app/commons/abilities/action.factory';
+import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 import { NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
 import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-writer.repository.impl';
 import { UserEntity } from '@app/user/entities/user.entity';
@@ -24,6 +25,7 @@ import { UserEntity } from '@app/user/entities/user.entity';
       UserEntity,
       NovelWriterEntity,
       ChapterEntity,
+      NovelTagEntity,
     ]),
   ],
   providers: [
