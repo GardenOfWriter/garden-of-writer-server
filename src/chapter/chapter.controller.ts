@@ -51,7 +51,7 @@ export class ChapterController {
   @ApiOperation({
     summary: '회차 연재 승인 신청하기',
   })
-  @Put('/apply/:id')
+  @Put('/approval/:id')
   applyChapter(@Param() dto: ApplyChapterDto, @CurrentUser() user: UserEntity) {
     return this.chapterService.applyChapter(dto.id);
   }

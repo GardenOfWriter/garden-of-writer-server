@@ -61,7 +61,7 @@ export class NovelWriterController {
   @ApiOperation({
     summary: '작가 순서 변경',
   })
-  @Post('change-seq')
+  @Post('/sequence')
   async changePriorty(
     @Body() dto: ChangeWriterSeqRequestDto,
     @CurrentUser() user: UserEntity,

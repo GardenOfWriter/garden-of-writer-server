@@ -46,7 +46,7 @@ export class NovelRoomController {
     summary: '소설 공방 개설',
   })
   // @UseInterceptors(TransactionInterceptor)
-  @Post('/create-room')
+  @Post('')
   async createRoom(
     @Body() createNovelRoomDto: CreateNovelRoomDto,
     @CurrentUser() user: UserEntity,
