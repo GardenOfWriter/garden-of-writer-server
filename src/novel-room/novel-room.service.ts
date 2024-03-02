@@ -14,7 +14,7 @@ import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
-import { UserEntity } from '@app/user/entities/user.entity';
+
 import { In, Repository } from 'typeorm';
 import { ChapterRepository } from '../chapter/repository/chapter.repository';
 
