@@ -43,7 +43,7 @@ export class FindAllNovelAttendBoardDto {
 
   @ApiProperty({
     example: 0,
-    description: '게시글 조회수 입니다.',
+    description: '게시글 조회수',
   })
   @Expose()
   get viewCount(): number {
@@ -84,10 +84,15 @@ export class FindAllNovelAttendBoardDto {
   @ApiProperty({
     enum: NovelRoomTypeEnum,
     example: '소설 공방 타입',
-    description: `${NovelRoomTypeEnum.SOLO} : 혼자 : ${NovelRoomTypeEnum.GROUP2} : 2명 group3 : 3명`,
+    description: `${NovelRoomTypeEnum.SOLO}   : 혼자
+                  ${NovelRoomTypeEnum.GROUP2} : 2명 
+                  ${NovelRoomTypeEnum.GROUP3} : 3명
+                  ${NovelRoomTypeEnum.GROUP3} : 3명
+                  ${NovelRoomTypeEnum.GROUP4} : 4명
+                  ${NovelRoomTypeEnum.GROUP5} : 5명`,
   })
   @Expose()
-  get roomType() {
+  get roomType(): NovelRoomType {
     return this._type;
   }
 }

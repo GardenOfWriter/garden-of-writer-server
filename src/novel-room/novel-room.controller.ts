@@ -6,6 +6,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -19,14 +20,18 @@ import { JwtGuard } from '@app/auth/guard/jwt.guard';
 import { ActionEnum, AppAbility } from '@app/commons/abilities/ability.factory';
 import { CaslAbility } from '@app/commons/decorator/casl.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
-import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { NovelRoomService } from '@app/novel-room/novel-room.service';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QueryRunner as QR } from 'typeorm';
-import { TransactionInterceptor } from '../commons/interceptor/transaction.interceptor';
+
 import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
+import {
+  FindAllNovelRoom,
+  FindByDetailNovelRoom,
+} from './decorator/swagger.decorator';
+
 @ApiTags('소설 공방')
 @Controller('novel-room')
 @ApiBearerAuth('Authorization')
@@ -51,23 +56,20 @@ export class NovelRoomController {
     await this.novelRoomService.createRoom(createNovelRoomDto);
     return;
   }
-  @ApiOperation({
-    summary: '소설 공방 리스트 출력',
-  })
+
+  @FindAllNovelRoom()
   @Get()
-  async getAll(
+  async findAllRooms(
     @CurrentUser() user: UserEntity,
     @Query() query: FindAttendQueryDto,
   ): Promise<NovelRoomEntity[]> {
-    return this.novelRoomService.getAllRooms(user, query);
+    return this.novelRoomService.findAllRooms(user, query);
   }
 
-  @ApiOperation({
-    summary: '소설공방 조회',
-  })
+  @FindByDetailNovelRoom()
   @Get(':id')
-  getRoomById(@Param('id') id: string) {
-    return this.novelRoomService.getById(+id);
+  getRoomById(@Param('id', ParseIntPipe) id: number) {
+    return this.novelRoomService.getById(id);
   }
 
   @ApiOperation({
