@@ -36,6 +36,13 @@ export class CreateNovelRoomDto {
   category: NovelRoomCategoryType;
 
   @ApiProperty({
+    example: '@태그입니다',
+    description: '소설 태그',
+  })
+  @IsString()
+  novelTags: string[];
+
+  @ApiProperty({
     enum: NovelRoomTypeEnum,
     example: NovelRoomTypeEnum.GROUP2,
     description: '작가 정원',
@@ -78,6 +85,7 @@ export class CreateNovelRoomDto {
       this.title,
       this.subTitle,
       this.category,
+      this.novelTags,
       this.character,
       this.summary,
       this._user,

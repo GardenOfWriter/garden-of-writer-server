@@ -7,8 +7,18 @@ import {
   NovelRoomType,
   NovelRoomTypeEnum,
 } from '@app/novel-room/entities/enum/novel-room-type.enum';
+import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
+
 import { UserEntity } from '@app/user/entities/user.entity';
-import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { NovelAttendBoardEntity } from '../../novel-attend-board/entities/novel-attend-board.entity';
 import { NovelWriterEntity } from '../../novel-writer/entities/novel-writer.entity';
 
@@ -79,11 +89,16 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @OneToOne((_type) => NovelAttendBoardEntity, (board) => board.noveRoom)
   novelAttendBoard: NovelAttendBoardEntity;
 
+  @ManyToMany(() => NovelTagEntity)
+  @JoinTable()
+  tags: NovelTagEntity[];
+
   static of(
     type: NovelRoomType,
     title: string,
     subTitle: string,
-    category: NovelRoomCategoryType,
+    category: NovelRoomCategory,
+    tags: string[],
     character: string,
     summary: string,
     user: UserEntity,
@@ -94,6 +109,7 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     room.subTitle = subTitle;
     room.category = category;
     room.character = character;
+    room.tags = []; // 추후 수정 필요
     room.summary = summary;
     room.user = user;
     return room;

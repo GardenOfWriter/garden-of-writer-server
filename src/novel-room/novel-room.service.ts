@@ -13,6 +13,8 @@ import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
 import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 
+import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
+import { UserEntity } from '@app/user/entities/user.entity';
 import { In, Repository } from 'typeorm';
 import { ChapterRepository } from '../chapter/repository/chapter.repository';
 import { NovelWriterStatusEnum } from '../novel-writer/entities/enums/novel-writer-status.enum';
@@ -38,6 +40,8 @@ export class NovelRoomService {
     private readonly novelWriterRepository: NovelWriterRepository,
     @Inject(ChapterRepositoryToken)
     private readonly chapterRepository: ChapterRepository,
+    @InjectRepository(NovelTagEntity)
+    private readonly novelTagRepository: Repository<NovelTagEntity>,
   ) {}
 
   async findAllRooms(user: UserEntity, dto: FindAttendQueryDto): Promise<any> {
@@ -63,7 +67,7 @@ export class NovelRoomService {
     );
   }
   async createRoom(createNovelRoomDto: CreateNovelRoomDto): Promise<void> {
-    const { title, subTitle } = createNovelRoomDto;
+    const { title, subTitle, novelTags } = createNovelRoomDto;
     /**
      *  성능상 이슈 findOne 보다 exist 이 리소스 소비가 덜 사용됨
      */
@@ -82,6 +86,22 @@ export class NovelRoomService {
     if (checkSubTitle) {
       throw new NovelRoomDuplicationSubTitleException();
     }
+
+    const createTags = await Promise.all(
+      novelTags.map(async (tagName) => {
+        let tags = await this.novelTagRepository.findOne({
+          where: { tagName },
+        });
+        if (!tags) {
+          tags = await this.novelTagRepository.create({
+            tagName,
+          });
+          await this.novelTagRepository.save(tags);
+        }
+        return tags;
+      }),
+    );
+
     // 삭제 필요
     // const room = this.novelRoomRepository.create(createNovelRoomDto.toEntity());
     const saveRoom = await this.novelRoomRepository.save(
