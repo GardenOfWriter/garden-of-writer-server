@@ -7,3 +7,12 @@ export const ChapterStatusEnum = {
 
 export type ChapterStatusType =
   (typeof ChapterStatusEnum)[keyof typeof ChapterStatusEnum];
+
+export const ChatperStatusDescription = {
+  enum: ChapterStatusEnum,
+  example: true,
+  description: `${ChapterStatusEnum.WRITING} : 작성중,
+                  ${ChapterStatusEnum.REJECT} : 연재검토,
+                  ${ChapterStatusEnum.APPROVE}: 연재승인,
+                  ${ChapterStatusEnum.REJECT} : 연재거절`,
+};

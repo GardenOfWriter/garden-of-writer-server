@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNumber, IsString } from 'class-validator';
+import { ChatperStatusDescription } from '../entities/enums/chapter-status.enum';
 import {
   ChapterStatusEnum,
   ChapterStatusType,
@@ -14,10 +15,7 @@ export class ChapterDto {
   id: number;
 
   @ApiProperty({
-    enum: ChapterStatusEnum,
-    example: 'writing',
-    description:
-      'writing (작성중) || review (연재검토중) || approve (연재승인) || reject (연재 거절) ',
+    ...ChatperStatusDescription,
   })
   @IsIn(Object.values(ChapterStatusEnum))
   status: ChapterStatusType;

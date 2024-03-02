@@ -6,14 +6,13 @@ import { Expose } from 'class-transformer';
 import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
 import { NovelRoomEntity } from '../../entities/novel-room.entity';
-import {
-  NovelRoomType,
-  NovelRoomTypeEnum,
-} from '@app/novel-room/entities/enum/novel-room-type.enum';
+import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { NovelRoomCategoryEnum } from '@app/novel-room/entities/enum/novel-room-category.enum';
-import { NovelWriterStatusEnum } from '@app/novel-writer/entities/enums/novel-writer-status.enum';
-import { NovelWriterCategoryEnum } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
+
+import { RoomCategoryDescription } from '../../entities/enum/novel-room-category.enum';
+import { RoomTypeDescription } from '../../entities/enum/novel-room-type.enum';
+import { WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
+import { NovelRoomStatuDescription } from '../../entities/enum/novel-room-status.enum';
 
 export class FindAttendStatusNovelRoomDto {
   private _no: number;
@@ -48,18 +47,7 @@ export class FindAttendStatusNovelRoomDto {
   get id(): number {
     return this._id;
   }
-  @ApiProperty({
-    example: NovelRoomCategoryEnum.ACTION_MARTIAL_ARTS,
-    description: `카테고리 =  일반소설 : ${NovelRoomCategoryEnum.NORMAL},
-                            로맨틱/드라마 : ${NovelRoomCategoryEnum.ROMANCE_DRAMA},
-                            코믹 : ${NovelRoomCategoryEnum.COMEDY},
-                            시/에시이/수필 : ${NovelRoomCategoryEnum.POETRY_ESSAY},
-                            판타지/SF : ${NovelRoomCategoryEnum.FANTASY_SF},
-                            퓨전 : ${NovelRoomCategoryEnum.FUSION},
-                            액션/무협 : ${NovelRoomCategoryEnum.ACTION_MARTIAL_ARTS},
-                            스포츠/학원 : ${NovelRoomCategoryEnum.SPORTS_ACADEMY},
-                            공포/추리 : ${NovelRoomCategoryEnum.HORROR_DETECTIVE}`,
-  })
+  @ApiProperty({ ...RoomCategoryDescription })
   @Expose({ name: 'category' })
   get category(): number {
     return this._category;
@@ -93,23 +81,16 @@ export class FindAttendStatusNovelRoomDto {
   }
 
   @ApiProperty({
-    example: NovelWriterCategoryEnum.REPRESENTATIVE_WRITER,
-    description: `작가구분 = 대표작가 : ${NovelWriterCategoryEnum.REPRESENTATIVE_WRITER},
-                           참여작가 : ${NovelWriterCategoryEnum.PARTICIPATING_WRITER},`,
+    example: WriterCategoryEnum.HOST,
+    description: `작가구분 = 대표작가 : ${WriterCategoryEnum.HOST},
+                           참여작가 : ${WriterCategoryEnum.ATTENDEE},`,
   })
   @Expose({ name: 'writerStatus' })
   get writerStatus(): string {
     return this._me.category;
   }
-  @ApiProperty({
-    enum: NovelRoomTypeEnum,
-    example: NovelRoomTypeEnum.SOLO,
-    description: `공방 타입  혼자 : ${NovelRoomTypeEnum.SOLO},
-                           2명 : ${NovelRoomTypeEnum.GROUP2},
-                           3명 : ${NovelRoomTypeEnum.GROUP3},
-                           4명 : ${NovelRoomTypeEnum.GROUP4},
-                           5명 : ${NovelRoomTypeEnum.GROUP5}`,
-  })
+
+  @ApiProperty({ ...RoomTypeDescription })
   @Expose({ name: 'type' })
   get type(): NovelRoomType {
     return this._type;
@@ -139,11 +120,7 @@ export class FindAttendStatusNovelRoomDto {
   //  *  공방 상태
   //  */
   @ApiProperty({
-    enum: NovelRoomStatusEnum,
-    example: NovelRoomStatusEnum.SERIES,
-    description: `소설공방 상태 = 연재중 : ${NovelRoomStatusEnum.SERIES},
-                             연재완료 : ${NovelRoomStatusEnum.COMPLETE},
-                              삭제   : ${NovelRoomStatusEnum.REMOVE},`,
+    ...NovelRoomStatuDescription,
   })
   @Expose({ name: 'status' })
   get status(): NovelRoomStatusType {

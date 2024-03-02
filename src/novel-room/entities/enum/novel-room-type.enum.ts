@@ -8,3 +8,13 @@ export const NovelRoomTypeEnum = {
 
 export type NovelRoomType =
   (typeof NovelRoomTypeEnum)[keyof typeof NovelRoomTypeEnum];
+
+export const RoomTypeDescription = {
+  enum: NovelRoomTypeEnum,
+  example: NovelRoomTypeEnum.SOLO,
+  description: `공방 타입  혼자 : ${NovelRoomTypeEnum.SOLO},
+                         2명 : ${NovelRoomTypeEnum.GROUP2},
+                         3명 : ${NovelRoomTypeEnum.GROUP3},
+                         4명 : ${NovelRoomTypeEnum.GROUP4},
+                         5명 : ${NovelRoomTypeEnum.GROUP5}`,
+};
