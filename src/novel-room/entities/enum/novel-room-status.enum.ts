@@ -6,3 +6,11 @@ export const NovelRoomStatusEnum = {
 
 export type NovelRoomStatusType =
   (typeof NovelRoomStatusEnum)[keyof typeof NovelRoomStatusEnum];
+
+export const NovelRoomStatuDescription = {
+  enum: NovelRoomStatusEnum,
+  example: NovelRoomStatusEnum.SERIES,
+  description: `${NovelRoomStatusEnum.SERIES} : 연재중, 
+                  ${NovelRoomStatusEnum.COMPLETE} : 연재완료,
+                  ${NovelRoomStatusEnum.REMOVE} : 삭제`,
+};

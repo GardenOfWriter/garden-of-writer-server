@@ -1,14 +1,17 @@
-import { NovelWriterCategoryType } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
-import { NovelWriterStatusType } from '@app/novel-writer/entities/enums/novel-writer-status.enum';
+import { WriterCategoryType } from '@app/novel-writer/entities/enums/writer-category.enum';
+import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { NovelWriterCategoryEnum } from '../../entities/enums/novel-writer-category.enum';
+import {
+  WriterCategoryEnum,
+  WriterCategoryDescription,
+} from '../../entities/enums/writer-category.enum';
 import { NovelWriterEntity } from '../../entities/novel-writer.entity';
 
 export class FindByNovelWriterDetails {
-  private _status: NovelWriterStatusType;
-  private _category: NovelWriterCategoryType;
+  private _status: WriterStatusType;
+  private _category: WriterCategoryType;
   private _createdAt: Date;
   private _notifiedAt: Date;
   private _user: UserEntity;
@@ -41,13 +44,9 @@ export class FindByNovelWriterDetails {
   get userId(): number {
     return this._user.id;
   }
-  @ApiProperty({
-    enum: NovelWriterCategoryEnum,
-    example: true,
-    description: `${NovelWriterCategoryEnum.PARTICIPATING_WRITER} : 참여 작가, ${NovelWriterCategoryEnum.REPRESENTATIVE_WRITER} : 대표작가`,
-  })
+  @ApiProperty({ ...WriterCategoryDescription })
   @Expose({ name: 'category' })
-  get category(): NovelWriterCategoryType {
+  get category(): WriterCategoryType {
     return this._category;
   }
   @ApiProperty({
@@ -55,7 +54,7 @@ export class FindByNovelWriterDetails {
     description: '',
   })
   @Expose({ name: 'status' })
-  get status(): NovelWriterStatusType {
+  get status(): WriterStatusType {
     return this._status;
   }
   @ApiProperty({

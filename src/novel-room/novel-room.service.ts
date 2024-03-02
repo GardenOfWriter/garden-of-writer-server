@@ -1,7 +1,7 @@
 import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
 import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.enum';
 import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.repository';
-import { NovelWriterCategoryEnum } from '@app/novel-writer/entities/enums/novel-writer-category.enum';
+import { WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import {
   NovelWriterRepository,
@@ -17,7 +17,7 @@ import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { In, Repository } from 'typeorm';
 import { ChapterRepository } from '../chapter/repository/chapter.repository';
-import { NovelWriterStatusEnum } from '../novel-writer/entities/enums/novel-writer-status.enum';
+
 import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
 import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
 import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-subtitle.exception';
@@ -25,6 +25,7 @@ import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title
 import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { FindByRoomIdDetailDto } from './dto/response/findbyid-detail.dto';
+import { WriterStatusEnum } from '@app/novel-writer/entities/enums/writer-status.enum';
 
 @Injectable()
 export class NovelRoomService {
@@ -160,17 +161,17 @@ export class NovelRoomService {
   ): any[] {
     const writer = NovelWriterEntity.of(
       room.id,
-      NovelWriterCategoryEnum.REPRESENTATIVE_WRITER,
-      NovelWriterStatusEnum.ATTENDING,
+      WriterCategoryEnum.HOST,
+      WriterStatusEnum.ATTENDING,
       dto.getUser(),
     );
-    writer.changeStatue(NovelWriterStatusEnum.ATTENDING);
+    writer.changeStatue(WriterStatusEnum.ATTENDING);
     return [
       this.novelWriterRepository.saveRow(
         NovelWriterEntity.of(
           room.id,
-          NovelWriterCategoryEnum.REPRESENTATIVE_WRITER,
-          NovelWriterStatusEnum.ATTENDING,
+          WriterCategoryEnum.HOST,
+          WriterStatusEnum.ATTENDING,
           dto.getUser(),
         ),
       ),

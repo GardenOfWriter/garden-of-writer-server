@@ -18,8 +18,8 @@ import { UserEntity } from '../user/entities/user.entity';
 import { FindWriter } from './decorator/find-writer.decorator';
 import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
 import { CreateNovelWriterRequestDto } from './dto/request/create-novel-writer.dto';
-import { NovelWriterCategoryEnum } from './entities/enums/novel-writer-category.enum';
-import { NovelWriterStatusEnum } from './entities/enums/novel-writer-status.enum';
+import { WriterCategoryEnum } from './entities/enums/writer-category.enum';
+import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterService } from './novel-writer.service';
 
 @ApiTags('작가 리스트')
@@ -50,11 +50,7 @@ export class NovelWriterController {
     @Body() dto: CreateNovelWriterRequestDto,
   ) {
     return this.novelWriterService.create(
-      dto.toEntity(
-        user,
-        NovelWriterCategoryEnum.PARTICIPATING_WRITER,
-        NovelWriterStatusEnum.ATTENDING_REVIEW,
-      ),
+      dto.toEntity(user, WriterCategoryEnum.HOST, WriterStatusEnum.REVIEW),
     );
   }
 

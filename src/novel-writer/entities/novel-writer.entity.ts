@@ -3,31 +3,27 @@ import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '../../commons/entities/primary-generated-pk-with-meta-time.entity';
-
 import {
-  NovelWriterCategoryEnum,
-  NovelWriterCategoryType,
-} from './enums/novel-writer-category.enum';
-import {
-  NovelWriterStatusEnum,
-  NovelWriterStatusType,
-} from './enums/novel-writer-status.enum';
+  WriterCategoryType,
+  WriterCategoryEnum,
+} from './enums/writer-category.enum';
+import { WriterStatusEnum, WriterStatusType } from './enums/writer-status.enum';
 
 @Entity({ name: 'novel-writer', schema: 'gow-server' })
 export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @Column({
     type: 'enum',
-    enum: Object.values(NovelWriterCategoryEnum),
-    default: NovelWriterCategoryEnum.REPRESENTATIVE_WRITER,
+    enum: Object.values(WriterCategoryEnum),
+    default: WriterCategoryEnum.HOST,
   })
-  category: NovelWriterCategoryType;
+  category: WriterCategoryType;
 
   @Column({
     type: 'enum',
-    enum: Object.values(NovelWriterStatusEnum),
-    default: NovelWriterStatusEnum.ATTENDING_REVIEW,
+    enum: Object.values(WriterStatusEnum),
+    default: WriterStatusEnum.REVIEW,
   })
-  status: NovelWriterStatusType;
+  status: WriterStatusType;
 
   @Column()
   novelRoomId: number;
@@ -59,15 +55,15 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   novelRoom: NovelRoomEntity;
 
   isRepresentativeWriter(): boolean {
-    return this.category === NovelWriterCategoryEnum.REPRESENTATIVE_WRITER;
+    return this.category === WriterCategoryEnum.HOST;
   }
 
-  changeStatue(status: NovelWriterStatusType): void {
+  changeStatue(status: WriterStatusType): void {
     switch (status) {
       case 'attending':
         this.notifiedAt = getToDay();
         break;
-      case 'attendingReject':
+      case 'reject':
         this.notifiedAt = getToDay();
         break;
       case 'exit':
@@ -85,8 +81,8 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   }
   static of(
     novelRoomId: number,
-    category: NovelWriterCategoryType,
-    status: NovelWriterStatusType,
+    category: WriterCategoryType,
+    status: WriterStatusType,
     user: UserEntity,
   ) {
     const writer = new NovelWriterEntity();

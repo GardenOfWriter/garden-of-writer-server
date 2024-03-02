@@ -1,21 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNumber, IsString } from 'class-validator';
 import {
-  NovelWriterStatusEnum,
-  NovelWriterStatusType,
-} from '../entities/enums/novel-writer-status.enum';
+  WriterStatusEnum,
+  WriterStatusType,
+} from '../entities/enums/writer-status.enum';
 
 export class NovelWirterDto {
   @ApiProperty({
-    enum: NovelWriterStatusEnum,
-    example: NovelWriterStatusEnum.ATTENDING,
-    description: `${NovelWriterStatusEnum.ATTENDING} : 참여중,
-                  ${NovelWriterStatusEnum.ATTENDING_REJECT} : 참여 반려,
-                  ${NovelWriterStatusEnum.ATTENDING_REVIEW} : 참여 검토,
-                  ${NovelWriterStatusEnum.EXIT} : 퇴장`,
+    enum: WriterStatusEnum,
+    example: WriterStatusEnum.ATTENDING,
+    description: `${WriterStatusEnum.ATTENDING} : 참여중,
+                  ${WriterStatusEnum.REJECT} : 참여 반려,
+                  ${WriterStatusEnum.REVIEW} : 참여 검토,
+                  ${WriterStatusEnum.EXIT} : 퇴장`,
   })
-  @IsIn(Object.values(NovelWriterStatusEnum))
-  status: NovelWriterStatusType;
+  @IsIn(Object.values(WriterStatusEnum))
+  status: WriterStatusType;
 
   @ApiProperty({
     example: '회차 제목',

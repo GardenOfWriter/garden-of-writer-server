@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { NovelWriterEntity } from '../entities/novel-writer.entity';
 
-import { NovelWriterStatusEnum } from '../entities/enums/novel-writer-status.enum';
+import { WriterStatusEnum } from '../entities/enums/writer-status.enum';
 import { NovelWriterRepository } from './novel-writer.repository';
 
 export class NovelWriterRepositoryImpl implements NovelWriterRepository {
@@ -14,7 +14,7 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     return this.dataSource.count({
       where: {
         novelRoomId,
-        status: NovelWriterStatusEnum.ATTENDING,
+        status: WriterStatusEnum.ATTENDING,
       },
     });
   }
@@ -53,7 +53,7 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
       ],
       relations: ['user'],
       where: {
-        status: NovelWriterStatusEnum.ATTENDING,
+        status: WriterStatusEnum.ATTENDING,
         novelRoom: {
           id: novelRoomId,
         },

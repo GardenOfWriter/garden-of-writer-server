@@ -1,18 +1,22 @@
 import {
-  NovelWriterCategoryEnum,
-  NovelWriterCategoryType,
-} from '@app/novel-writer/entities/enums/novel-writer-category.enum';
-import { NovelWriterStatusType } from '@app/novel-writer/entities/enums/novel-writer-status.enum';
+  WriterCategoryEnum,
+  WriterCategoryType,
+} from '@app/novel-writer/entities/enums/writer-category.enum';
+import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { NovelWriterStatusEnum } from '../../entities/enums/novel-writer-status.enum';
+import {
+  WriterStatusEnum,
+  WriterStatusDescription,
+} from '../../entities/enums/writer-status.enum';
 import { NovelWriterEntity } from '../../entities/novel-writer.entity';
+import { WriterCategoryDescription } from '../../entities/enums/writer-category.enum';
 
 export class FindByNovelRoomIdResponseDto {
-  private _status: NovelWriterStatusType;
+  private _status: WriterStatusType;
   private _user: UserEntity;
-  private _category: NovelWriterCategoryType;
+  private _category: WriterCategoryType;
   private _id: number;
   private _writingSeq: number;
   private _currentlyWriting: boolean;
@@ -48,16 +52,9 @@ export class FindByNovelRoomIdResponseDto {
   get currentlyWriting(): boolean {
     return this._currentlyWriting;
   }
-  @ApiProperty({
-    enum: NovelWriterStatusEnum,
-    example: true,
-    description: `${NovelWriterStatusEnum.ATTENDING} : 참여중,
-                  ${NovelWriterStatusEnum.ATTENDING_REJECT} : 참여 반려,
-                  ${NovelWriterStatusEnum.ATTENDING_REVIEW} : 참여 검토,
-                  ${NovelWriterStatusEnum.EXIT} : 퇴장`,
-  })
+  @ApiProperty({ ...WriterStatusDescription })
   @Expose()
-  get status(): NovelWriterStatusType {
+  get status(): WriterStatusType {
     return this._status;
   }
 
@@ -69,11 +66,7 @@ export class FindByNovelRoomIdResponseDto {
   get nickname(): string {
     return this._user.nickname;
   }
-  @ApiProperty({
-    enum: NovelWriterCategoryEnum,
-    example: true,
-    description: `${NovelWriterCategoryEnum.PARTICIPATING_WRITER} : 참여 작가, ${NovelWriterCategoryEnum.REPRESENTATIVE_WRITER} : 대표작가`,
-  })
+  @ApiProperty({ ...WriterCategoryDescription })
   @Expose()
   get category(): string {
     return this._category;

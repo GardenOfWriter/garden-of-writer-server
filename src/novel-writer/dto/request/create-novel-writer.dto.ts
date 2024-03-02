@@ -1,8 +1,8 @@
-import { NovelWriterStatusType } from '@app/novel-writer/entities/enums/novel-writer-status.enum';
+import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { PickType } from '@nestjs/swagger';
-import { NovelWriterCategoryType } from '../../entities/enums/novel-writer-category.enum';
+import { WriterCategoryType } from '../../entities/enums/writer-category.enum';
 import { NovelWirterDto } from '../novel-writer.dto';
 
 /**
@@ -13,8 +13,8 @@ export class CreateNovelWriterRequestDto extends PickType(NovelWirterDto, [
 ]) {
   toEntity(
     user: UserEntity,
-    category: NovelWriterCategoryType,
-    status: NovelWriterStatusType,
+    category: WriterCategoryType,
+    status: WriterStatusType,
   ): Partial<NovelWriterEntity> {
     const entity = NovelWriterEntity.of(
       this.novelRoomId,

@@ -11,7 +11,7 @@ import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
 import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
 import { FindByNovelRoomIdResponseDto } from './dto/response/find-novel-room-id.dto';
 import { FindByNovelWriterDetails } from './dto/response/find-writers-details.dto';
-import { NovelWriterStatusEnum } from './entities/enums/novel-writer-status.enum';
+import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
 import { AlreadyExistWriterExcetpion } from './exceptions/already-exist-writer.excetpion';
 import { BadChangeWriterIdSeqExcetpion } from './exceptions/bad-change-writer-id-seq.exception';
@@ -123,7 +123,7 @@ export class NovelWriterService {
       where: {
         id: In(dto.writerIdSeq),
         novelRoom: { id: dto.novelRoomId },
-        status: NovelWriterStatusEnum.ATTENDING,
+        status: WriterStatusEnum.ATTENDING,
       },
     });
     if (!dto.checkRoomAttendWriter(writers)) {
@@ -159,11 +159,11 @@ export class NovelWriterService {
   }
   private async changeSendEmail(writer: NovelWriterEntity) {
     if (
-      writer.status === NovelWriterStatusEnum.ATTENDING ||
-      writer.status === NovelWriterStatusEnum.ATTENDING_REJECT
+      writer.status === WriterStatusEnum.ATTENDING ||
+      writer.status === WriterStatusEnum.REJECT
     ) {
       const template =
-        writer.status == NovelWriterStatusEnum.ATTENDING
+        writer.status == WriterStatusEnum.ATTENDING
           ? EmailTemplate.WRITER_ATTENDING
           : EmailTemplate.WRITER_REJECT;
       await this.emailService.sendEmail(
