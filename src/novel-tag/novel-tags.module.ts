@@ -4,7 +4,7 @@ import { ChapterRepositoryImpl } from '@app/chapter/repository/chapter.repositor
 import { EmailServiceToken } from '@app/commons/email/email.service';
 import { EmailServiceImpl } from '@app/commons/email/email.service.impl';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
-import { NovelRoomService } from '@app/novel-room/novel-room.service';
+import { NovelRoomService } from '@app/novel-tag/novel-room.service';
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
@@ -12,6 +12,8 @@ import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-wr
 import { UserEntity } from '@app/user/entities/user.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TagEntity } from './entities/tag.entity';
+import { NovelTagService } from '@app/novel-room/novel-tag.service';
 
 @Module({
   imports: [
@@ -21,10 +23,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       NovelRoomEntity,
       NovelWriterEntity,
       ChapterEntity,
+      TagEntity,
     ]),
   ],
   providers: [
     NovelRoomService,
+    NovelTagService,
     {
       provide: NovelWriterRepositoryToken,
       useClass: NovelWriterRepositoryImpl,
@@ -38,6 +42,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       useClass: ChapterRepositoryImpl,
     },
   ],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, NovelTagService],
 })
 export class NovelTagModule {}

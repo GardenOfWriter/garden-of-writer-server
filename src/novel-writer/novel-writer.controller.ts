@@ -5,6 +5,7 @@ import {
   Get,
   ParseIntPipe,
   Post,
+  Put,
   Query,
   SerializeOptions,
   UseGuards,
@@ -44,7 +45,7 @@ export class NovelWriterController {
   @ApiOperation({
     summary: '소설 공방에 참여 작가로 참여 신청',
   })
-  @Post('join')
+  @Post('/novel-room/approval')
   create(
     @CurrentUser() user: UserEntity,
     @Body() dto: CreateNovelWriterRequestDto,
@@ -57,7 +58,7 @@ export class NovelWriterController {
   @ApiOperation({
     summary: '작가 순서 변경',
   })
-  @Post('/sequence')
+  @Put('/sequence')
   async changePriorty(
     @Body() dto: ChangeWriterSeqRequestDto,
     @CurrentUser() user: UserEntity,

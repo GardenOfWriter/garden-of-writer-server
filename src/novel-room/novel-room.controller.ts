@@ -1,4 +1,4 @@
-import { CreateNovelRoomDto } from '@app/novel-room/dto/create-novel-room.dto';
+import { CreateNovelRoomDto } from '@app/novel-room/dto/request/create-novel-room.dto';
 import { UpdateNovelRoomDto } from '@app/novel-room/dto/update-novel-room.dto';
 import {
   Body,
@@ -21,7 +21,7 @@ import { ActionEnum, AppAbility } from '@app/commons/abilities/ability.factory';
 import { CaslAbility } from '@app/commons/decorator/casl.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
-import { NovelRoomService } from '@app/novel-room/novel-room.service';
+import { NovelRoomService } from '@app/novel-tag/novel-room.service';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QueryRunner as QR } from 'typeorm';
@@ -31,6 +31,10 @@ import {
   FindAllNovelRoom,
   FindByDetailNovelRoom,
 } from './decorator/swagger.decorator';
+import { NovelAttendBoardService } from '@app/novel-attend-board/novel-attend-board.service';
+import { NovelTagService } from './novel-tag.service';
+import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
+import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
 
 @ApiTags('소설 공방')
 @Controller('novel-room')
@@ -40,20 +44,26 @@ import {
 })
 @UseGuards(JwtGuard)
 export class NovelRoomController {
-  constructor(private readonly novelRoomService: NovelRoomService) {}
+  constructor(
+    private readonly novelRoomService: NovelRoomService,
+    private readonly novelAttendBoardService: NovelAttendBoardService,
+    private readonly novelTagService: NovelTagService,
+  ) {}
 
   @ApiOperation({
     summary: '소설 공방 개설',
   })
-  // @UseInterceptors(TransactionInterceptor)
+  @UseInterceptors(TransactionInterceptor)
   @Post('')
   async createRoom(
-    @Body() createNovelRoomDto: CreateNovelRoomDto,
+    @Body() dto: CreateNovelRoomDto,
     @CurrentUser() user: UserEntity,
-    // @QueryRunner() qr?: QR,
+    @QueryRunner() qr?: QR,
   ): Promise<void> {
-    createNovelRoomDto.setUserId(user);
-    await this.novelRoomService.createRoom(createNovelRoomDto);
+    dto.setUserId(user);
+    const room = await this.novelRoomService.createRoom(dto);
+    await this.novelAttendBoardService.create(dto.toAttendBoardEntity(room.id));
+    await this.novelTagService.createTag(dto.novelTags, room.id);
     return;
   }
 

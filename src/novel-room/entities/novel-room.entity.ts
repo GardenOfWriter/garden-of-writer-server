@@ -29,11 +29,6 @@ import {
 
 @Entity({ name: 'novel-room', schema: 'gow-server' })
 export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
-  // @PrimaryGeneratedColumn({
-  //   name: 'room_id',
-  // })
-  // id: number;
-
   //작가정원
   @Column({
     type: 'enum', //
@@ -47,7 +42,7 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   title: string;
 
   //한줄소개
-  @Column('varchar', { length: 255, unique: true })
+  @Column('varchar', { length: 255 })
   subTitle: string;
 
   //카테고리
@@ -98,7 +93,6 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     title: string,
     subTitle: string,
     category: NovelRoomCategoryType,
-    tags: string[],
     character: string,
     summary: string,
     user: UserEntity,
@@ -109,7 +103,6 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     room.subTitle = subTitle;
     room.category = category;
     room.character = character;
-    room.tags = []; // 추후 수정 필요
     room.summary = summary;
     room.user = user;
     return room;

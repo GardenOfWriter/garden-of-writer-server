@@ -8,8 +8,16 @@ import {
 } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { NovelRoomEntity } from '../entities/novel-room.entity';
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { NovelRoomEntity } from '../../entities/novel-room.entity';
+import { NovelAttendBoardEntity } from '@app/novel-attend-board/entities/novel-attend-board.entity';
+import { TagEntity } from '@app/novel-tag/entities/tag.entity';
 
 export class CreateNovelRoomDto {
   @ApiProperty({
@@ -36,10 +44,10 @@ export class CreateNovelRoomDto {
   category: NovelRoomCategoryType;
 
   @ApiProperty({
-    example: '@태그입니다',
-    description: '소설 태그',
+    example: ['태그입니다'],
+    description: '배열로 태그를 전달',
   })
-  @IsString()
+  @IsArray()
   novelTags: string[];
 
   @ApiProperty({
@@ -65,11 +73,30 @@ export class CreateNovelRoomDto {
   @IsNotEmpty()
   summary: string;
 
-  // @ApiProperty({
-  //   example: 1,
-  //   description: '유저 ID',
-  // })
-  // @IsNotEmpty()
+  @ApiProperty({
+    example: '공방 모집글 제목',
+    description: '공방 모집글 제목',
+  })
+  @IsString()
+  @IsOptional()
+  attendTitle: string;
+
+  @ApiProperty({
+    example: '공방 모집글 카카오톡 링크',
+    description: '공방 모집글 카카오톡 링크',
+  })
+  @IsString()
+  @IsOptional()
+  attendOpenKakaoLink: string;
+
+  @ApiProperty({
+    example: '공방 모집글 본문',
+    description: '공방 모집글 본문',
+  })
+  @IsString()
+  @IsOptional()
+  attendContent: string;
+
   private _user: UserEntity;
 
   setUserId(user: UserEntity) {
@@ -79,16 +106,23 @@ export class CreateNovelRoomDto {
     return this._user;
   }
   // request dto -> toEntity -> of method -> entity
-  toEntity(): Partial<NovelRoomEntity> {
+  toRoomEntity(): Partial<NovelRoomEntity> {
     return NovelRoomEntity.of(
       this.type,
       this.title,
       this.subTitle,
       this.category,
-      this.novelTags,
       this.character,
       this.summary,
       this._user,
+    );
+  }
+  toAttendBoardEntity(roomId: number) {
+    return NovelAttendBoardEntity.of(
+      roomId,
+      this.attendTitle,
+      this.attendContent,
+      this.attendOpenKakaoLink,
     );
   }
 }

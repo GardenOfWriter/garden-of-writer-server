@@ -9,7 +9,7 @@ import {
 } from '@app/novel-writer/repository/novel-writer.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateNovelRoomDto } from 'src/novel-room/dto/create-novel-room.dto';
+import { CreateNovelRoomDto } from '@app/novel-room/dto/request/create-novel-room.dto';
 import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 
@@ -18,14 +18,15 @@ import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 import { In, Repository } from 'typeorm';
 import { ChapterRepository } from '../chapter/repository/chapter.repository';
 
-import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
-import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
-import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-subtitle.exception';
-import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title.exception';
-import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
+import { FindAttendQueryDto } from '../novel-room/dto/request/find-attend-query.dto';
+import { FindAttendStatusNovelRoomDto } from '../novel-room/dto/response/find-attend-status.dto';
+import { NovelRoomDuplicationSubTitleException } from '../novel-room/exceptions/duplicate-subtitle.exception';
+import { NovelRoomDuplicationTitleException } from '../novel-room/exceptions/duplicate-title.exception';
+import { NovelRoomNotFoundException } from '../novel-room/exceptions/not-found.exception';
 import { UserEntity } from '@app/user/entities/user.entity';
-import { FindByRoomIdDetailDto } from './dto/response/findbyid-detail.dto';
+import { FindByRoomIdDetailDto } from '../novel-room/dto/response/findbyid-detail.dto';
 import { WriterStatusEnum } from '@app/novel-writer/entities/enums/writer-status.enum';
+import { TagEntity } from '@app/novel-tag/entities/tag.entity';
 
 @Injectable()
 export class NovelRoomService {
@@ -35,14 +36,14 @@ export class NovelRoomService {
      */
     @InjectRepository(NovelRoomEntity)
     private readonly novelRoomRepository: Repository<NovelRoomEntity>,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
     @Inject(NovelWriterRepositoryToken)
     private readonly novelWriterRepository: NovelWriterRepository,
     @Inject(ChapterRepositoryToken)
     private readonly chapterRepository: ChapterRepository,
     @InjectRepository(NovelTagEntity)
     private readonly novelTagRepository: Repository<NovelTagEntity>,
+    @InjectRepository(TagEntity)
+    private readonly tagRepository: Repository<TagEntity>,
   ) {}
 
   async findAllRooms(user: UserEntity, dto: FindAttendQueryDto): Promise<any> {
@@ -67,56 +68,22 @@ export class NovelRoomService {
       (room: NovelRoomEntity) => new FindAttendStatusNovelRoomDto(user, room),
     );
   }
-  async createRoom(createNovelRoomDto: CreateNovelRoomDto): Promise<void> {
-    const { title, subTitle, novelTags } = createNovelRoomDto;
-    /**
-     *  성능상 이슈 findOne 보다 exist 이 리소스 소비가 덜 사용됨
-     */
-
+  async createRoom(dto: CreateNovelRoomDto): Promise<NovelRoomEntity> {
     const checkTitle = await this.novelRoomRepository.exist({
-      where: { title },
+      where: { title: dto.title },
     });
-
     if (checkTitle) {
       throw new NovelRoomDuplicationTitleException();
     }
-    const checkSubTitle = await this.novelRoomRepository.exist({
-      where: { subTitle },
-    });
-
-    if (checkSubTitle) {
-      throw new NovelRoomDuplicationSubTitleException();
-    }
-
-    const createTags = await Promise.all(
-      novelTags.map(async (tagName) => {
-        let tags = await this.novelTagRepository.findOne({
-          where: { tagName },
-        });
-        if (!tags) {
-          tags = await this.novelTagRepository.create({
-            tagName,
-          });
-          await this.novelTagRepository.save(tags);
-        }
-        return tags;
-      }),
-    );
-
-    // 삭제 필요
-    // const room = this.novelRoomRepository.create(createNovelRoomDto.toEntity());
-    const saveRoom = await this.novelRoomRepository.save(
-      createNovelRoomDto.toEntity(),
-    );
-
+    const roomEntity = dto.toRoomEntity();
+    const room = await this.novelRoomRepository.save(roomEntity);
     /**
      *  소설 공방 생성후 트리거 발생
      *  1. novelWriter테이블 대표 작가 할당
      *  2. 프롤로그 회차 자동 생성
      */
-    await Promise.allSettled(
-      this.saveRoomTrigger(saveRoom, createNovelRoomDto),
-    );
+    await Promise.allSettled(this.saveRoomTrigger(room, dto));
+    return room;
   }
 
   async getById(id: number): Promise<FindByRoomIdDetailDto> {

@@ -19,5 +19,12 @@ import { NovelAttendBoardRepositoryImpl } from './repository/novel-attend-board.
       useClass: NovelAttendBoardRepositoryImpl,
     },
   ],
+  exports: [
+    NovelAttendBoardService,
+    {
+      provide: NovelAttendBoardRepositryToken,
+      useClass: NovelAttendBoardRepositoryImpl,
+    },
+  ],
 })
 export class NovelAttendBoardModule {}

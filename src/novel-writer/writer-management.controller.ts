@@ -29,7 +29,7 @@ export class WriterManagementController {
   @ApiOperation({
     summary: '참여 작가 상태 번경',
   })
-  @Put('/change-status/:id')
+  @Put('/status/:id')
   async changeWriterStatus(
     @Param('id') id: number,
     @Body() dto: UpdateNovelWriterStatusRequestDto,

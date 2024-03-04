@@ -17,7 +17,6 @@ export class NovelAttendBoardService {
     private novelAttendBoardRepository: NovelAttendBoardRepository,
     @InjectRepository(NovelRoomEntity)
     private novelRoomRepository: Repository<NovelRoomEntity>,
-    // private novelWriterRepository: NovelWriterRepository,
   ) {}
 
   async create(entity: Partial<NovelAttendBoardEntity>) {

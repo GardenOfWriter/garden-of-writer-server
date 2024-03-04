@@ -25,7 +25,7 @@
       "@app/novel-writer/*": ["./src/novel-writer/*"],
       "@app/novel-tag/*": ["./src/novel-tag/*"],
       "@app/novel-text/*": ["./src/novel-text/*"],
-      "@app/novel-attend-board/*": ["./src/novel-board/*"],
+      "@app/novel-attend-board/*": ["./src/novel-attend-board/*"],
       "@app/chapter/*": ["./src/chapter/*"],
       "@app/*": ["./src/*"]
     }
