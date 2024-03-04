@@ -12,7 +12,7 @@ export class NovelAttendBoardEntity {
   @JoinColumn({ name: 'id' })
   noveRoom: NovelRoomEntity;
 
-  @Column({ length: 255, unique: true })
+  @Column({ length: 255 })
   title: string;
 
   @Column('text')

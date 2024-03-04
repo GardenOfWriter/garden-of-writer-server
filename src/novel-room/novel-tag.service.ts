@@ -14,19 +14,22 @@ export class NovelTagService {
   ) {}
 
   async createTag(tags: string[], roomId: number) {
-    await Promise.all(
+    const tagEntities = await Promise.all(
       tags.map(async (tag) => {
-        const entity = await this.tagRepository.findOne({
+        const checkTag = await this.tagRepository.findOne({
           where: { name: tag },
         });
-        if (!entity) {
-          const tagEntity = TagEntity.of(tag);
-          await this.tagRepository.save(tagEntity);
-          const novelTagEntity = NovelTagEntity.of(roomId, tagEntity.id);
-          await this.novelTagRepository.save(novelTagEntity);
+        if (!checkTag) {
+          const entity = TagEntity.of(tag);
+          const saveTag = await this.tagRepository.save(entity);
+          return saveTag;
         }
-        return tags;
+        return checkTag;
       }),
     );
+    tagEntities.map(async (tagEntity) => {
+      const novelTagEntity = NovelTagEntity.of(roomId, tagEntity.id);
+      await this.novelTagRepository.save(novelTagEntity);
+    });
   }
 }
