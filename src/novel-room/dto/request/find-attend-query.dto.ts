@@ -4,8 +4,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString } from 'class-validator';
 
 export const NovelRoomAttendQueryEnum = {
-  PARTICIPATING: 'participating',
-  NOT_PARTICIPATING: 'not_participating',
+  ATTENDING: 'attending',
+  NON_ATTENDING: 'non_attending',
 } as const;
 
 export type NovelRoomAttendQueryType =
@@ -14,22 +14,22 @@ export type NovelRoomAttendQueryType =
 export const DescriptionProperty = {
   ROOM_STATUS: {
     enum: NovelRoomAttendQueryEnum,
-    example: NovelRoomAttendQueryEnum.PARTICIPATING,
-    description: `${NovelRoomAttendQueryEnum.PARTICIPATING} : 참여,
-                    ${NovelRoomAttendQueryEnum.NOT_PARTICIPATING} : 미참여`,
+    example: NovelRoomAttendQueryEnum.ATTENDING,
+    description: `  ${NovelRoomAttendQueryEnum.ATTENDING} : 참여,
+                    ${NovelRoomAttendQueryEnum.NON_ATTENDING} : 미참여`,
   },
 } as const;
 
 export class FindAttendQueryDto extends BasePaginationRequest {
   @ApiProperty({ ...DescriptionProperty.ROOM_STATUS })
   @IsEnum(Object.values(NovelRoomAttendQueryEnum), {
-    message: `roomStatus 는 ${NovelRoomAttendQueryEnum.NOT_PARTICIPATING} 과 ${NovelRoomAttendQueryEnum.PARTICIPATING} 입력 가능합니다.`,
+    message: `roomStatus 는 ${NovelRoomAttendQueryEnum.ATTENDING} 과 ${NovelRoomAttendQueryEnum.NON_ATTENDING} 입력 가능합니다.`,
   })
   @IsString({ message: '룸 참여 상태를 입력해 주세요' })
   roomStatus: NovelRoomAttendQueryType;
 
   queryConvertStatus(): WriterStatusType[] {
-    return this.roomStatus === NovelRoomAttendQueryEnum.NOT_PARTICIPATING
+    return this.roomStatus === NovelRoomAttendQueryEnum.ATTENDING
       ? ['reject', 'review', 'exit']
       : ['attending'];
   }
