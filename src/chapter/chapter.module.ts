@@ -3,20 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChapterController } from './chapter.controller';
 import { ChapterService } from './chapter.service';
 import { ChapterEntity } from './entities/chapter.entity';
-import { ChapterRepositoryToken } from './repository/chapter.repository';
-import { ChapterRepositoryImpl } from './repository/chapter.repository.impl';
 import { ChapterSubscriber } from './subscriber/chapter.subscriber';
+import { ChapterRepositoryProvider } from './repository/chapter.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ChapterEntity])],
   controllers: [ChapterController],
-  providers: [
-    ChapterService,
-    ChapterSubscriber,
-    {
-      provide: ChapterRepositoryToken,
-      useClass: ChapterRepositoryImpl,
-    },
-  ],
+  providers: [ChapterService, ChapterSubscriber, ChapterRepositoryProvider],
 })
 export class ChapterModule {}

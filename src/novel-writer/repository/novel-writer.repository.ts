@@ -1,7 +1,14 @@
 import { FindOneOptions } from 'typeorm';
 import { NovelWriterEntity } from '../entities/novel-writer.entity';
+import { Provider } from '@nestjs/common';
+import { NovelWriterRepositoryImpl } from './novel-writer.repository.impl';
 
 export const NovelWriterRepositoryToken = 'NovelWriterRepository';
+
+export const NovelWriterRepositoryProvider: Provider = {
+  provide: NovelWriterRepositoryToken,
+  useClass: NovelWriterRepositoryImpl,
+};
 
 export interface NovelWriterRepository {
   saveRow(entity: Partial<NovelWriterEntity>): Promise<void>;

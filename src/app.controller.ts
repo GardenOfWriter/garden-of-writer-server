@@ -1,6 +1,16 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Inject,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { EmailService, EmailServiceToken } from './commons/email/email.service';
+import { ApiOperation } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
@@ -22,5 +32,50 @@ export class AppController {
       console.log(error);
     }
     return this.appService.getHello();
+  }
+  @ApiOperation({
+    description: '바디값 테스트[GET]',
+  })
+  @Get('body/get')
+  getBody(@Query('isBody') check: boolean) {
+    if (check) {
+      return 'test';
+    } else {
+      return;
+    }
+  }
+  @ApiOperation({
+    description: '바디값 테스트[POST]',
+  })
+  @Post('body/post')
+  postBody(@Body('isBody') check: boolean) {
+    if (check) {
+      return 'test';
+    } else {
+      return;
+    }
+  }
+  @ApiOperation({
+    description: '바디값 테스트[PUT]',
+  })
+  @Put('body/put')
+  putBody(@Body('isBody') check: boolean) {
+    if (check) {
+      return 'test';
+    } else {
+      return;
+    }
+  }
+
+  @ApiOperation({
+    description: '바디값 테스트[DELETE]',
+  })
+  @Delete('body/delete')
+  deleteBody(@Body('isBody') check: boolean) {
+    if (check) {
+      return 'test';
+    } else {
+      return;
+    }
   }
 }

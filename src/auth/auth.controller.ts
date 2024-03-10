@@ -55,9 +55,12 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Req() request: RequestUser, @Res() response: Response) {
-    response.setHeader('Set-Cookie', this.authService.logoutUser());
-    return response.sendStatus(200);
+  async logout(
+    @Req() request: RequestUser,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    // response.setHeader('Set-Cookie', this.authService.logoutUser());
+    return;
   }
 
   @ApiBearerAuth('Authorization')
@@ -65,6 +68,6 @@ export class AuthController {
   @Get('guard')
   async guardTest(@CurrentUser() user) {
     console.log('user', user);
-    return 'success';
+    return 'test';
   }
 }

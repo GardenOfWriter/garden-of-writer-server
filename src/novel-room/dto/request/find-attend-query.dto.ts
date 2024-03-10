@@ -2,23 +2,11 @@ import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.
 import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString } from 'class-validator';
-
-export const NovelRoomAttendQueryEnum = {
-  ATTENDING: 'attending',
-  NON_ATTENDING: 'non_attending',
-} as const;
-
-export type NovelRoomAttendQueryType =
-  (typeof NovelRoomAttendQueryEnum)[keyof typeof NovelRoomAttendQueryEnum];
-
-export const DescriptionProperty = {
-  ROOM_STATUS: {
-    enum: NovelRoomAttendQueryEnum,
-    example: NovelRoomAttendQueryEnum.ATTENDING,
-    description: `  ${NovelRoomAttendQueryEnum.ATTENDING} : 참여,
-                    ${NovelRoomAttendQueryEnum.NON_ATTENDING} : 미참여`,
-  },
-} as const;
+import {
+  DescriptionProperty,
+  NovelRoomAttendQueryEnum,
+  NovelRoomAttendQueryType,
+} from './enum/room-attend-query.enum';
 
 export class FindAttendQueryDto extends BasePaginationRequest {
   @ApiProperty({ ...DescriptionProperty.ROOM_STATUS })

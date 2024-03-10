@@ -6,6 +6,7 @@ import {
   Controller,
   Get,
   Post,
+  Query,
   SerializeOptions,
   UseGuards,
   UseInterceptors,
@@ -18,6 +19,7 @@ import {
 } from './decorator/novel-attend-board.swagger';
 import { CreateNovelAttnedBoardDto } from './dto/request/create-board.dto';
 import { NovelAttendBoardService } from './novel-attend-board.service';
+import { FindAttendBoardDto } from './dto/request/find-attend-board.dto';
 
 @ApiTags('소설공방참여 게시글')
 @Controller('novel-attend-board')
@@ -31,14 +33,7 @@ export class NovelAttendBoardController {
   constructor(private novelAttendBoardService: NovelAttendBoardService) {}
   @FindNovelAttendBoard()
   @Get('')
-  findAll(@CurrentUser() user: UserEntity) {
+  findAll(@Query() dto: FindAttendBoardDto, @CurrentUser() user: UserEntity) {
     return this.novelAttendBoardService.findAll(user);
-  }
-
-  @UseInterceptors(TransactionInterceptor)
-  @CreateNovelAttendBoard()
-  @Post('')
-  create(@Body() dto: CreateNovelAttnedBoardDto) {
-    return this.novelAttendBoardService.create(dto.toEntity());
   }
 }

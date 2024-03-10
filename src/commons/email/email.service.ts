@@ -1,7 +1,13 @@
+import { Provider } from '@nestjs/common';
 import { EmailTemplate } from './enums/teamplate.enums';
+import { EmailServiceImpl } from './email.service.impl';
 
 export const EmailServiceToken = 'EmailService';
 
+export const EmailServiceProvider: Provider = {
+  provide: EmailServiceToken,
+  useClass: EmailServiceImpl,
+};
 export interface EmailService {
   sendEmail(
     to: string,

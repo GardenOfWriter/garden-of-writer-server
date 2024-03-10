@@ -8,20 +8,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
-import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.repository';
-import { ChapterRepositoryImpl } from '@app/chapter/repository/chapter.repository.impl';
+import { ChapterRepositoryProvider } from '@app/chapter/repository/chapter.repository';
 import { AbilityFactory } from '@app/commons/abilities/ability.factory';
 import { ActionsFactory } from '@app/commons/abilities/action.factory';
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
-import { NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
-import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-writer.repository.impl';
+import { NovelWriterRepositoryProvider } from '@app/novel-writer/repository/novel-writer.repository';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { NovelAttendBoardEntity } from '@app/novel-attend-board/entities/novel-attend-board.entity';
-import { NovelAttendBoardRepositryToken } from '@app/novel-attend-board/repository/novel-attend-board.repository';
+import {
+  NovelAttendBoardRepositoryProvider,
+  NovelAttendBoardRepositryToken,
+} from '@app/novel-attend-board/repository/novel-attend-board.repository';
 import { NovelAttendBoardRepositoryImpl } from '@app/novel-attend-board/repository/novel-attend-board.repository.impl';
 import { NovelAttendBoardService } from '@app/novel-attend-board/novel-attend-board.service';
 import { TagEntity } from '@app/novel-tag/entities/tag.entity';
 import { NovelTagService } from './novel-tag.service';
+import { NovelRoomRepositoryProvider } from './repository/novel-room.repository';
 
 @Module({
   imports: [
@@ -41,22 +43,14 @@ import { NovelTagService } from './novel-tag.service';
     NovelRoomService,
     NovelTagService,
     NovelAttendBoardService,
-    {
-      provide: NovelWriterRepositoryToken,
-      useClass: NovelWriterRepositoryImpl,
-    },
-    {
-      provide: ChapterRepositoryToken,
-      useClass: ChapterRepositoryImpl,
-    },
+    NovelWriterRepositoryProvider,
+    ChapterRepositoryProvider,
     {
       provide: 'novelRoomTypeEnum',
       useValue: NovelRoomTypeEnum,
     },
-    {
-      provide: NovelAttendBoardRepositryToken,
-      useClass: NovelAttendBoardRepositoryImpl,
-    },
+    NovelAttendBoardRepositoryProvider,
+    NovelRoomRepositoryProvider,
     ActionsFactory,
   ],
   controllers: [NovelRoomController],

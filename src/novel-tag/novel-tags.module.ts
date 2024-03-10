@@ -1,19 +1,29 @@
 import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
-import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.repository';
+import {
+  ChapterRepositoryProvider,
+  ChapterRepositoryToken,
+} from '@app/chapter/repository/chapter.repository';
 import { ChapterRepositoryImpl } from '@app/chapter/repository/chapter.repository.impl';
-import { EmailServiceToken } from '@app/commons/email/email.service';
+import {
+  EmailServiceProvider,
+  EmailServiceToken,
+} from '@app/commons/email/email.service';
 import { EmailServiceImpl } from '@app/commons/email/email.service.impl';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { NovelRoomService } from '@app/novel-tag/novel-room.service';
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
-import { NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
+import {
+  NovelWriterRepositoryProvider,
+  NovelWriterRepositoryToken,
+} from '@app/novel-writer/repository/novel-writer.repository';
 import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-writer.repository.impl';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagEntity } from './entities/tag.entity';
 import { NovelTagService } from '@app/novel-room/novel-tag.service';
+import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-room.repository';
 
 @Module({
   imports: [
@@ -29,18 +39,10 @@ import { NovelTagService } from '@app/novel-room/novel-tag.service';
   providers: [
     NovelRoomService,
     NovelTagService,
-    {
-      provide: NovelWriterRepositoryToken,
-      useClass: NovelWriterRepositoryImpl,
-    },
-    {
-      provide: EmailServiceToken,
-      useClass: EmailServiceImpl,
-    },
-    {
-      provide: ChapterRepositoryToken,
-      useClass: ChapterRepositoryImpl,
-    },
+    NovelWriterRepositoryProvider,
+    EmailServiceProvider,
+    ChapterRepositoryProvider,
+    NovelRoomRepositoryProvider,
   ],
   exports: [TypeOrmModule, NovelTagService],
 })

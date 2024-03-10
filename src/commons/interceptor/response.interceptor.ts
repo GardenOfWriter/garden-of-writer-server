@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 import { getToDayISO8601 } from '../util/date.util';
+import { Request } from 'express';
 
 export interface ICommonResponse<T> {
   statusCode: number;
@@ -26,8 +27,11 @@ export class ResponseInterceptor<T>
   ): Observable<ICommonResponse<T>> | Promise<Observable<ICommonResponse<T>>> {
     return next.handle().pipe(
       map((result: any) => {
-        const statusCode =
-          context.switchToHttp().getResponse().statusCode || 200;
+        const req = context.switchToHttp().getRequest() as Request;
+        const res = context.switchToHttp().getResponse();
+        const statusCode = res.statusCode;
+        const method = req.method;
+        const customStatusCode = this.getSuccessCustomsCode(method, result);
         const message = getSuccessResponseMessageForStatusCode(statusCode);
         const timestamp = getToDayISO8601();
         let meta = undefined;
@@ -37,7 +41,7 @@ export class ResponseInterceptor<T>
           meta = resMeta;
         }
         const successResponse: ICommonResponse<T> = {
-          statusCode,
+          statusCode: customStatusCode,
           message,
           data: result || null,
           timestamp,
@@ -47,7 +51,23 @@ export class ResponseInterceptor<T>
       }),
     );
   }
+  getSuccessCustomsCode(method, result) {
+    if (result) {
+      return 200;
+    }
+    switch (method) {
+      case 'GET':
+        return 201;
+      case 'POST':
+        return 202;
+      case 'PUT':
+        return 203;
+      case 'DELETE':
+        return 204;
+    }
+  }
 }
+
 function getSuccessResponseMessageForStatusCode(
   statusCode: HttpStatus,
 ): string {
