@@ -63,7 +63,7 @@ export class ResponseInterceptor<T>
       case 'POST':
         return HttpStatus.CREATED; // 201
       case 'PUT':
-        return HttpStatus.OK; // 200
+        return HttpStatus.NO_CONTENT; // 200
       case 'DELETE':
         return HttpStatus.NO_CONTENT; // 204
     }
