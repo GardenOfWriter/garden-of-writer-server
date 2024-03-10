@@ -59,11 +59,11 @@ export class ResponseInterceptor<T>
     // 응답 데이터가 없을경우
     switch (method) {
       case 'GET':
-        return HttpStatus.OK; // 200
+        return HttpStatus.NO_CONTENT; // 204
       case 'POST':
         return HttpStatus.CREATED; // 201
       case 'PUT':
-        return HttpStatus.NO_CONTENT; // 200
+        return HttpStatus.NO_CONTENT; // 204
       case 'DELETE':
         return HttpStatus.NO_CONTENT; // 204
     }
