@@ -11,11 +11,17 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { NovelWriterService } from '../novel-writer/novel-writer.service';
 import { JwtGuard } from './guard/jwt.guard';
 
+@ApiTags('인증')
 @Controller('auth')
 export class AuthController {
   constructor(

@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { EmailService, EmailServiceToken } from './commons/email/email.service';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
@@ -33,6 +33,7 @@ export class AppController {
     }
     return this.appService.getHello();
   }
+  @ApiTags('test')
   @ApiOperation({
     description: '바디값 테스트[GET]',
   })
@@ -44,6 +45,7 @@ export class AppController {
       return;
     }
   }
+  @ApiTags('test')
   @ApiOperation({
     description: '바디값 테스트[POST]',
   })
@@ -55,6 +57,7 @@ export class AppController {
       return;
     }
   }
+  @ApiTags('test')
   @ApiOperation({
     description: '바디값 테스트[PUT]',
   })
@@ -66,7 +69,7 @@ export class AppController {
       return;
     }
   }
-
+  @ApiTags('test')
   @ApiOperation({
     description: '바디값 테스트[DELETE]',
   })
