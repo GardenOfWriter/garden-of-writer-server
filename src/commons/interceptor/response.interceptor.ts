@@ -52,18 +52,20 @@ export class ResponseInterceptor<T>
     );
   }
   getSuccessCustomsCode(method, result) {
+    // 응답 데이터가 있을경우 200
     if (result) {
-      return 200;
+      return HttpStatus.OK; // 200
     }
+    // 응답 데이터가 없을경우
     switch (method) {
       case 'GET':
-        return 201;
+        return HttpStatus.OK; // 200
       case 'POST':
-        return 202;
+        return HttpStatus.CREATED; // 201
       case 'PUT':
-        return 203;
+        return HttpStatus.OK; // 200
       case 'DELETE':
-        return 204;
+        return HttpStatus.NO_CONTENT; // 204
     }
   }
 }
