@@ -1,5 +1,5 @@
 import { LoginUserDto } from '@app/auth/dto/login-user.dto';
-import { TokenPayload } from '@app/auth/interface/auth.interface';
+import { TokenPayload, TokenResult } from '@app/auth/interface/auth.interface';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { UserService } from '@app/user/user.service';
 import { Injectable, Logger } from '@nestjs/common';
@@ -16,36 +16,28 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(
-    dto: LoginUserDto,
-  ): Promise<{ accessToken: string } | undefined> {
-    const user: UserEntity = await this.userService.findByFields({
-      select: ['id', 'email', 'password'], // 패스워드 컬럼은 select 가 기본 false 되어있어서 find 할때 명시를 해줘야함
-      where: { email: dto.email },
-    });
-    /**
-     *  유저 이메일 정보 확인
-     */
-    if (!user) {
-      throw new UserIncorrectEmailException();
-    }
-    /**
-     * 패스워드 유효성 확인
-     */
-    if (!(await bcrypt.compare(dto.password, user.password))) {
-      throw new UserIncorrectPasswordException();
-    }
-    return this.generateToken(user.id, user.email);
+  async validateUser(dto: LoginUserDto): Promise<TokenResult> {
+    const user: UserEntity = await this.userService.findEmail(dto.email);
+    if (!user) throw new UserIncorrectEmailException();
+    const comparePassword = await bcrypt.compare(dto.password, user.password);
+    this.logger.debug(`compare password ${comparePassword}`);
+    if (!comparePassword) throw new UserIncorrectPasswordException();
+    const token = this.generateAccessToken(user.id, user.email);
+    return token;
   }
 
   public logoutUser() {
-    return `Authentication=; HttpOnly; Path=/; Max=Age=0`;
+    const cookieExpire = `Authentication=; HttpOnly; Path=/; Max=Age=0`;
+    return cookieExpire;
   }
 
   /*
    * 토큰 생성 함수
    */
-  private async generateToken(id: number, email: string) {
+  private async generateAccessToken(
+    id: number,
+    email: string,
+  ): Promise<TokenResult> {
     const payload: TokenPayload = { id, email };
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_KEY,

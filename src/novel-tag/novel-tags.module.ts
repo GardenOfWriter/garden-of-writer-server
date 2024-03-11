@@ -10,7 +10,7 @@ import {
 } from '@app/commons/email/email.service';
 import { EmailServiceImpl } from '@app/commons/email/email.service.impl';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
-import { NovelRoomService } from '@app/novel-tag/novel-room.service';
+import { NovelRoomService } from '@app/novel-room/decorator/novel-room.service';
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import {
@@ -22,7 +22,7 @@ import { UserEntity } from '@app/user/entities/user.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagEntity } from './entities/tag.entity';
-import { NovelTagService } from '@app/novel-room/novel-tag.service';
+import { NovelTagService } from '@app/novel-tag/novel-tag.service';
 import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-room.repository';
 
 @Module({
@@ -44,6 +44,6 @@ import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-ro
     ChapterRepositoryProvider,
     NovelRoomRepositoryProvider,
   ],
-  exports: [TypeOrmModule, NovelTagService],
+  exports: [NovelTagService],
 })
 export class NovelTagModule {}

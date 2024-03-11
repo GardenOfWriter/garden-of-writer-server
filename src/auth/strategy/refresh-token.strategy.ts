@@ -6,11 +6,11 @@ import { UserService } from '../../user/user.service';
 import { UserNotExistsException } from '../exceptions/user-not-exists.exception';
 
 @Injectable()
-export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class RefreshTokenStrategy extends PassportStrategy(Strategy) {
   constructor(private userService: UserService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: process.env.JWT_ACCESS_KEY,
+      secretOrKey: process.env.JWT_REFERSH_KEY,
       ignoreExpiration: false,
     });
   }

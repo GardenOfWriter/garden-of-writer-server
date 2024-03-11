@@ -9,3 +9,7 @@ export interface TokenPayload {
 export interface RequestUser extends Request {
   user: UserEntity;
 }
+
+export interface TokenResult {
+  accessToken: string;
+}

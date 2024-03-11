@@ -65,7 +65,7 @@ export class AuthController {
     @Req() request: RequestUser,
     @Res({ passthrough: true }) response: Response,
   ) {
-    // response.setHeader('Set-Cookie', this.authService.logoutUser());
+    response.setHeader('Set-Cookie', this.authService.logoutUser());
     return;
   }
 

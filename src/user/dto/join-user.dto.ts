@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
+import { UserEntity } from '../entities/user.entity';
 
 export class JoinUserDto {
   @ApiProperty({
@@ -21,4 +22,8 @@ export class JoinUserDto {
   })
   @IsString()
   readonly password: string;
+
+  toEntity(): Partial<UserEntity> {
+    return UserEntity.of(this.email, this.nickname, this.password);
+  }
 }

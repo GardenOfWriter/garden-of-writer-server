@@ -21,7 +21,7 @@ import { ActionEnum, AppAbility } from '@app/commons/abilities/ability.factory';
 import { CaslAbility } from '@app/commons/decorator/casl.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
-import { NovelRoomService } from '@app/novel-tag/novel-room.service';
+import { NovelRoomService } from '@app/novel-room/decorator/novel-room.service';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QueryRunner as QR } from 'typeorm';
@@ -32,7 +32,7 @@ import {
   FindByDetailNovelRoom,
 } from './decorator/swagger.decorator';
 import { NovelAttendBoardService } from '@app/novel-attend-board/novel-attend-board.service';
-import { NovelTagService } from './novel-tag.service';
+import { NovelTagService } from '../novel-tag/novel-tag.service';
 import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
 

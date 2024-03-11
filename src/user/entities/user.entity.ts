@@ -1,4 +1,9 @@
+import {
+  PASSWORD_REG_EXP,
+  PASSWORD_REG_EXP_ERROR_MESSAGE,
+} from '@app/commons/reg-exp/reg-exp';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
+import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import {
   BeforeInsert,
@@ -42,4 +47,18 @@ export class UserEntity {
 
   @OneToMany(() => NovelRoomEntity, (novelRoom) => novelRoom.user)
   novelRooms: NovelRoomEntity[];
+
+  checkRegexPassword() {
+    if (PASSWORD_REG_EXP.test(this.password) === false) {
+      throw new BadRequestException(PASSWORD_REG_EXP_ERROR_MESSAGE);
+    }
+  }
+
+  static of(email: string, nickname: string, password: string) {
+    const user = new UserEntity();
+    user.email = email;
+    user.nickname = nickname;
+    user.password = password;
+    return user;
+  }
 }
