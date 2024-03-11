@@ -33,52 +33,52 @@ export class AppController {
     }
     return this.appService.getHello();
   }
-  @ApiTags('test')
-  @ApiOperation({
-    description: '바디값 테스트[GET]',
-  })
-  @Get('body/get')
-  getBody(@Query('isBody') check: boolean) {
-    if (check) {
-      return 'test';
-    } else {
-      return;
-    }
-  }
-  @ApiTags('test')
-  @ApiOperation({
-    description: '바디값 테스트[POST]',
-  })
-  @Post('body/post')
-  postBody(@Body('isBody') check: boolean) {
-    if (check) {
-      return 'test';
-    } else {
-      return;
-    }
-  }
-  @ApiTags('test')
-  @ApiOperation({
-    description: '바디값 테스트[PUT]',
-  })
-  @Put('body/put')
-  putBody(@Body('isBody') check: boolean) {
-    if (check) {
-      return 'test';
-    } else {
-      return;
-    }
-  }
-  @ApiTags('test')
-  @ApiOperation({
-    description: '바디값 테스트[DELETE]',
-  })
-  @Delete('body/delete')
-  deleteBody(@Body('isBody') check: boolean) {
-    if (check) {
-      return 'test';
-    } else {
-      return;
-    }
-  }
+  // @ApiTags('test')
+  // @ApiOperation({
+  //   description: '바디값 테스트[GET]',
+  // })
+  // @Get('body/get')
+  // getBody(@Query('isBody') check: boolean) {
+  //   if (check) {
+  //     return 'test';
+  //   } else {
+  //     return;
+  //   }
+  // }
+  // @ApiTags('test')
+  // @ApiOperation({
+  //   description: '바디값 테스트[POST]',
+  // })
+  // @Post('body/post')
+  // postBody(@Body('isBody') check: boolean) {
+  //   if (check) {
+  //     return 'test';
+  //   } else {
+  //     return;
+  //   }
+  // }
+  // @ApiTags('test')
+  // @ApiOperation({
+  //   description: '바디값 테스트[PUT]',
+  // })
+  // @Put('body/put')
+  // putBody(@Body('isBody') check: boolean) {
+  //   if (check) {
+  //     return 'test';
+  //   } else {
+  //     return;
+  //   }
+  // }
+  // @ApiTags('test')
+  // @ApiOperation({
+  //   description: '바디값 테스트[DELETE]',
+  // })
+  // @Delete('body/delete')
+  // deleteBody(@Body('isBody') check: boolean) {
+  //   if (check) {
+  //     return 'test';
+  //   } else {
+  //     return;
+  //   }
+  // }
 }

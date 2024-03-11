@@ -10,7 +10,7 @@ import {
 } from '@app/commons/email/email.service';
 import { EmailServiceImpl } from '@app/commons/email/email.service.impl';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
-import { NovelRoomService } from '@app/novel-room/decorator/novel-room.service';
+import { NovelRoomService } from '@app/novel-room/novel-room.service';
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import {

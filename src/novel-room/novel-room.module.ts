@@ -1,7 +1,7 @@
 import { NovelRoomTypeEnum } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { NovelRoomController } from '@app/novel-room/novel-room.controller';
-import { NovelRoomService } from '@app/novel-room/decorator/novel-room.service';
+import { NovelRoomService } from '@app/novel-room/novel-room.service';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -24,13 +24,13 @@ import { NovelAttendBoardService } from '@app/novel-attend-board/novel-attend-bo
 import { TagEntity } from '@app/novel-tag/entities/tag.entity';
 import { NovelTagService } from '../novel-tag/novel-tag.service';
 import { NovelRoomRepositoryProvider } from './repository/novel-room.repository';
+import { AbilityModule } from '@app/commons/abilities/ability.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       NovelRoomEntity,
       NovelAttendBoardEntity, //
-      Repository<NovelRoomEntity>,
       UserEntity,
       NovelWriterEntity,
       ChapterEntity,

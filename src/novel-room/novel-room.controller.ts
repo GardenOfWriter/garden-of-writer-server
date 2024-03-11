@@ -1,5 +1,5 @@
 import { CreateNovelRoomDto } from '@app/novel-room/dto/request/create-novel-room.dto';
-import { UpdateNovelRoomDto } from '@app/novel-room/dto/update-novel-room.dto';
+import { UpdateNovelRoomDto } from '@app/novel-room/dto/request/update-novel-room.dto';
 import {
   Body,
   Controller,
@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   Query,
   SerializeOptions,
   UseGuards,
@@ -21,7 +22,7 @@ import { ActionEnum, AppAbility } from '@app/commons/abilities/ability.factory';
 import { CaslAbility } from '@app/commons/decorator/casl.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
-import { NovelRoomService } from '@app/novel-room/decorator/novel-room.service';
+import { NovelRoomService } from '@app/novel-room/novel-room.service';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QueryRunner as QR } from 'typeorm';
@@ -30,6 +31,7 @@ import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
 import {
   FindAllNovelRoom,
   FindByDetailNovelRoom,
+  UpdateNovelRoom,
 } from './decorator/swagger.decorator';
 import { NovelAttendBoardService } from '@app/novel-attend-board/novel-attend-board.service';
 import { NovelTagService } from '../novel-tag/novel-tag.service';
@@ -98,9 +100,7 @@ export class NovelRoomController {
     }
   }
 
-  @ApiOperation({
-    summary: '소설 공방 수정(방장만 가능)',
-  })
+  @UpdateNovelRoom()
   @Patch(':id')
   @UseGuards(CaslGuard)
   async updateRoom(

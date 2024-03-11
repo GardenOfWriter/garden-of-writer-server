@@ -64,6 +64,8 @@ export class ResponseInterceptor<T>
         return HttpStatus.CREATED; // 201
       case 'PUT':
         return HttpStatus.NO_CONTENT; // 204
+      case 'PATCH':
+        return HttpStatus.NO_CONTENT; // 204
       case 'DELETE':
         return HttpStatus.NO_CONTENT; // 204
     }

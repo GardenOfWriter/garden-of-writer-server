@@ -12,10 +12,12 @@ import { AuthService } from './auth.service';
 import { JwtGuard } from './guard/jwt.guard';
 import { AccessTokenStrategy } from './strategy/access-token.strategy';
 import { NovelWriterRepositoryProvider } from '@app/novel-writer/repository/novel-writer.repository';
+import { UserModule } from '@app/user/user.module';
 
 @Module({
   imports: [
     EmailModule,
+    UserModule,
     NovelWriterModule,
     TypeOrmModule.forFeature([UserEntity, NovelWriterEntity]),
     JwtModule.register({
@@ -27,7 +29,6 @@ import { NovelWriterRepositoryProvider } from '@app/novel-writer/repository/nove
   exports: [TypeOrmModule, JwtGuard],
   providers: [
     AuthService,
-    UserService,
     JwtGuard,
     AccessTokenStrategy,
     NovelWriterService,

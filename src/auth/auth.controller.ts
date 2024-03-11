@@ -50,14 +50,18 @@ export class AuthController {
     @Body() dto: LoginUserDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
-    const jwt = await this.authService.validateUser(dto);
-    const hasRoom = await this.writerService.checkRoomParticiate(dto.email);
-    res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
-    res.cookie('accessToken', jwt.accessToken, {
-      httpOnly: true,
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-    });
-    return { ...jwt, hasRoom };
+    try {
+      const jwt = await this.authService.validateUser(dto);
+      const hasRoom = await this.writerService.checkRoomParticiate(dto.email);
+      res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
+      res.cookie('accessToken', jwt.accessToken, {
+        httpOnly: true,
+        maxAge: 3 * 24 * 60 * 60 * 1000,
+      });
+      return { ...jwt, hasRoom };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Post('logout')

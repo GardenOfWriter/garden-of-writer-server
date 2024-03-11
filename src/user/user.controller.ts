@@ -1,7 +1,15 @@
 import { JoinUserDto } from '@app/user/dto/join-user.dto';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { UserService } from '@app/user/user.service';
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('유저')
@@ -14,7 +22,8 @@ export class UserController {
   })
   @Post('/join')
   async create(@Body() userData: JoinUserDto): Promise<void> {
-    await this.userService.create(userData.toEntity());
+    const joinUser = userData.toEntity();
+    await this.userService.create(joinUser);
     return;
   }
 
@@ -23,9 +32,8 @@ export class UserController {
     summary: '회원조회',
   })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    console.log(id);
-    return this.userService.findById(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.findById(id);
   }
 
   @ApiOperation({

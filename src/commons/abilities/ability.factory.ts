@@ -6,10 +6,14 @@ import {
   ExtractSubjectType,
   InferSubjects,
 } from '@casl/ability';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
+import {
+  NovelRoomRepository,
+  NovelRoomRepositoryToken,
+} from '@app/novel-room/repository/novel-room.repository';
 
 export enum ActionEnum {
   Manager = 'manager',
@@ -26,8 +30,8 @@ export type AppAbility = Ability<[ActionEnum, Subjects]>;
 @Injectable()
 export class AbilityFactory {
   constructor(
-    @InjectRepository(NovelRoomEntity)
-    private readonly roomRepository: Repository<NovelRoomEntity>,
+    @Inject(NovelRoomRepositoryToken)
+    private readonly roomRepository: NovelRoomRepository,
   ) {}
 
   createForUser(user: UserEntity) {

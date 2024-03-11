@@ -10,21 +10,21 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateNovelRoomDto } from '@app/novel-room/dto/request/create-novel-room.dto';
-import { UpdateNovelRoomDto } from 'src/novel-room/dto/update-novel-room.dto';
+import { UpdateNovelRoomDto } from '@app/novel-room/dto/request/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 
 import { In, Repository } from 'typeorm';
-import { ChapterRepository } from '../../chapter/repository/chapter.repository';
+import { ChapterRepository } from '../chapter/repository/chapter.repository';
 
-import { FindAttendQueryDto } from '../dto/request/find-attend-query.dto';
-import { FindAttendStatusNovelRoomDto } from '../dto/response/find-attend-status.dto';
-import { NovelRoomDuplicationSubTitleException } from '../exceptions/duplicate-subtitle.exception';
-import { NovelRoomDuplicationTitleException } from '../exceptions/duplicate-title.exception';
-import { NovelRoomNotFoundException } from '../exceptions/not-found.exception';
+import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
+import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
+import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-subtitle.exception';
+import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title.exception';
+import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
 import { UserEntity } from '@app/user/entities/user.entity';
-import { FindByRoomIdDetailDto } from '../dto/response/findbyid-detail.dto';
+import { FindByRoomIdDetailDto } from './dto/response/findbyid-detail.dto';
 import { WriterStatusEnum } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { TagEntity } from '@app/novel-tag/entities/tag.entity';
 

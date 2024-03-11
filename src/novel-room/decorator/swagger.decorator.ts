@@ -27,3 +27,11 @@ export function FindByDetailNovelRoom(): MethodDecorator {
     }),
   );
 }
+
+export function UpdateNovelRoom(): MethodDecorator {
+  return applyDecorators(
+    ApiOperation({
+      summary: '소설 공방 상세정보 출력',
+    }),
+  );
+}
