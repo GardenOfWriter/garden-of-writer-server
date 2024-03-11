@@ -14,7 +14,7 @@ export class UserController {
   })
   @Post('/join')
   async create(@Body() userData: JoinUserDto): Promise<void> {
-    await this.userService.create(userData);
+    await this.userService.create(userData.toEntity());
     return;
   }
 

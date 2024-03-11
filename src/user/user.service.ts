@@ -14,7 +14,7 @@ export class UserService {
     return this.userRepository.getAll();
   }
 
-  async create(joinUser: UserEntity): Promise<void> {
+  async create(joinUser: Partial<UserEntity>): Promise<void> {
     const user = await this.userRepository.getByNicknameEmail(
       joinUser.email,
       joinUser.nickname,
