@@ -32,7 +32,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       errorCode:
         exception?.response || 'Unknow Error Contact System Adminstrator',
       path: request.path,
-      statusCode,
       message,
       data: null,
       validate: exception?.validate,

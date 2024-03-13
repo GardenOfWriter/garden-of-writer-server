@@ -7,10 +7,9 @@ import {
 } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 import { getToDayISO8601 } from '../util/date.util';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 export interface ICommonResponse<T> {
-  statusCode: number;
   message: string;
   data: T | null;
   timestamp: string;
@@ -27,21 +26,21 @@ export class ResponseInterceptor<T>
   ): Observable<ICommonResponse<T>> | Promise<Observable<ICommonResponse<T>>> {
     return next.handle().pipe(
       map((result: any) => {
-        const req = context.switchToHttp().getRequest() as Request;
-        const res = context.switchToHttp().getResponse();
+        const req = context.switchToHttp().getRequest<Request>();
+        const res = context.switchToHttp().getResponse<Response>();
         const statusCode = res.statusCode;
         const method = req.method;
         const customStatusCode = this.getSuccessCustomsCode(method, result);
         const message = getSuccessResponseMessageForStatusCode(statusCode);
         const timestamp = getToDayISO8601();
         let meta = undefined;
+        res.status(customStatusCode);
         if (result?.meta) {
           const { items, meta: resMeta } = result;
           result = items;
           meta = resMeta;
         }
         const successResponse: ICommonResponse<T> = {
-          statusCode: customStatusCode,
           message,
           data: result || null,
           timestamp,

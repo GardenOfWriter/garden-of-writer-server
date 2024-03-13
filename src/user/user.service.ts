@@ -2,6 +2,7 @@ import { UserEntity } from '@app/user/entities/user.entity';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './user.repository';
+import { NovelRoomDuplicationSubTitleException } from '@app/novel-room/exceptions/duplicate-subtitle.exception';
 
 @Injectable()
 export class UserService {
@@ -16,7 +17,7 @@ export class UserService {
       joinUser.email,
       joinUser.nickname,
     );
-    if (user.email) throw new ConflictException('중복된 닉네임이 존재합니다.');
+    if (user.email) throw new NovelRoomDuplicationSubTitleException();
     if (user.nickname)
       throw new ConflictException('중복된 이메일 계정이 존재합니다.');
     user.checkRegexPassword();

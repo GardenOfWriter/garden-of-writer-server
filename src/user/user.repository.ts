@@ -11,7 +11,10 @@ export class UserRepository {
   ) {}
 
   async getAll() {
-    return await this.dataSource.find();
+    return await this.dataSource
+      .createQueryBuilder()
+      .select('user.ems')
+      .getRawMany();
   }
   async getById(id: number): Promise<UserEntity> {
     return await this.dataSource.findOne({
