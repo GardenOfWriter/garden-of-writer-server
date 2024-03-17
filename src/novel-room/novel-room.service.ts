@@ -27,6 +27,7 @@ import { UserEntity } from '@app/user/entities/user.entity';
 import { FindByRoomIdDetailDto } from './dto/response/findbyid-detail.dto';
 import { WriterStatusEnum } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { TagEntity } from '@app/novel-tag/entities/tag.entity';
+import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 
 @Injectable()
 export class NovelRoomService {
@@ -51,7 +52,7 @@ export class NovelRoomService {
      *  참여중 미참여중 필터링
      */
     const roomFilter = dto.queryConvertStatus();
-    const rooms = await this.novelRoomRepository.find({
+    const [rooms, totalCount] = await this.novelRoomRepository.findAndCount({
       relations: ['novelWriter', 'novelWriter.user'],
       where: {
         novelWriter: {
@@ -64,9 +65,10 @@ export class NovelRoomService {
     if (!rooms || rooms.length === 0) {
       return [];
     }
-    return rooms.map(
+    const items = rooms.map(
       (room: NovelRoomEntity) => new FindAttendStatusNovelRoomDto(user, room),
     );
+    return new PagingationResponse(totalCount, dto.chuckSize, items);
   }
   async createRoom(dto: CreateNovelRoomDto): Promise<NovelRoomEntity> {
     const checkTitle = await this.novelRoomRepository.exist({
