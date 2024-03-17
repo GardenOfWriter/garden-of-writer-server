@@ -62,9 +62,6 @@ export class NovelRoomService {
       },
     });
 
-    if (!rooms || rooms.length === 0) {
-      return [];
-    }
     const items = rooms.map(
       (room: NovelRoomEntity) => new FindAttendStatusNovelRoomDto(user, room),
     );
