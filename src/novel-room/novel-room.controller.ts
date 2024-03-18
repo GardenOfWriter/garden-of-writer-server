@@ -55,12 +55,11 @@ export class NovelRoomController {
   @ApiOperation({
     summary: '소설 공방 개설',
   })
-  @UseInterceptors(TransactionInterceptor)
+  // @UseInterceptors(TransactionInterceptor)
   @Post('')
   async createRoom(
     @Body() dto: CreateNovelRoomDto,
     @CurrentUser() user: UserEntity,
-    @QueryRunner() qr?: QR,
   ): Promise<void> {
     dto.setUserId(user);
     const room = await this.novelRoomService.createRoom(dto);

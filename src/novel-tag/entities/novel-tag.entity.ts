@@ -1,6 +1,5 @@
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
-import { PrimaryAuditiedPK } from '../../commons/entities/primary-auditied-pk.entity';
 import { TagEntity } from './tag.entity';
 import { PrimaryGeneratedPkEntity } from '@app/commons/entities/primary-generated-pk.entity';
 
