@@ -48,9 +48,6 @@ export class NovelRoomService {
   ) {}
 
   async findAllRooms(user: UserEntity, dto: FindAttendQueryDto): Promise<any> {
-    /**
-     *  참여중 미참여중 필터링
-     */
     const roomFilter = dto.queryConvertStatus();
     const [rooms, totalCount] = await this.novelRoomRepository.findAndCount({
       relations: ['novelWriter', 'novelWriter.user'],
@@ -60,6 +57,8 @@ export class NovelRoomService {
           status: In(roomFilter),
         },
       },
+      take: dto.take,
+      skip: dto.skip,
     });
 
     const items = rooms.map(

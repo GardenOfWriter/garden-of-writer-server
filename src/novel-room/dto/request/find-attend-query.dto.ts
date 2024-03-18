@@ -18,7 +18,7 @@ export class FindAttendQueryDto extends BasePaginationRequest {
 
   queryConvertStatus(): WriterStatusType[] {
     return this.roomStatus === NovelRoomAttendQueryEnum.ATTENDING
-      ? ['reject', 'review', 'exit']
-      : ['attending'];
+      ? ['attending']
+      : ['reject', 'review', 'exit'];
   }
 }
