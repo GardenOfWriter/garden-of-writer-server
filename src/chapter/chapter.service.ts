@@ -19,6 +19,7 @@ export class ChapterService {
     private chapterRepository: ChapterRepository,
   ) {}
   async save(entity: Partial<ChapterEntity>): Promise<void> {
+    console.log(entity);
     const count = await this.chapterRepository.chapterCount(entity.novelRoomId);
     entity.setNo(count);
     await this.chapterRepository.saveRow(entity);
@@ -28,9 +29,6 @@ export class ChapterService {
     await this.chapterRepository.updateRow(id, entity);
     return;
   }
-  /**
-   * 연재 신청 => 연재를 신청하기 하면 Chpater 상태가 review 로 넘어간다
-   */
   async applyChapter(id: number): Promise<void> {
     const chapter = await this.findOneChapterId(id);
     chapter.changeStatus(ChapterStatusEnum.REVIEW);
@@ -61,6 +59,7 @@ export class ChapterService {
         dto.novelRoomId,
         dto,
       );
+    console.log(chapters);
     const items = chapters.map(
       (chapter) => new FindChapterRoomIdResDto(chapter),
     );
