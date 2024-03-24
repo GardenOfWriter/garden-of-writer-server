@@ -1,17 +1,12 @@
-import {
-  NovelRoomCategoryEnum,
-  NovelRoomCategoryType,
-} from '@app/novel-room/entities/enum/novel-room-category.enum';
+import { NovelRoomCategoryType } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { NovelRoomStatusType } from '@app/novel-room/entities/enum/novel-room-status.enum';
-import {
-  NovelRoomType,
-  NovelRoomTypeEnum,
-} from '@app/novel-room/entities/enum/novel-room-type.enum';
+import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { RoomCategoryDescription } from '../../entities/enum/novel-room-category.enum';
 import { RoomTypeDescription } from '../../entities/enum/novel-room-type.enum';
+import { NovelRoomStatuDescription } from '../../entities/enum/novel-room-status.enum';
 
 export class FindByRoomIdDetailDto {
   private _createdAt: Date;
@@ -37,6 +32,7 @@ export class FindByRoomIdDetailDto {
     this._completedAt = room.completedAt;
     this._createdAt = room.createdAt;
     this._updatedAt = room.updatedAt;
+    this._completedAt = room.completedAt;
   }
 
   @ApiProperty({
@@ -76,6 +72,15 @@ export class FindByRoomIdDetailDto {
   get summary() {
     return this._summary;
   }
+
+  @ApiProperty({
+    ...NovelRoomStatuDescription,
+  })
+  @Expose()
+  get status() {
+    return this._status;
+  }
+
   @ApiProperty({
     example: '공방 제목',
     description: '공방 제목',
@@ -109,5 +114,13 @@ export class FindByRoomIdDetailDto {
   @Expose()
   get updatedAt() {
     return this._updatedAt;
+  }
+  @ApiProperty({
+    example: new Date(),
+    description: '연재 완료일',
+  })
+  @Expose()
+  get completedAt() {
+    return this._createdAt;
   }
 }

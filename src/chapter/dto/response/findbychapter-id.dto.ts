@@ -6,7 +6,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { ChapterEntity } from '../../entities/chapter.entity';
 
-export class FindChapterByNovelRoomIdResponseDto {
+export class FindChapterRoomIdResDto {
   private _id: number;
   private _no: number;
   private _status: ChapterStatusType;

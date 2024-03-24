@@ -44,7 +44,6 @@ import { ErrorsInterceptor } from './commons/interceptor/error.interceptor';
       logging: true,
       namingStrategy: new SnakeNamingStrategy(),
       autoLoadEntities: true,
-      subscribers: [ChapterSubscriber],
     }),
     EmailModule,
     PassportModule,

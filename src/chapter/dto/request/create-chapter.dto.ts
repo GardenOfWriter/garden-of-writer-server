@@ -11,7 +11,6 @@ export class CreateChapterRequestDto extends PickType(ChapterDto, [
     const entity = ChapterEntity.of(
       this.novelRoomId,
       ChapterStatusEnum.WRITING,
-      '임시 제목',
       user,
     );
     return entity;

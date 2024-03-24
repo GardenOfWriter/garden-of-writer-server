@@ -10,6 +10,17 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     @InjectRepository(NovelWriterEntity)
     private dataSource: Repository<NovelWriterEntity>,
   ) {}
+
+  findByUserEmail(email: string): Promise<NovelWriterEntity[]> {
+    return this.dataSource.find({
+      where: {
+        user: {
+          email,
+        },
+      },
+    });
+  }
+
   findBynovelRoomIdAttendingCount(novelRoomId: number): Promise<number> {
     return this.dataSource.count({
       where: {

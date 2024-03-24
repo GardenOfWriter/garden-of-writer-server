@@ -20,8 +20,8 @@ export class UpdateChapterRequestDto extends PickType(ChapterDto, [
     const entity = ChapterEntity.of(
       this.novelRoomId,
       this.status,
-      this.title,
       user,
+      this.title,
     );
     return entity;
   }

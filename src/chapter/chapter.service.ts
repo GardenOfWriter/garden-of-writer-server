@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { FindChapterByNovelRoomIdResponseDto } from './dto/response/findbychapter-id.dto';
+import { FindChapterRoomIdResDto } from './dto/response/findbychapter-id.dto';
 import { ChapterEntity } from './entities/chapter.entity';
 import { FindByNovelRoomIdDto } from './dto/request/findby-novel-room-id.dto';
 import {
@@ -19,6 +19,8 @@ export class ChapterService {
     private chapterRepository: ChapterRepository,
   ) {}
   async save(entity: Partial<ChapterEntity>): Promise<void> {
+    const count = await this.chapterRepository.chapterCount(entity.novelRoomId);
+    entity.setNo(count);
     await this.chapterRepository.saveRow(entity);
     return;
   }
@@ -51,14 +53,16 @@ export class ChapterService {
     return;
   }
 
-  async findChapterText(dto: FindByNovelRoomIdDto): Promise<any> {
+  async findChapterText(
+    dto: FindByNovelRoomIdDto,
+  ): Promise<PagingationResponse<FindChapterRoomIdResDto>> {
     const [chapters, totalCount] =
       await this.chapterRepository.findChpaterByRoomIdAndCount(
         dto.novelRoomId,
         dto,
       );
     const items = chapters.map(
-      (chapter) => new FindChapterByNovelRoomIdResponseDto(chapter),
+      (chapter) => new FindChapterRoomIdResDto(chapter),
     );
     return new PagingationResponse(totalCount, dto.chuckSize, items);
   }

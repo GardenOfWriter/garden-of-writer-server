@@ -51,7 +51,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
     const jwt = await this.authService.validateUser(dto);
-    const hasRoom = await this.writerService.checkRoomParticiate(dto.email);
+    const hasRoom = await this.writerService.checkRoomStatusAttend(dto.email);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
     res.cookie('accessToken', jwt.accessToken, {
       httpOnly: true,

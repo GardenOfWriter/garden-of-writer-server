@@ -17,9 +17,9 @@ export class UserService {
       joinUser.email,
       joinUser.nickname,
     );
-    if (user.email) throw new NovelRoomDuplicationSubTitleException();
+    if (user.email) throw new ConflictException('중복된 이메일이 존재합니다.');
     if (user.nickname)
-      throw new ConflictException('중복된 이메일 계정이 존재합니다.');
+      throw new ConflictException('중복된 닉네임이 존재합니다.');
     user.checkRegexPassword();
     await this.userRepository.addRow(user);
     return;
