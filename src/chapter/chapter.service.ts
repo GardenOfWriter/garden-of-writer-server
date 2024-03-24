@@ -63,7 +63,7 @@ export class ChapterService {
     const items = chapters.map(
       (chapter) => new FindChapterRoomIdResDto(chapter),
     );
-    return new PagingationResponse(totalCount, dto.chuckSize, items);
+    return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
 
   private findOneChapterId(id: number): Promise<ChapterEntity> {

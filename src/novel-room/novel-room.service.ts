@@ -60,7 +60,7 @@ export class NovelRoomService {
     const items = rooms.map(
       (room: NovelRoomEntity) => new FindAttendStatusNovelRoomDto(user, room),
     );
-    return new PagingationResponse(totalCount, dto.chuckSize, items);
+    return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
   async createRoom(dto: CreateNovelRoomDto): Promise<NovelRoomEntity> {
     const checkTitle = await this.novelRoomRepository.exist({
