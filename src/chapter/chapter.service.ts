@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { FindChapterByNovelRoomIdResponseDto } from './dto/response/findbychapter-id.dto';
+import { FindChapterRoomIdResDto } from './dto/response/findbychapter-id.dto';
 import { ChapterEntity } from './entities/chapter.entity';
 import { FindByNovelRoomIdDto } from './dto/request/findby-novel-room-id.dto';
 import {
@@ -19,6 +19,9 @@ export class ChapterService {
     private chapterRepository: ChapterRepository,
   ) {}
   async save(entity: Partial<ChapterEntity>): Promise<void> {
+    console.log(entity);
+    const count = await this.chapterRepository.chapterCount(entity.novelRoomId);
+    entity.setNo(count);
     await this.chapterRepository.saveRow(entity);
     return;
   }
@@ -26,9 +29,6 @@ export class ChapterService {
     await this.chapterRepository.updateRow(id, entity);
     return;
   }
-  /**
-   * 연재 신청 => 연재를 신청하기 하면 Chpater 상태가 review 로 넘어간다
-   */
   async applyChapter(id: number): Promise<void> {
     const chapter = await this.findOneChapterId(id);
     chapter.changeStatus(ChapterStatusEnum.REVIEW);
@@ -51,16 +51,19 @@ export class ChapterService {
     return;
   }
 
-  async findChapterText(dto: FindByNovelRoomIdDto): Promise<any> {
+  async findChapterText(
+    dto: FindByNovelRoomIdDto,
+  ): Promise<PagingationResponse<FindChapterRoomIdResDto>> {
     const [chapters, totalCount] =
       await this.chapterRepository.findChpaterByRoomIdAndCount(
         dto.novelRoomId,
         dto,
       );
+    console.log(chapters);
     const items = chapters.map(
-      (chapter) => new FindChapterByNovelRoomIdResponseDto(chapter),
+      (chapter) => new FindChapterRoomIdResDto(chapter),
     );
-    return new PagingationResponse(totalCount, dto.chuckSize, items);
+    return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
 
   private findOneChapterId(id: number): Promise<ChapterEntity> {

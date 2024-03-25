@@ -43,7 +43,6 @@ import { UserModule } from './user/user.module';
       logging: true,
       namingStrategy: new SnakeNamingStrategy(),
       autoLoadEntities: true,
-      subscribers: [ChapterSubscriber],
     }),
     EmailModule,
     PassportModule,

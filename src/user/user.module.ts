@@ -21,6 +21,7 @@ import { UserService } from './user.service';
       useClass: UserRepositoryImpl,
     },
   ],
+
   exports: [UserService, UserRepository],
   controllers: [UserController],
 })

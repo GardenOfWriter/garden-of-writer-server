@@ -14,6 +14,7 @@ export interface NovelWriterRepository {
   saveRow(entity: Partial<NovelWriterEntity>): Promise<void>;
   saveRows(entities: Partial<NovelWriterEntity>[]);
   updateRow(id: number, entity: Partial<NovelWriterEntity>): Promise<void>;
+  findByUserEmail(email: string): Promise<NovelWriterEntity[]>;
   deleteRow(id: number): Promise<void>;
   findByoptions(
     options: FindOneOptions<NovelWriterEntity>,

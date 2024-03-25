@@ -5,14 +5,15 @@ import { ChapterStatusEnum } from '../../entities/enums/chapter-status.enum';
 import { ChapterDto } from '../chapter.dto';
 
 export class CreateChapterRequestDto extends PickType(ChapterDto, [
+  'title',
   'novelRoomId',
 ]) {
   toEntity(user: UserEntity): Partial<ChapterEntity> {
     const entity = ChapterEntity.of(
       this.novelRoomId,
       ChapterStatusEnum.WRITING,
-      '임시 제목',
       user,
+      this.title,
     );
     return entity;
   }

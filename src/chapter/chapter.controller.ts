@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateNovel } from './decorator/create-chapter.decorator';
+import { CreateChapter } from './decorator/create-chapter.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Param } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
@@ -38,7 +38,7 @@ export class ChapterController {
     return await this.chapterService.findChapterText(dto);
   }
 
-  @CreateNovel()
+  @CreateChapter()
   @Post('')
   create(
     @CurrentUser() user: UserEntity,

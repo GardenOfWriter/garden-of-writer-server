@@ -8,7 +8,7 @@ export abstract class BasePaginationRequest {
   })
   @IsNumber()
   @IsOptional()
-  chuckSize: number;
+  chunkSize: number;
 
   @ApiProperty({
     example: 1,
@@ -19,11 +19,11 @@ export abstract class BasePaginationRequest {
   pageNo: number;
 
   get skip(): number {
-    return (this.pageNo - 1) * this.chuckSize;
+    return (this.pageNo - 1) * this.chunkSize;
   }
 
   get take(): number {
-    return this.chuckSize;
+    return this.chunkSize;
   }
 
   getDESCtNownum() {

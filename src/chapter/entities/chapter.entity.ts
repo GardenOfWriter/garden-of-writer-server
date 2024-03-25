@@ -12,6 +12,7 @@ import {
 export class ChapterEntity extends PrimaryAuditiedPK {
   @Column('int', { comment: '소설공방의 회차 번호' })
   no: number;
+
   @Column({ length: 255, comment: '회차 제목' })
   title: string;
 
@@ -22,6 +23,9 @@ export class ChapterEntity extends PrimaryAuditiedPK {
     comment: '회차 상태',
   })
   status: ChapterStatusType;
+
+  @Column({ name: 'novel_room_id' })
+  novelRoomId: number;
 
   @ManyToOne(() => NovelRoomEntity, (room) => room.id)
   novelRoom: NovelRoomEntity;
@@ -39,13 +43,13 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   chapterComment: ChapterCommentEntity[];
 
   static of(
-    novelRoom: number,
+    novelRoomId: number,
     status: ChapterStatusType,
-    title: string,
     user: UserEntity,
+    title: string = '프롤로그',
   ) {
     const chapter = new ChapterEntity();
-    chapter.novelRoom = { id: novelRoom } as NovelRoomEntity;
+    chapter.novelRoomId = novelRoomId;
     chapter.status = status;
     chapter.title = title;
     chapter.createdBy = user;
@@ -53,6 +57,9 @@ export class ChapterEntity extends PrimaryAuditiedPK {
     return chapter;
   }
 
+  setNo(prevNo: number) {
+    this.no = prevNo + 1;
+  }
   /**
    *
    */

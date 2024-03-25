@@ -12,15 +12,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateNovelRoomDto } from '@app/novel-room/dto/request/create-novel-room.dto';
 import { UpdateNovelRoomDto } from '@app/novel-room/dto/request/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
-
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
-
 import { In, Repository } from 'typeorm';
 import { ChapterRepository } from '../chapter/repository/chapter.repository';
-
 import { FindAttendQueryDto } from './dto/request/find-attend-query.dto';
 import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
-import { NovelRoomDuplicationSubTitleException } from './exceptions/duplicate-subtitle.exception';
 import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title.exception';
 import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
 import { UserEntity } from '@app/user/entities/user.entity';
@@ -64,15 +60,13 @@ export class NovelRoomService {
     const items = rooms.map(
       (room: NovelRoomEntity) => new FindAttendStatusNovelRoomDto(user, room),
     );
-    return new PagingationResponse(totalCount, dto.chuckSize, items);
+    return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
   async createRoom(dto: CreateNovelRoomDto): Promise<NovelRoomEntity> {
     const checkTitle = await this.novelRoomRepository.exist({
       where: { title: dto.title },
     });
-    if (checkTitle) {
-      throw new NovelRoomDuplicationTitleException();
-    }
+    if (checkTitle) throw new NovelRoomDuplicationTitleException();
     const roomEntity = dto.toRoomEntity();
     const room = await this.novelRoomRepository.save(roomEntity);
     /**
@@ -88,9 +82,7 @@ export class NovelRoomService {
     const room = await this.novelRoomRepository.findOne({
       where: { id },
     });
-    if (!room) {
-      throw new NovelRoomNotFoundException();
-    }
+    if (!room) throw new NovelRoomNotFoundException();
     return new FindByRoomIdDetailDto(room);
   }
 
@@ -102,23 +94,15 @@ export class NovelRoomService {
 
   async updateRoom(
     id: number,
-    updateNovelRoomDto: UpdateNovelRoomDto,
+    dto: UpdateNovelRoomDto,
   ): Promise<NovelRoomEntity> {
     const room = await this.novelRoomRepository.findOne({
       where: {
         id,
       },
     });
-
-    if (updateNovelRoomDto.subTitle) {
-      room.subTitle = updateNovelRoomDto.subTitle;
-    }
-
-    if (updateNovelRoomDto.category) {
-      room.category = updateNovelRoomDto.category;
-    }
-
-    return await this.novelRoomRepository.save(room);
+    if (!room) throw new NovelRoomNotFoundException();
+    return await this.novelRoomRepository.save(dto);
   }
   private saveRoomTrigger(
     room: NovelRoomEntity,
@@ -130,24 +114,14 @@ export class NovelRoomService {
       WriterStatusEnum.ATTENDING,
       dto.getUser(),
     );
-    writer.changeStatue(WriterStatusEnum.ATTENDING);
+    const chapter = ChapterEntity.of(
+      room.id,
+      ChapterStatusEnum.WRITING,
+      dto.getUser(),
+    );
     return [
-      this.novelWriterRepository.saveRow(
-        NovelWriterEntity.of(
-          room.id,
-          WriterCategoryEnum.HOST,
-          WriterStatusEnum.ATTENDING,
-          dto.getUser(),
-        ),
-      ),
-      this.chapterRepository.saveRow(
-        ChapterEntity.of(
-          room.id,
-          ChapterStatusEnum.WRITING,
-          '프롤로그',
-          dto.getUser(),
-        ),
-      ),
+      this.novelWriterRepository.saveRow(writer),
+      this.chapterRepository.saveRow(chapter),
     ];
   }
 }

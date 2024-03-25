@@ -84,12 +84,16 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     category: WriterCategoryType,
     status: WriterStatusType,
     user: UserEntity,
+    writingSeq: number = 1,
+    currentlyWriting: boolean = true,
   ) {
     const writer = new NovelWriterEntity();
     writer.novelRoom = { id: novelRoomId } as NovelRoomEntity;
     writer.user = user;
     writer.category = category;
     writer.status = status;
+    writer.currentlyWriting = currentlyWriting;
+    writer.writingSeq = writingSeq;
     return writer;
   }
 }

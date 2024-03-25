@@ -66,11 +66,10 @@ export class NovelWriterService {
   async findByNoveRoomId(novelRoomId: number, user: UserEntity) {
     const writers =
       await this.novelWriterRepository.findByNovelRoomId(novelRoomId);
-
     this.writerPemissionCheck(writers, user);
     return writers.map((writer) => new FindByNovelRoomIdResponseDto(writer));
   }
-  async checkRoomParticiate(email: string): Promise<boolean> {
+  async checkRoomStatusAttend(email: string): Promise<boolean> {
     const writers = await this.novelWriterRepository.findByoptions({
       where: {
         user: {
