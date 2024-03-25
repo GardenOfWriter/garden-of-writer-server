@@ -1,19 +1,25 @@
-import { UserEntity } from '@app/user/entities/user.entity';
-import { ConflictException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from './user.repository';
 import { NovelRoomDuplicationSubTitleException } from '@app/novel-room/exceptions/duplicate-subtitle.exception';
+import { UserEntity } from '@app/user/entities/user.entity';
+import {
+  UserRepository,
+  UserRepositoryToken,
+} from '@app/user/repository/user.repository';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    // private readonly userRepository: UserRepository,
+    @Inject(UserRepositoryToken)
+    private userRepository: UserRepository,
+  ) {}
 
   async findAll(): Promise<UserEntity[]> {
-    return this.userRepository.getAll();
+    return this.userRepository.findAll();
   }
 
   async create(joinUser: Partial<UserEntity>): Promise<void> {
-    const user = await this.userRepository.getByNicknameEmail(
+    const user = await this.userRepository.findByNicknameEmail(
       joinUser.email,
       joinUser.nickname,
     );
@@ -26,12 +32,12 @@ export class UserService {
   }
 
   async findEmail(email: string) {
-    const checkEmail = await this.userRepository.getByEmail(email);
+    const checkEmail = await this.userRepository.findByEmail(email);
     return checkEmail;
   }
 
   async findById(id: number): Promise<UserEntity> {
-    return await this.userRepository.getById(id);
+    return await this.userRepository.findByUserId(id);
   }
 
   async deleteUser(id: number): Promise<void> {
