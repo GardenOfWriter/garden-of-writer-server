@@ -10,9 +10,7 @@ import { getToDayISO8601 } from '../util/date.util';
 import { Request, Response } from 'express';
 
 export interface ICommonResponse<T> {
-  message: string;
   data: T | null;
-  timestamp: string;
   meta?: any;
 }
 
@@ -41,9 +39,7 @@ export class ResponseInterceptor<T>
           meta = resMeta;
         }
         const successResponse: ICommonResponse<T> = {
-          message,
           data: result || null,
-          timestamp,
           meta: meta || undefined,
         };
         return successResponse;

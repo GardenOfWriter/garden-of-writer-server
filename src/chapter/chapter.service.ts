@@ -59,7 +59,7 @@ export class ChapterService {
         dto.novelRoomId,
         dto,
       );
-    console.log(chapters);
+
     const items = chapters.map(
       (chapter) => new FindChapterRoomIdResDto(chapter),
     );

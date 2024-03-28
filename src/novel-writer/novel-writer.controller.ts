@@ -22,6 +22,7 @@ import { CreateNovelWriterRequestDto } from './dto/request/create-novel-writer.d
 import { WriterCategoryEnum } from './entities/enums/writer-category.enum';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterService } from './novel-writer.service';
+import { FindNovelWriteManagementrDto } from './dto/request/find-novel-writer.dto';
 
 @ApiTags('작가 리스트')
 @Controller('writer')

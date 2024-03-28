@@ -20,6 +20,8 @@ import {
   NovelWriterRepository,
   NovelWriterRepositoryToken,
 } from './repository/novel-writer.repository';
+import { PagingationResponse } from '@app/commons/pagination/pagination.response';
+import { FindNovelWriteManagementrDto } from './dto/request/find-novel-writer.dto';
 
 @Injectable()
 export class NovelWriterService {
@@ -81,16 +83,16 @@ export class NovelWriterService {
   }
   async findByNovelRoomIdDetails(
     user: UserEntity,
-    novelRoomId: number,
-  ): Promise<FindByNovelWriterDetails[]> {
-    const writers = await this.novelWriterRepository.findByoptions({
-      relations: ['user'],
-      where: {
-        novelRoom: { id: novelRoomId },
-      },
-    });
+    dto: FindNovelWriteManagementrDto,
+  ): Promise<PagingationResponse<FindByNovelWriterDetails>> {
+    const [writers, totalCount] =
+      await this.novelWriterRepository.findByNovelRoomIdDetails(
+        dto.novelRoomId,
+        dto,
+      );
     this.writerPemissionCheck(writers, user);
-    return writers.map((writer) => new FindByNovelWriterDetails(writer));
+    const items = writers.map((writer) => new FindByNovelWriterDetails(writer));
+    return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
   async changeWriterStatus(
     id: number,
@@ -114,7 +116,6 @@ export class NovelWriterService {
     } catch (error) {
       console.error(error);
     }
-
     return;
   }
   async changeWriterSeq(dto: ChangeWriterSeqRequestDto, user: UserEntity) {

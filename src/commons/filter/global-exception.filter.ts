@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { IBaseException } from '../exception/base.exception';
-import { getToDayISO8601 } from '../util/date.util';
 
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
@@ -24,19 +23,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.message
         : 'INTERNAL SERVER ERROR';
-    console.log(exception);
-    // const data = exception instanceof HttpException ? exception.data : null;
-    console.log('exception = ', exception?.data);
     response.status(statusCode);
-
     const responseBody: IBaseException = {
       errorCode:
         exception?.response || 'Unknow Error Contact System Adminstrator',
-      path: request.path,
-      message,
       data: null,
       validate: exception?.validate,
-      timestamp: getToDayISO8601(),
+      message,
     };
     this.logger.error(`HTTP Error: ${statusCode} - Message: ${message}`);
     this.logger.error(`exception ${JSON.stringify(exception)}`);

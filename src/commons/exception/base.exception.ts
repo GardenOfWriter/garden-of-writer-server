@@ -5,8 +5,8 @@ import { CoreErrorMessage } from './core-error-message.interface';
 
 export interface IBaseException extends ICommonResponse<null> {
   errorCode: string;
-  path: string;
   validate?: string[];
+  message: string;
 }
 
 export class BaseException

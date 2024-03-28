@@ -2,6 +2,8 @@ import { FindOneOptions } from 'typeorm';
 import { NovelWriterEntity } from '../entities/novel-writer.entity';
 import { Provider } from '@nestjs/common';
 import { NovelWriterRepositoryImpl } from './novel-writer.repository.impl';
+import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
+import { UserEntity } from '@app/user/entities/user.entity';
 
 export const NovelWriterRepositoryToken = 'NovelWriterRepository';
 
@@ -28,4 +30,8 @@ export interface NovelWriterRepository {
     options: FindOneOptions<NovelWriterEntity>,
   ): Promise<NovelWriterEntity>;
   findBynovelRoomIdAttendingCount(novelRoomId: number): Promise<number>;
+  findByNovelRoomIdDetails(
+    novelRoomId: number,
+    pagination: BasePaginationRequest,
+  ): Promise<[NovelWriterEntity[], number]>;
 }

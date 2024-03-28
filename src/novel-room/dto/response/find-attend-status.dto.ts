@@ -9,10 +9,14 @@ import { NovelRoomEntity } from '../../entities/novel-room.entity';
 import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { RoomCategoryDescription } from '../../entities/enum/novel-room-category.enum';
+import {
+  RoomCategoryDescription,
+  findCategoryName,
+} from '../../entities/enum/novel-room-category.enum';
 import { RoomTypeDescription } from '../../entities/enum/novel-room-type.enum';
 import { WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
 import { NovelRoomStatuDescription } from '../../entities/enum/novel-room-status.enum';
+import { convertDayFormat } from '@app/commons/util/date.util';
 
 export class FindAttendStatusNovelRoomDto {
   private _no: number;
@@ -49,8 +53,8 @@ export class FindAttendStatusNovelRoomDto {
   }
   @ApiProperty({ ...RoomCategoryDescription })
   @Expose({ name: 'category' })
-  get category(): number {
-    return this._category;
+  get category(): { id: number; name: string } {
+    return { id: this._category, name: findCategoryName(this._category) };
   }
 
   @ApiProperty({
@@ -67,8 +71,8 @@ export class FindAttendStatusNovelRoomDto {
     description: '개설일',
   })
   @Expose({ name: 'createdAt' })
-  get createdAt(): Date {
-    return this._createdAt;
+  get createdAt(): string {
+    return convertDayFormat(this._createdAt);
   }
 
   @ApiProperty({
@@ -76,8 +80,11 @@ export class FindAttendStatusNovelRoomDto {
     description: '완결일',
   })
   @Expose({ name: 'completionAt' })
-  get completionAt(): Date {
-    return this._completedAt;
+  get completionAt(): string | null {
+    if (this._completedAt) {
+      return convertDayFormat(this._completedAt);
+    }
+    return null;
   }
 
   @ApiProperty({
@@ -131,8 +138,9 @@ export class FindAttendStatusNovelRoomDto {
     description: '참여 승인/반려일',
   })
   @Expose({ name: 'notifiedAt' })
-  get notifiedAt(): Date | null {
-    return this._me.notifiedAt || null;
+  get notifiedAt(): string | null {
+    const date = convertDayFormat(this._me.notifiedAt);
+    return this._me.notifiedAt ? date : null;
   }
 
   @ApiProperty({
@@ -140,7 +148,8 @@ export class FindAttendStatusNovelRoomDto {
     description: '참여 승인/반려일',
   })
   @Expose({ name: 'exitedAt' })
-  get exitedAt(): Date | null {
-    return this._me.exitedAt || null;
+  get exitedAt(): string | null {
+    const date = convertDayFormat(this._me.exitedAt);
+    return this._me.exitedAt ? date : null;
   }
 }

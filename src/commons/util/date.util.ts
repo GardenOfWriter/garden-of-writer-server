@@ -7,3 +7,7 @@ export const getToDayISO8601 = () => {
 export const getToDay = () => {
   return dayjs().toDate();
 };
+
+export const convertDayFormat = (date: Date) => {
+  return dayjs(date).format('YYYY-MM-DD HH:MM');
+};

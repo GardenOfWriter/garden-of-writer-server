@@ -4,6 +4,7 @@ import { NovelWriterEntity } from '../entities/novel-writer.entity';
 
 import { WriterStatusEnum } from '../entities/enums/writer-status.enum';
 import { NovelWriterRepository } from './novel-writer.repository';
+import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 
 export class NovelWriterRepositoryImpl implements NovelWriterRepository {
   constructor(
@@ -52,8 +53,8 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     });
   }
 
-  findByNovelRoomId(novelRoomId: number): Promise<NovelWriterEntity[]> {
-    return this.dataSource.find({
+  async findByNovelRoomId(novelRoomId: number): Promise<NovelWriterEntity[]> {
+    return await this.dataSource.find({
       select: [
         'id',
         'status',
@@ -74,10 +75,25 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
       },
     });
   }
+
   async findByoptions(
     options: FindOneOptions<NovelWriterEntity>,
   ): Promise<NovelWriterEntity[]> {
     return await this.dataSource.find(options);
+  }
+
+  async findByNovelRoomIdDetails(
+    novelRoomId: number,
+    pagination: BasePaginationRequest,
+  ): Promise<[NovelWriterEntity[], number]> {
+    return await this.dataSource.findAndCount({
+      relations: ['user'],
+      where: {
+        novelRoom: { id: novelRoomId },
+      },
+      take: pagination.take,
+      skip: pagination.skip,
+    });
   }
 
   async saveRow(entity: Partial<NovelWriterEntity>): Promise<void> {
