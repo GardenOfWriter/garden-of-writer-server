@@ -145,7 +145,7 @@ export class NovelWriterService {
 
   private writerPemissionCheck(writers: NovelWriterEntity[], user: UserEntity) {
     const currentWriter = this.filterCurrentWriter(writers, user);
-    this.logger.debug('currentWriter =', currentWriter);
+    this.logger.debug('currentWriter =', JSON.stringify(currentWriter));
     if (!currentWriter || !currentWriter.isRepresentativeWriter()) {
       throw new NotAccessParticiateWriterExcetpion();
     }
