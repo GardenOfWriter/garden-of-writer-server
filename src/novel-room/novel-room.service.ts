@@ -55,14 +55,20 @@ export class NovelRoomService {
   async createRoom(dto: CreateNovelRoomDto): Promise<NovelRoomEntity> {
     const checkTitle = await this.novelRoomRepository.existTitle(dto.title);
     if (checkTitle) throw new NovelRoomDuplicationTitleException();
-    const roomEntity = dto.toRoomEntity();
-    await this.novelRoomRepository.saveRow(roomEntity);
-    await Promise.allSettled(this.saveRoomTrigger(roomEntity, dto));
-    return roomEntity;
+    const room = dto.toRoomEntity();
+    await this.novelRoomRepository.saveRow(room);
+    const user = dto.getUser();
+    const writer = dto.toWriterEntity(room.id, user);
+    const chapter = dto.toChapterEntity(room.id, user);
+    await Promise.all([
+      await this.novelWriterRepository.saveRow(writer),
+      await this.chapterRepository.saveRow(chapter),
+    ]);
+    return room;
   }
 
   async getById(id: number): Promise<FindByRoomIdDetailDto> {
-    const room = await this.novelRoomRepository.getById(id);
+    const room = await this.novelRoomRepository.getByIdWithTag(id);
     if (!room) throw new NovelRoomNotFoundException();
     return new FindByRoomIdDetailDto(room);
   }
@@ -80,20 +86,5 @@ export class NovelRoomService {
     room.updateSubTitleAndCategory(dto.subTitle, dto.category);
     await this.novelRoomRepository.saveRow(room);
     return room;
-  }
-  private saveRoomTrigger(
-    room: NovelRoomEntity,
-    dto: CreateNovelRoomDto,
-  ): any[] {
-    const user = dto.getUser();
-    const writerStatus = WriterStatusEnum.ATTENDING;
-    const host = WriterCategoryEnum.HOST;
-    const chpaterStatus = ChapterStatusEnum.WRITING;
-    const writer = NovelWriterEntity.of(room.id, host, writerStatus, user);
-    const chapter = ChapterEntity.of(room.id, chpaterStatus, user);
-    return [
-      this.novelWriterRepository.saveRow(writer),
-      this.chapterRepository.saveRow(chapter),
-    ];
   }
 }

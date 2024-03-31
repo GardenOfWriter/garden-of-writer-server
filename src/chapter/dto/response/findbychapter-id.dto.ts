@@ -11,16 +11,16 @@ export class FindChapterRoomIdResDto {
   private _no: number;
   private _status: ChapterStatusType;
   private _title: string;
-  private _approvalDate: Date;
-  private _finalWriteredAt: Date;
+  private _approvalAt: Date;
+  private _finalAt: Date;
   private _viewCount: number;
 
   constructor(entity: ChapterEntity) {
     this._id = entity.id;
     this._status = entity.status;
     this._title = entity.title;
-    this._approvalDate = entity.approvalDate;
-    this._finalWriteredAt = entity.finalWriteredAt;
+    this._approvalAt = entity.approvalAt;
+    this._finalAt = entity.finalAt;
     this._viewCount = entity.viewCount;
     this._no = entity.no;
   }
@@ -62,19 +62,19 @@ export class FindChapterRoomIdResDto {
 
   @ApiProperty({
     example: '2023-01-01 10:00:00',
-    description: '승인/반려일',
+    description: '연재 승인일',
   })
-  @Expose()
-  get approvalDate(): Date {
-    return this._approvalDate;
+  @Expose({ name: 'approvalAt' })
+  get approvalAt(): Date {
+    return this._approvalAt;
   }
   @ApiProperty({
     example: '2023-01-01 10:00:00',
     description: '최종 작성일',
   })
-  @Expose()
-  get finalWriteredAt(): Date {
-    return this._finalWriteredAt;
+  @Expose({ name: 'finalAt' })
+  get finalAt(): Date {
+    return this._finalAt;
   }
   @ApiProperty({
     example: 10,

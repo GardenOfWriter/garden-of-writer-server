@@ -66,6 +66,20 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
   async getById(id: number): Promise<NovelRoomEntity> {
     return await this.dataSource.findOne({ where: { id } });
   }
+
+  async getByIdWithTag(id: number): Promise<NovelRoomEntity> {
+    return await this.dataSource.findOne({
+      relations: [
+        'novelWriter',
+        'novelWriter.user',
+        'novelTag',
+        'novelTag.tag',
+      ],
+      where: {
+        id,
+      },
+    });
+  }
   async saveRow(entity: NovelRoomEntity): Promise<void> {
     await this.dataSource.save(entity);
     return;

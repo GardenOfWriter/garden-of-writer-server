@@ -35,8 +35,6 @@ import {
 } from './decorator/swagger.decorator';
 import { NovelAttendBoardService } from '@app/novel-attend-board/novel-attend-board.service';
 import { NovelTagService } from '../novel-tag/novel-tag.service';
-import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
-import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
 

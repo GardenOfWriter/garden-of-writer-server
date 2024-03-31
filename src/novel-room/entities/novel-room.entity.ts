@@ -7,18 +7,8 @@ import {
   NovelRoomType,
   NovelRoomTypeEnum,
 } from '@app/novel-room/entities/enum/novel-room-type.enum';
-import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
-
 import { UserEntity } from '@app/user/entities/user.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { NovelAttendBoardEntity } from '../../novel-attend-board/entities/novel-attend-board.entity';
 import { NovelWriterEntity } from '../../novel-writer/entities/novel-writer.entity';
 
@@ -27,6 +17,7 @@ import {
   NovelRoomStatusType,
 } from './enum/novel-room-status.enum';
 import { convertDayFormat } from '@app/commons/util/date.util';
+import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 
 @Entity({ name: 'novel-room', schema: 'gow-server' })
 export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
@@ -73,7 +64,6 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   })
   completedAt: string;
 
-  // 소설 공방 상태
   @Column({
     type: 'enum', //
     enum: NovelRoomStatusEnum,
@@ -83,9 +73,7 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
 
   @Column('varchar', { nullable: true })
   bookCover: string;
-  /**
-   *  추후에 createdBy로 옮기는걸 제안
-   */
+
   @ManyToOne(() => UserEntity, (user) => user.novelRooms)
   user: UserEntity;
 
@@ -94,6 +82,9 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
 
   @OneToOne((_type) => NovelAttendBoardEntity, (board) => board.noveRoom)
   novelAttendBoard: NovelAttendBoardEntity;
+
+  @OneToMany(() => NovelTagEntity, (novelTag) => novelTag.novelRoom)
+  novelTag: NovelTagEntity[];
 
   static of(
     type: NovelRoomType,
@@ -120,6 +111,5 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   updateSubTitleAndCategory(subTitle: string, category: NovelRoomCategoryType) {
     this.subTitle = subTitle;
     this.category = category;
-    return this;
   }
 }

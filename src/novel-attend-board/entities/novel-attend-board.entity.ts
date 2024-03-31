@@ -26,7 +26,7 @@ export class NovelAttendBoardEntity {
   @Column('text')
   content: string;
 
-  @Column('int', { nullable: true })
+  @Column('int', { nullable: true, default: 0 })
   viewCount: number;
 
   @Column('varchar', { length: 4000 })

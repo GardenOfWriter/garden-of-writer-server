@@ -21,7 +21,7 @@ import {
   NovelWriterRepositoryToken,
 } from './repository/novel-writer.repository';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
-import { FindNovelWriteManagementrDto } from './dto/request/find-novel-writer.dto';
+import { FindNovelWriteManagementDto } from './dto/request/find-novel-writer.dto';
 
 @Injectable()
 export class NovelWriterService {
@@ -83,7 +83,7 @@ export class NovelWriterService {
   }
   async findByNovelRoomIdDetails(
     user: UserEntity,
-    dto: FindNovelWriteManagementrDto,
+    dto: FindNovelWriteManagementDto,
   ): Promise<PagingationResponse<FindByNovelWriterDetails>> {
     const [writers, totalCount] =
       await this.novelWriterRepository.findByNovelRoomIdDetails(
@@ -145,7 +145,6 @@ export class NovelWriterService {
 
   private writerPemissionCheck(writers: NovelWriterEntity[], user: UserEntity) {
     const currentWriter = this.filterCurrentWriter(writers, user);
-    this.logger.debug('currentWriter =', JSON.stringify(currentWriter));
     if (!currentWriter || !currentWriter.isRepresentativeWriter()) {
       throw new NotAccessParticiateWriterExcetpion();
     }

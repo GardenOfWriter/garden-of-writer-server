@@ -18,6 +18,11 @@ import {
 import { NovelRoomEntity } from '../../entities/novel-room.entity';
 import { NovelAttendBoardEntity } from '@app/novel-attend-board/entities/novel-attend-board.entity';
 import { TagEntity } from '@app/novel-tag/entities/tag.entity';
+import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
+import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.enum';
+import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
+import { WriterStatusEnum } from '@app/novel-writer/entities/enums/writer-status.enum';
+import { WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
 
 export class CreateNovelRoomDto {
   @ApiProperty({
@@ -74,8 +79,8 @@ export class CreateNovelRoomDto {
   summary: string;
 
   @ApiProperty({
-    example: '공방 북커버 ',
-    description: '이미지 주소로 표현',
+    example: '북커버 이미지 주소',
+    description: '공방 북커버 ',
   })
   @IsString()
   @IsOptional()
@@ -126,12 +131,23 @@ export class CreateNovelRoomDto {
       this._user,
     );
   }
-  toAttendBoardEntity(roomId: number) {
+  toAttendBoardEntity(roomId: number): NovelAttendBoardEntity {
     return NovelAttendBoardEntity.of(
       roomId,
       this.attendTitle,
       this.attendContent,
       this.attendOpenKakaoLink,
     );
+  }
+
+  toChapterEntity(roomId: number, user: UserEntity): ChapterEntity {
+    const chapterStatus = ChapterStatusEnum.WRITING;
+    return ChapterEntity.of(roomId, chapterStatus, user);
+  }
+
+  toWriterEntity(roomId: number, user: UserEntity) {
+    const writerStatus = WriterStatusEnum.ATTENDING;
+    const host = WriterCategoryEnum.HOST;
+    return NovelWriterEntity.of(roomId, host, writerStatus, user);
   }
 }

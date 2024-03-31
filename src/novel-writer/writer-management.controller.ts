@@ -14,7 +14,7 @@ import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
 import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
 import { NovelWriterService } from './novel-writer.service';
-import { FindNovelWriteManagementrDto } from './dto/request/find-novel-writer.dto';
+import { FindNovelWriteManagementDto } from './dto/request/find-novel-writer.dto';
 
 @ApiTags('참여 작가 관리 (대표작가)')
 @Controller('writer/management')
@@ -43,7 +43,7 @@ export class WriterManagementController {
   @Get('')
   async findWriterManagement(
     @CurrentUser() user: UserEntity,
-    @Query() dto: FindNovelWriteManagementrDto,
+    @Query() dto: FindNovelWriteManagementDto,
   ) {
     return await this.novelWriterService.findByNovelRoomIdDetails(user, dto);
   }

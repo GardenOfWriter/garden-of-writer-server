@@ -1,3 +1,4 @@
+import { ChapterLikeEntity } from '@app/chapter/entities/chapter-like.entity';
 import {
   PASSWORD_REG_EXP,
   PASSWORD_REG_EXP_ERROR_MESSAGE,
@@ -49,6 +50,9 @@ export class UserEntity {
 
   @OneToMany(() => BoardLikeEntity, (boardLike) => boardLike.user)
   boardLike: BoardLikeEntity[];
+
+  @OneToMany(() => ChapterLikeEntity, (chapterLike) => chapterLike.user)
+  chapterLike: ChapterLikeEntity[];
 
   checkRegexPassword() {
     if (PASSWORD_REG_EXP.test(this.password) === false) {

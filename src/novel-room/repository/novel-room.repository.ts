@@ -29,6 +29,7 @@ export interface NovelRoomRepository {
   ): Promise<[NovelRoomEntity[], number]>;
 
   saveRow(entity: NovelRoomEntity): Promise<void>;
+  getByIdWithTag(id: number): Promise<NovelRoomEntity>;
   getById(id: number): Promise<NovelRoomEntity>;
   existTitle(title: string): Promise<boolean>;
   deleteRow(id: number): Promise<void>;

@@ -18,11 +18,10 @@ import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
 import { FindWriter } from './decorator/find-writer.decorator';
 import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
-import { CreateNovelWriterRequestDto } from './dto/request/create-novel-writer.dto';
+import { CreateNovelWriterDto } from './dto/request/create-novel-writer.dto';
 import { WriterCategoryEnum } from './entities/enums/writer-category.enum';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterService } from './novel-writer.service';
-import { FindNovelWriteManagementrDto } from './dto/request/find-novel-writer.dto';
 
 @ApiTags('작가 리스트')
 @Controller('writer')
@@ -47,13 +46,13 @@ export class NovelWriterController {
     summary: '소설 공방에 참여 작가로 참여 신청',
   })
   @Post('/novel-room/approval')
-  create(
-    @CurrentUser() user: UserEntity,
-    @Body() dto: CreateNovelWriterRequestDto,
-  ) {
-    return this.novelWriterService.create(
-      dto.toEntity(user, WriterCategoryEnum.HOST, WriterStatusEnum.REVIEW),
+  create(@CurrentUser() user: UserEntity, @Body() dto: CreateNovelWriterDto) {
+    const writer = dto.toEntity(
+      user,
+      WriterCategoryEnum.HOST,
+      WriterStatusEnum.REVIEW,
     );
+    return this.novelWriterService.create(writer);
   }
 
   @ApiOperation({
