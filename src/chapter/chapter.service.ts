@@ -19,7 +19,6 @@ export class ChapterService {
     private chapterRepository: ChapterRepository,
   ) {}
   async save(entity: Partial<ChapterEntity>): Promise<void> {
-    console.log(entity);
     const count = await this.chapterRepository.chapterCount(entity.novelRoomId);
     entity.setNo(count);
     await this.chapterRepository.saveRow(entity);
