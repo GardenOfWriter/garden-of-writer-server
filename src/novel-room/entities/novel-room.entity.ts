@@ -7,18 +7,8 @@ import {
   NovelRoomType,
   NovelRoomTypeEnum,
 } from '@app/novel-room/entities/enum/novel-room-type.enum';
-import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
-
 import { UserEntity } from '@app/user/entities/user.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { NovelAttendBoardEntity } from '../../novel-attend-board/entities/novel-attend-board.entity';
 import { NovelWriterEntity } from '../../novel-writer/entities/novel-writer.entity';
 
@@ -26,6 +16,8 @@ import {
   NovelRoomStatusEnum,
   NovelRoomStatusType,
 } from './enum/novel-room-status.enum';
+import { convertDayFormat } from '@app/commons/util/date.util';
+import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 
 @Entity({ name: 'novel-room', schema: 'gow-server' })
 export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
@@ -62,19 +54,26 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   summary: string | null;
 
   // 연재 완료일
-  @Column('timestamp', { nullable: true })
-  completedAt: Date;
+  @Column('timestamp', {
+    nullable: true,
+    comment: '연재 완료일',
+    transformer: {
+      to: (value) => value,
+      from: (value) => (value ? convertDayFormat(value) : null),
+    },
+  })
+  completedAt: string;
 
-  // 소설 공방 상태
   @Column({
     type: 'enum', //
     enum: NovelRoomStatusEnum,
     default: NovelRoomStatusEnum.SERIES,
   })
   status: NovelRoomStatusType;
-  /**
-   *  추후에 createdBy로 옮기는걸 제안
-   */
+
+  @Column('varchar', { nullable: true })
+  bookCover: string;
+
   @ManyToOne(() => UserEntity, (user) => user.novelRooms)
   user: UserEntity;
 
@@ -84,9 +83,8 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @OneToOne((_type) => NovelAttendBoardEntity, (board) => board.noveRoom)
   novelAttendBoard: NovelAttendBoardEntity;
 
-  @ManyToMany(() => NovelTagEntity)
-  @JoinTable()
-  tags: NovelTagEntity[];
+  @OneToMany(() => NovelTagEntity, (novelTag) => novelTag.novelRoom)
+  novelTag: NovelTagEntity[];
 
   static of(
     type: NovelRoomType,
@@ -95,8 +93,9 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     category: NovelRoomCategoryType,
     character: string,
     summary: string,
+    bookCover: string,
     user: UserEntity,
-  ) {
+  ): NovelRoomEntity {
     const room = new NovelRoomEntity();
     room.type = type;
     room.title = title;
@@ -104,7 +103,13 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     room.category = category;
     room.character = character;
     room.summary = summary;
+    room.bookCover = bookCover;
     room.user = user;
     return room;
+  }
+
+  updateSubTitleAndCategory(subTitle: string, category: NovelRoomCategoryType) {
+    this.subTitle = subTitle;
+    this.category = category;
   }
 }

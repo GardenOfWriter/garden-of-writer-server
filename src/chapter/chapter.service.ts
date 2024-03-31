@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { FindChapterRoomIdResDto } from './dto/response/findbychapter-id.dto';
 import { ChapterEntity } from './entities/chapter.entity';
 import { FindByNovelRoomIdDto } from './dto/request/findby-novel-room-id.dto';
@@ -9,6 +9,7 @@ import {
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { ChapterStatusEnum } from './entities/enums/chapter-status.enum';
 import { ChangeTitleDto } from './dto/request/change-title.dto';
+import { UserEntity } from '@app/user/entities/user.entity';
 
 @Injectable()
 export class ChapterService {
@@ -19,9 +20,8 @@ export class ChapterService {
     private chapterRepository: ChapterRepository,
   ) {}
   async save(entity: Partial<ChapterEntity>): Promise<void> {
-    console.log(entity);
     const count = await this.chapterRepository.chapterCount(entity.novelRoomId);
-    entity.setNo(count);
+    entity.setNextNo(count);
     await this.chapterRepository.saveRow(entity);
     return;
   }
@@ -39,14 +39,7 @@ export class ChapterService {
     chapter.changeTitle(dto.title);
     await this.save(chapter);
   }
-  async delete(id: number): Promise<void> {
-    const chapter = await this.chapterRepository.findByoptions({
-      where: { id },
-    });
-    // 아래 validation 반드시 필요. 추후 구현
-    // if (novelText.createdBy.id !== user.id) {
-    //   throw new ConflictException('작성자가 아닙니다.')
-    // }
+  async delete(id: number, user: UserEntity): Promise<void> {
     await this.chapterRepository.deleteRow(id);
     return;
   }

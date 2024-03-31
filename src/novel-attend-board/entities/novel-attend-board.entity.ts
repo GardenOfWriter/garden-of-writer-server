@@ -1,5 +1,13 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { NovelRoomEntity } from '../../novel-room/entities/novel-room.entity';
+import { BoardLikeEntity } from './board-like.entity';
 
 @Entity({ name: 'novel-attend-board', schema: 'gow-server' })
 export class NovelAttendBoardEntity {
@@ -18,11 +26,14 @@ export class NovelAttendBoardEntity {
   @Column('text')
   content: string;
 
-  @Column('int', { nullable: true })
-  viewCount: string;
+  @Column('int', { nullable: true, default: 0 })
+  viewCount: number;
 
   @Column('varchar', { length: 4000 })
   openKakaoLink: string;
+
+  @OneToMany((_type) => BoardLikeEntity, (boardLike) => boardLike.attendBoard)
+  boardLike: BoardLikeEntity[];
 
   static of(
     roomId: number,

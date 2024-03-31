@@ -8,7 +8,7 @@ import { NovelWirterDto } from '../novel-writer.dto';
 /**
  *  참여 작가로 조인
  */
-export class CreateNovelWriterRequestDto extends PickType(NovelWirterDto, [
+export class CreateNovelWriterDto extends PickType(NovelWirterDto, [
   'novelRoomId',
 ]) {
   toEntity(

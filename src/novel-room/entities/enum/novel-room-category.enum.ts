@@ -37,7 +37,10 @@ export const findCategoryName = (category: number) => {
 };
 
 export const RoomCategoryDescription = {
-  example: NovelRoomCategoryEnum.ACTION_MARTIAL_ARTS,
+  example: {
+    id: NovelRoomCategoryEnum.NORMAL,
+    name: findCategoryName(NovelRoomCategoryEnum.NORMAL),
+  },
   description: `카테고리 =  일반소설 : ${NovelRoomCategoryEnum.NORMAL},
                           로맨틱/드라마 : ${NovelRoomCategoryEnum.ROMANCE_DRAMA},
                           코믹 : ${NovelRoomCategoryEnum.COMEDY},

@@ -11,7 +11,7 @@ export class NovelTagEntity extends PrimaryGeneratedPkEntity {
   @Column('bigint')
   tagId: number;
 
-  @ManyToOne(() => NovelRoomEntity, (room) => room.tags)
+  @ManyToOne(() => NovelRoomEntity, (novelRoom) => novelRoom.novelTag)
   novelRoom: NovelRoomEntity;
 
   @ManyToOne(() => TagEntity, (novelTag) => novelTag.noveTag)

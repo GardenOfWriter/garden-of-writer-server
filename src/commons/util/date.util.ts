@@ -9,5 +9,5 @@ export const getToDay = () => {
 };
 
 export const convertDayFormat = (date: Date) => {
-  return dayjs(date).format('YYYY-MM-DD HH:MM');
+  return dayjs(date).format('YYYY-MM-DD HH:mm').toString();
 };

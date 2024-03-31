@@ -8,6 +8,8 @@ import {
   ChapterStatusEnum,
   ChapterStatusType,
 } from './enums/chapter-status.enum';
+import { convertDayFormat, getToDay } from '@app/commons/util/date.util';
+import { ChapterLikeEntity } from './chapter-like.entity';
 @Entity({ name: 'chapter', schema: 'gow-server' })
 export class ChapterEntity extends PrimaryAuditiedPK {
   @Column('int', { comment: '소설공방의 회차 번호' })
@@ -30,17 +32,34 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   @ManyToOne(() => NovelRoomEntity, (room) => room.id)
   novelRoom: NovelRoomEntity;
 
-  @Column('timestamp', { comment: '최종 작성일 ', nullable: true })
-  finalWriteredAt: Date;
+  @Column('timestamp', {
+    comment: '최종 작성일 ',
+    nullable: true,
+    transformer: {
+      to: (value) => value,
+      from: (value) => (value ? convertDayFormat(value) : null),
+    },
+  })
+  finalAt: Date;
 
-  @Column('timestamp', { comment: '연재 승인일', nullable: true })
-  approvalDate: Date;
+  @Column('timestamp', {
+    comment: '연재 승인일',
+    nullable: true,
+    transformer: {
+      to: (value) => value,
+      from: (value) => (value ? convertDayFormat(value) : null),
+    },
+  })
+  approvalAt: Date;
 
   @Column('int', { comment: '조회수', default: 0 })
   viewCount: number;
 
   @OneToMany((_type) => ChapterCommentEntity, (comment) => comment)
   chapterComment: ChapterCommentEntity[];
+
+  @OneToMany((_type) => ChapterLikeEntity, (like) => like.chapter)
+  chapterLike: ChapterLikeEntity[];
 
   static of(
     novelRoomId: number,
@@ -49,6 +68,7 @@ export class ChapterEntity extends PrimaryAuditiedPK {
     title: string = '프롤로그',
   ) {
     const chapter = new ChapterEntity();
+    chapter.no = 1;
     chapter.novelRoomId = novelRoomId;
     chapter.status = status;
     chapter.title = title;
@@ -57,12 +77,10 @@ export class ChapterEntity extends PrimaryAuditiedPK {
     return chapter;
   }
 
-  setNo(prevNo: number) {
+  setNextNo(prevNo: number) {
     this.no = prevNo + 1;
   }
-  /**
-   *
-   */
+
   changeStatus(status: ChapterStatusType) {
     this.status = status;
   }
@@ -70,15 +88,12 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   changeTitle(title: string) {
     this.title = title;
   }
-  /**
-   *
-   * 나중에 day.js 혹은 joda date 타임으로 변경
-   */
+
   chapterApproved() {
-    this.approvalDate = new Date();
+    this.approvalAt = getToDay();
   }
 
   chapterFinalWriterd() {
-    this.finalWriteredAt = new Date();
+    this.finalAt = getToDay();
   }
 }

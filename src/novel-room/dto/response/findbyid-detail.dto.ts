@@ -1,4 +1,7 @@
-import { NovelRoomCategoryType } from '@app/novel-room/entities/enum/novel-room-category.enum';
+import {
+  NovelRoomCategoryType,
+  findCategoryName,
+} from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { NovelRoomStatusType } from '@app/novel-room/entities/enum/novel-room-status.enum';
 import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
@@ -7,6 +10,8 @@ import { Expose } from 'class-transformer';
 import { RoomCategoryDescription } from '../../entities/enum/novel-room-category.enum';
 import { RoomTypeDescription } from '../../entities/enum/novel-room-type.enum';
 import { NovelRoomStatuDescription } from '../../entities/enum/novel-room-status.enum';
+import { convertDayFormat } from '../../../commons/util/date.util';
+import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 
 export class FindByRoomIdDetailDto {
   private _createdAt: Date;
@@ -18,8 +23,9 @@ export class FindByRoomIdDetailDto {
   private _category: NovelRoomCategoryType;
   private _character: string;
   private _summary: string;
-  private _completedAt: Date;
+  private _completedAt: string;
   private _status: NovelRoomStatusType;
+  private _novelTags: NovelTagEntity[];
 
   constructor(room: NovelRoomEntity) {
     this._id = room.id;
@@ -32,12 +38,12 @@ export class FindByRoomIdDetailDto {
     this._completedAt = room.completedAt;
     this._createdAt = room.createdAt;
     this._updatedAt = room.updatedAt;
-    this._completedAt = room.completedAt;
+    this._novelTags = room.novelTag;
   }
 
   @ApiProperty({
     example: 1,
-    description: '공방 row id',
+    description: '공방 id',
   })
   @Expose()
   get id() {
@@ -49,10 +55,11 @@ export class FindByRoomIdDetailDto {
   get type() {
     return this._type;
   }
+
   @ApiProperty({ ...RoomCategoryDescription })
-  @Expose()
-  get category() {
-    return this._category;
+  @Expose({ name: 'category' })
+  get category(): { id: number; name: string } {
+    return { id: this._category, name: findCategoryName(this._category) };
   }
 
   @ApiProperty({
@@ -99,7 +106,7 @@ export class FindByRoomIdDetailDto {
   }
 
   @ApiProperty({
-    example: new Date(),
+    example: convertDayFormat(new Date()),
     description: '공방 생성일',
   })
   @Expose()
@@ -108,7 +115,7 @@ export class FindByRoomIdDetailDto {
   }
 
   @ApiProperty({
-    example: new Date(),
+    example: convertDayFormat(new Date()),
     description: '공방 수정일',
   })
   @Expose()
@@ -116,11 +123,21 @@ export class FindByRoomIdDetailDto {
     return this._updatedAt;
   }
   @ApiProperty({
-    example: new Date(),
+    example: convertDayFormat(new Date()),
     description: '연재 완료일',
   })
   @Expose()
   get completedAt() {
-    return this._createdAt;
+    return this._completedAt;
+  }
+  @ApiProperty({
+    example: ['공방 태그'],
+    description: '공방 태그',
+  })
+  @Expose()
+  get novelTag(): string[] {
+    return this._novelTags.map((novelTag) => {
+      return novelTag.tag.name;
+    });
   }
 }

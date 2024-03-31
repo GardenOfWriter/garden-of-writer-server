@@ -4,11 +4,17 @@ import {
 } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { NovelRoomEntity } from '../../../novel-room/entities/novel-room.entity';
-import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
-import { UserEntity } from '../../../user/entities/user.entity';
+import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
+import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
+import { UserEntity } from '@app/user/entities/user.entity';
+import { convertDayFormat } from '@app/commons/util/date.util';
+import {
+  RoomCategoryDescription,
+  findCategoryName,
+} from '@app/novel-room/entities/enum/novel-room-category.enum';
 
 export class FindAllNovelAttendBoardDto {
+  private _roomId: number;
   private _roomTitle: string;
   private _roomCreatedAt: Date;
   private _viewCount: number;
@@ -16,13 +22,25 @@ export class FindAllNovelAttendBoardDto {
   private _writers: NovelWriterEntity[];
   private _category: number;
   private _type: NovelRoomType;
+  private _like: number;
   constructor(user: UserEntity, room: NovelRoomEntity) {
+    this._roomId = room.id;
     this._roomTitle = room.title;
     this._boardTitle = room.novelAttendBoard?.title;
     this._roomCreatedAt = room.createdAt;
     this._writers = room.novelWriter;
     this._category = room.category;
     this._type = room.type;
+    this._like = room.novelAttendBoard.boardLike.length;
+  }
+
+  @ApiProperty({
+    example: '공방 ID',
+    description: '공방 ID',
+  })
+  @Expose()
+  get roomId(): number {
+    return this._roomId;
   }
   @ApiProperty({
     example: '소설 공방 제목',
@@ -50,7 +68,7 @@ export class FindAllNovelAttendBoardDto {
     return this._viewCount || 0;
   }
   @ApiProperty({
-    example: new Date(),
+    example: convertDayFormat(new Date()),
     description: '공방 게시일',
   })
   @Expose()
@@ -63,15 +81,12 @@ export class FindAllNovelAttendBoardDto {
   })
   @Expose()
   get like() {
-    return 5;
+    return this._like || 0;
   }
-  @ApiProperty({
-    example: '소설 공방 카테고리',
-    description: 'category',
-  })
-  @Expose()
-  get category() {
-    return this._category;
+  @ApiProperty({ ...RoomCategoryDescription })
+  @Expose({ name: 'category' })
+  get category(): { id: number; name: string } {
+    return { id: this._category, name: findCategoryName(this._category) };
   }
   @ApiProperty({
     example: 2,

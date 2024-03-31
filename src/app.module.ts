@@ -77,7 +77,6 @@ import { UserModule } from './user/user.module';
             const constraints = errors.map((_error) =>
               Object.values(_error.constraints),
             )[0];
-            console.log(constraints);
             throw new ArgumentInvalidException(constraints);
           },
         }),

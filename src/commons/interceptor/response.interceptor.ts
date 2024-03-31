@@ -29,8 +29,6 @@ export class ResponseInterceptor<T>
         const statusCode = res.statusCode;
         const method = req.method;
         const customStatusCode = this.getSuccessCustomsCode(method, result);
-        const message = getSuccessResponseMessageForStatusCode(statusCode);
-        const timestamp = getToDayISO8601();
         let meta = undefined;
         res.status(customStatusCode);
         if (result?.meta) {

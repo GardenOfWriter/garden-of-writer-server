@@ -1,25 +1,26 @@
 import { JwtGuard } from '@app/auth/guard/jwt.guard';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
-import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
 import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   Query,
   SerializeOptions,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserEntity } from '../user/entities/user.entity';
 import {
-  CreateNovelAttendBoard,
+  CreateBoardLike,
+  FindDetailBoard,
   FindNovelAttendBoard,
 } from './decorator/novel-attend-board.swagger';
-import { CreateNovelAttnedBoardDto } from './dto/request/create-board.dto';
 import { NovelAttendBoardService } from './novel-attend-board.service';
 import { FindAttendBoardDto } from './dto/request/find-attend-board.dto';
+import { CreateBoardLikeDto } from './dto/request/create-board-like.dto';
 
 @ApiTags('소설공방참여 게시글')
 @Controller('novel-attend-board')
@@ -34,6 +35,24 @@ export class NovelAttendBoardController {
   @FindNovelAttendBoard()
   @Get('')
   findAll(@Query() dto: FindAttendBoardDto, @CurrentUser() user: UserEntity) {
-    return this.novelAttendBoardService.findAll(user);
+    return this.novelAttendBoardService.findAll(dto, user);
+  }
+
+  @FindDetailBoard()
+  @Get(':id')
+  async findByIdDetail(
+    @Param('id', ParseIntPipe) roomId: number,
+    @CurrentUser() user: UserEntity,
+  ) {
+    return await this.novelAttendBoardService.findById(roomId, user);
+  }
+
+  @CreateBoardLike()
+  @Post('like')
+  async boardLike(
+    @CurrentUser() user: UserEntity,
+    @Body() dto: CreateBoardLikeDto,
+  ) {
+    return await this.novelAttendBoardService.createBoardLike(dto, user);
   }
 }
