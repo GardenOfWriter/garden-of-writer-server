@@ -37,6 +37,8 @@ import { NovelAttendBoardService } from '@app/novel-attend-board/novel-attend-bo
 import { NovelTagService } from '../novel-tag/novel-tag.service';
 import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
+import { PagingationResponse } from '@app/commons/pagination/pagination.response';
+import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
 
 @ApiTags('소설 공방')
 @Controller('novel-room')
@@ -73,7 +75,7 @@ export class NovelRoomController {
   async findAllRooms(
     @CurrentUser() user: UserEntity,
     @Query() query: FindAttendQueryDto,
-  ): Promise<NovelRoomEntity[]> {
+  ): Promise<PagingationResponse<FindAttendStatusNovelRoomDto>> {
     return this.novelRoomService.findAllRooms(user, query);
   }
 

@@ -26,6 +26,7 @@ import {
   NovelRoomStatusEnum,
   NovelRoomStatusType,
 } from './enum/novel-room-status.enum';
+import { convertDayFormat } from '@app/commons/util/date.util';
 
 @Entity({ name: 'novel-room', schema: 'gow-server' })
 export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
@@ -62,8 +63,15 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   summary: string | null;
 
   // 연재 완료일
-  @Column('timestamp', { nullable: true })
-  completedAt: Date;
+  @Column('timestamp', {
+    nullable: true,
+    comment: '연재 완료일',
+    transformer: {
+      to: (value) => value,
+      from: (value) => (value ? convertDayFormat(value) : null),
+    },
+  })
+  completedAt: string;
 
   // 소설 공방 상태
   @Column({
@@ -72,6 +80,9 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     default: NovelRoomStatusEnum.SERIES,
   })
   status: NovelRoomStatusType;
+
+  @Column('varchar', { nullable: true })
+  bookCover: string;
   /**
    *  추후에 createdBy로 옮기는걸 제안
    */
@@ -84,10 +95,6 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @OneToOne((_type) => NovelAttendBoardEntity, (board) => board.noveRoom)
   novelAttendBoard: NovelAttendBoardEntity;
 
-  @ManyToMany(() => NovelTagEntity)
-  @JoinTable()
-  tags: NovelTagEntity[];
-
   static of(
     type: NovelRoomType,
     title: string,
@@ -95,8 +102,9 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     category: NovelRoomCategoryType,
     character: string,
     summary: string,
+    bookCover: string,
     user: UserEntity,
-  ) {
+  ): NovelRoomEntity {
     const room = new NovelRoomEntity();
     room.type = type;
     room.title = title;
@@ -104,7 +112,14 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     room.category = category;
     room.character = character;
     room.summary = summary;
+    room.bookCover = bookCover;
     room.user = user;
     return room;
+  }
+
+  updateSubTitleAndCategory(subTitle: string, category: NovelRoomCategoryType) {
+    this.subTitle = subTitle;
+    this.category = category;
+    return this;
   }
 }
