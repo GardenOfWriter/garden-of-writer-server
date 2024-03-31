@@ -29,7 +29,6 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
     return await this.dataSource.findAndCount({
       relations: [
         'novelWriter',
-        'novelAttendBoard',
         'novelWriter.user',
         'novelAttendBoard',
         'novelAttendBoard.boardLike',

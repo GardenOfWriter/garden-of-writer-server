@@ -1,36 +1,41 @@
-import {
-  WriterCategoryEnum,
-  WriterCategoryType,
-} from '@app/novel-writer/entities/enums/writer-category.enum';
+import { WriterCategoryType } from '@app/novel-writer/entities/enums/writer-category.enum';
 import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import {
-  WriterStatusEnum,
-  WriterStatusDescription,
-} from '../../entities/enums/writer-status.enum';
+import { WriterStatusDescription } from '../../entities/enums/writer-status.enum';
 import { NovelWriterEntity } from '../../entities/novel-writer.entity';
 import { WriterCategoryDescription } from '../../entities/enums/writer-category.enum';
 
 export class FindByNovelRoomIdResponseDto {
+  private _no: number;
+  private _id: number;
   private _status: WriterStatusType;
   private _user: UserEntity;
   private _category: WriterCategoryType;
-  private _id: number;
   private _writingSeq: number;
   private _currentlyWriting: boolean;
-  constructor(entity: NovelWriterEntity) {
+  constructor(entity: NovelWriterEntity, no: number) {
     this._id = entity.id;
     this._status = entity.status;
     this._user = entity.user;
     this._category = entity.category;
     this._writingSeq = entity.writingSeq;
     this._currentlyWriting = entity.currentlyWriting;
+    this._no = no;
   }
   @ApiProperty({
     example: 1,
-    description: '소설 공방 작가 ID',
+    description: '작가 리스트 No',
+  })
+  @Expose()
+  get no(): number {
+    return this._no;
+  }
+
+  @ApiProperty({
+    example: 1,
+    description: '작가 ID',
   })
   @Expose()
   get id(): number {
@@ -59,7 +64,7 @@ export class FindByNovelRoomIdResponseDto {
   }
 
   @ApiProperty({
-    example: '작가 1',
+    example: '작가 닉네임 1',
     description: '작가 닉네임',
   })
   @Expose()

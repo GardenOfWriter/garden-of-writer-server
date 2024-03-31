@@ -35,7 +35,7 @@ export class ChapterRepositoryImpl implements ChapterRepository {
         novelRoom: { id: novelRoomId },
       },
       order: {
-        createdAt: 'DESC',
+        no: 'DESC',
       },
     });
   }

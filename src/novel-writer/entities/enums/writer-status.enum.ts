@@ -10,7 +10,7 @@ export type WriterStatusType =
 
 export const WriterStatusDescription = {
   enum: WriterStatusEnum,
-  example: true,
+  example: WriterStatusEnum.ATTENDING,
   description: `${WriterStatusEnum.ATTENDING} : 참여중,
                 ${WriterStatusEnum.REJECT} : 참여 반려,
                 ${WriterStatusEnum.REVIEW} : 참여 검토,

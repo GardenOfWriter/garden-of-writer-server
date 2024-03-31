@@ -12,6 +12,7 @@ import {
   RoomCategoryDescription,
   findCategoryName,
 } from '@app/novel-room/entities/enum/novel-room-category.enum';
+import { NovelAttendBoardEntity } from '@app/novel-attend-board/entities/novel-attend-board.entity';
 
 export class FindAllNovelAttendBoardDto {
   private _roomId: number;
@@ -22,7 +23,8 @@ export class FindAllNovelAttendBoardDto {
   private _writers: NovelWriterEntity[];
   private _category: number;
   private _type: NovelRoomType;
-  private _like: number;
+  private _attendBoard: NovelAttendBoardEntity;
+
   constructor(user: UserEntity, room: NovelRoomEntity) {
     this._roomId = room.id;
     this._roomTitle = room.title;
@@ -31,7 +33,7 @@ export class FindAllNovelAttendBoardDto {
     this._writers = room.novelWriter;
     this._category = room.category;
     this._type = room.type;
-    this._like = room.novelAttendBoard.boardLike.length;
+    this._attendBoard = room?.novelAttendBoard;
   }
 
   @ApiProperty({
@@ -80,8 +82,11 @@ export class FindAllNovelAttendBoardDto {
     description: '좋아요 수',
   })
   @Expose()
-  get like() {
-    return this._like || 0;
+  get likeCount() {
+    if (!this._attendBoard) {
+      return 0;
+    }
+    return this._attendBoard.boardLike.length || 0;
   }
   @ApiProperty({ ...RoomCategoryDescription })
   @Expose({ name: 'category' })

@@ -8,21 +8,24 @@ import {
   WriterCategoryDescription,
 } from '../../entities/enums/writer-category.enum';
 import { NovelWriterEntity } from '../../entities/novel-writer.entity';
+import { WriterStatusDescription } from '../../entities/enums/writer-status.enum';
+import { convertDayFormat } from '@app/commons/util/date.util';
 
 export class FindByNovelWriterDetails {
   private _status: WriterStatusType;
   private _category: WriterCategoryType;
+  private _user: UserEntity;
   private _createdAt: Date;
   private _notifiedAt: Date;
-  private _user: UserEntity;
   private _exitAt: Date;
   private _id: number;
 
   constructor(writer: NovelWriterEntity) {
     this._id = writer.id;
+    this._user = writer.user;
     this._category = writer.category;
     this._status = writer.status;
-    this._user = writer.user;
+
     this._createdAt = writer.createdAt;
     this._notifiedAt = writer.notifiedAt;
     this._exitAt = writer.exitedAt;
@@ -30,19 +33,22 @@ export class FindByNovelWriterDetails {
 
   @ApiProperty({
     example: 1,
-    description: '참여 작가 row Id',
+    description: '참여 작가 Id',
   })
   @Expose({ name: 'id' })
   get id(): number {
     return this._id;
   }
   @ApiProperty({
-    example: 1,
-    description: '유저 row Id',
+    example: { id: 1, nickname: '닉네임' },
+    description: 'userId : 유저 ID , nickname : 유저 닉네임',
   })
-  @Expose({ name: 'userId' })
-  get userId(): number {
-    return this._user.id;
+  @Expose({ name: 'user' })
+  get user(): { id: number; nickname: string } {
+    return {
+      id: this._user.id,
+      nickname: this._user.nickname,
+    };
   }
   @ApiProperty({ ...WriterCategoryDescription })
   @Expose({ name: 'category' })
@@ -50,40 +56,32 @@ export class FindByNovelWriterDetails {
     return this._category;
   }
   @ApiProperty({
-    example: '',
-    description: '',
+    ...WriterStatusDescription,
   })
   @Expose({ name: 'status' })
   get status(): WriterStatusType {
     return this._status;
   }
+
   @ApiProperty({
-    example: '',
-    description: '',
-  })
-  @Expose({ name: 'nickname' })
-  get nickname(): string {
-    return this._user.nickname;
-  }
-  @ApiProperty({
-    example: '',
-    description: '',
+    example: convertDayFormat(new Date()),
+    description: '참여신청일',
   })
   @Expose()
   get createdAt(): Date {
     return this._createdAt;
   }
   @ApiProperty({
-    example: '',
-    description: '',
+    example: convertDayFormat(new Date()),
+    description: '참여 승인/반려일',
   })
   @Expose()
   get notifiedAt(): Date {
     return this._notifiedAt;
   }
   @ApiProperty({
-    example: '',
-    description: '',
+    example: convertDayFormat(new Date()),
+    description: '퇴장일',
   })
   @Expose()
   get exitAt(): Date {

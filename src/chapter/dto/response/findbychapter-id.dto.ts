@@ -90,16 +90,16 @@ export class FindChapterRoomIdResDto {
     description: '댓글수',
   })
   @Expose()
-  get commentCnt(): number {
+  get commentCount(): number {
     return 10;
   }
 
   @ApiProperty({
     example: 5,
-    description: '좋아요',
+    description: '좋아요수',
   })
   @Expose()
-  get like(): number {
+  get likeCount(): number {
     return 5;
   }
 }

@@ -34,9 +34,6 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @Column('int', { comment: '현재 작성 여부', nullable: true })
   writingSeq: number;
 
-  /**
-   *  참여 승인/반려일 일
-   */
   @Column('timestamp', {
     nullable: true,
     transformer: {
@@ -45,9 +42,6 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     },
   })
   notifiedAt: Date;
-  /**
-   *  퇴장일 => 참여를 했는데 방장에 의해 퇴장 당함
-   */
 
   @Column('timestamp', {
     nullable: true,

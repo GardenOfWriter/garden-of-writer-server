@@ -28,7 +28,7 @@ export class FindByIdLikeUserDto {
   })
   @Expose({ name: 'id' })
   get id(): number {
-    return this._id;
+    return +this._id;
   }
   @ApiProperty({
     example: '모집글 타이틀',

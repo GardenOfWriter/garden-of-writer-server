@@ -15,6 +15,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
 import { NovelWriterService } from './novel-writer.service';
 import { FindNovelWriteManagementDto } from './dto/request/find-novel-writer.dto';
+import { FindWriterMangement } from './decorator/find-writer.decorator';
 
 @ApiTags('참여 작가 관리 (대표작가)')
 @Controller('writer/management')
@@ -37,9 +38,7 @@ export class WriterManagementController {
     await this.novelWriterService.changeWriterStatus(id, dto);
   }
 
-  @ApiOperation({
-    summary: '소설 공방 작가 관리 메뉴 조회',
-  })
+  @FindWriterMangement()
   @Get('')
   async findWriterManagement(
     @CurrentUser() user: UserEntity,
