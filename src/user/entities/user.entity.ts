@@ -2,6 +2,7 @@ import {
   PASSWORD_REG_EXP,
   PASSWORD_REG_EXP_ERROR_MESSAGE,
 } from '@app/commons/reg-exp/reg-exp';
+import { BoardLikeEntity } from '@app/novel-attend-board/entities/board-like.entity';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
@@ -45,6 +46,9 @@ export class UserEntity {
 
   @OneToMany(() => NovelRoomEntity, (novelRoom) => novelRoom.user)
   novelRooms: NovelRoomEntity[];
+
+  @OneToMany(() => BoardLikeEntity, (boardLike) => boardLike.user)
+  boardLike: BoardLikeEntity[];
 
   checkRegexPassword() {
     if (PASSWORD_REG_EXP.test(this.password) === false) {
