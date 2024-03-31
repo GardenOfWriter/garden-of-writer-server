@@ -1,4 +1,4 @@
-import { getToDay } from '@app/commons/util/date.util';
+import { convertDayFormat, getToDay } from '@app/commons/util/date.util';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
@@ -37,13 +37,25 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   /**
    *  참여 승인/반려일 일
    */
-  @Column('timestamp', { nullable: true })
+  @Column('timestamp', {
+    nullable: true,
+    transformer: {
+      to: (value) => value,
+      from: (value) => (value ? convertDayFormat(value) : null),
+    },
+  })
   notifiedAt: Date;
   /**
    *  퇴장일 => 참여를 했는데 방장에 의해 퇴장 당함
    */
 
-  @Column('timestamp', { nullable: true })
+  @Column('timestamp', {
+    nullable: true,
+    transformer: {
+      to: (value) => value,
+      from: (value) => (value ? convertDayFormat(value) : null),
+    },
+  })
   exitedAt: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.id, {

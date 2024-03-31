@@ -74,6 +74,14 @@ export class CreateNovelRoomDto {
   summary: string;
 
   @ApiProperty({
+    example: '공방 북커버 ',
+    description: '이미지 주소로 표현',
+  })
+  @IsString()
+  @IsOptional()
+  bookCover: string;
+
+  @ApiProperty({
     example: '공방 모집글 제목',
     description: '공방 모집글 제목',
   })
@@ -106,7 +114,7 @@ export class CreateNovelRoomDto {
     return this._user;
   }
   // request dto -> toEntity -> of method -> entity
-  toRoomEntity(): Partial<NovelRoomEntity> {
+  toRoomEntity(): NovelRoomEntity {
     return NovelRoomEntity.of(
       this.type,
       this.title,
@@ -114,6 +122,7 @@ export class CreateNovelRoomDto {
       this.category,
       this.character,
       this.summary,
+      this.bookCover,
       this._user,
     );
   }

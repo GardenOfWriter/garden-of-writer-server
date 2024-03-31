@@ -1,14 +1,10 @@
-import {
-  NovelRoomStatusEnum,
-  NovelRoomStatusType,
-} from '@app/novel-room/entities/enum/novel-room-status.enum';
+import { NovelRoomStatusType } from '@app/novel-room/entities/enum/novel-room-status.enum';
 import { Expose } from 'class-transformer';
 import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
 import { NovelRoomEntity } from '../../entities/novel-room.entity';
 import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
-
 import {
   RoomCategoryDescription,
   findCategoryName,
@@ -23,25 +19,27 @@ export class FindAttendStatusNovelRoomDto {
   private _category: number;
   private _title: string;
   private _createdAt: Date;
-  private _completedAt: Date; // 완결일
+  private _completedAt: string; // 완결일
   private _writers: NovelWriterEntity[];
   private _type: NovelRoomType;
   private _id: number;
   private _currentWriter: any;
+  private _bookCover: string;
   private _status: NovelRoomStatusType;
   private _me: NovelWriterEntity;
+
   constructor(user: UserEntity, room: NovelRoomEntity) {
     this._id = room.id;
     this._category = room.category;
     this._title = room.title;
     this._createdAt = room.createdAt;
-    this._completedAt = room.completedAt;
     this._type = room.type;
     this._writers = room.novelWriter;
     this._me = room.novelWriter.filter(
       (writer) => writer.user.id === user.id,
     )[0];
     this._status = room.status;
+    this._completedAt = room.completedAt;
   }
   @ApiProperty({
     example: 1,
@@ -67,24 +65,12 @@ export class FindAttendStatusNovelRoomDto {
   }
 
   @ApiProperty({
-    example: new Date(),
+    example: convertDayFormat(new Date()),
     description: '개설일',
   })
   @Expose({ name: 'createdAt' })
-  get createdAt(): string {
-    return convertDayFormat(this._createdAt);
-  }
-
-  @ApiProperty({
-    example: new Date(),
-    description: '완결일',
-  })
-  @Expose({ name: 'completionAt' })
-  get completionAt(): string | null {
-    if (this._completedAt) {
-      return convertDayFormat(this._completedAt);
-    }
-    return null;
+  get createdAt(): Date {
+    return this._createdAt;
   }
 
   @ApiProperty({
@@ -111,8 +97,17 @@ export class FindAttendStatusNovelRoomDto {
   get currentAttendCnt(): number {
     return this._writers.length;
   }
+
+  @ApiProperty({
+    example: 'http://bookcoverlink',
+    description: '북 커버 링크',
+  })
+  @Expose({ name: 'bookCover' })
+  get bookCover(): string {
+    return this._bookCover;
+  }
+
   /**
-   *  현 작성자
    *  TODO: 수정 필요
    */
   @ApiProperty({
@@ -123,9 +118,7 @@ export class FindAttendStatusNovelRoomDto {
   get currentWriter(): string {
     return this._writers[0].user.nickname;
   }
-  // /**
-  //  *  공방 상태
-  //  */
+
   @ApiProperty({
     ...NovelRoomStatuDescription,
   })
@@ -134,7 +127,7 @@ export class FindAttendStatusNovelRoomDto {
     return this._status;
   }
   @ApiProperty({
-    example: new Date(),
+    example: convertDayFormat(new Date()),
     description: '참여 승인/반려일',
   })
   @Expose({ name: 'notifiedAt' })
@@ -144,12 +137,21 @@ export class FindAttendStatusNovelRoomDto {
   }
 
   @ApiProperty({
-    example: new Date(),
+    example: convertDayFormat(new Date()),
     description: '참여 승인/반려일',
   })
   @Expose({ name: 'exitedAt' })
   get exitedAt(): string | null {
     const date = convertDayFormat(this._me.exitedAt);
     return this._me.exitedAt ? date : null;
+  }
+
+  @ApiProperty({
+    example: convertDayFormat(new Date()),
+    description: '연재완결일',
+  })
+  @Expose({ name: 'completedAt' })
+  get complatedAt(): string {
+    return this._completedAt;
   }
 }

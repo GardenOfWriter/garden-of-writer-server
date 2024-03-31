@@ -18,7 +18,7 @@ export class FindByRoomIdDetailDto {
   private _category: NovelRoomCategoryType;
   private _character: string;
   private _summary: string;
-  private _completedAt: Date;
+  private _completedAt: string;
   private _status: NovelRoomStatusType;
 
   constructor(room: NovelRoomEntity) {
@@ -32,7 +32,6 @@ export class FindByRoomIdDetailDto {
     this._completedAt = room.completedAt;
     this._createdAt = room.createdAt;
     this._updatedAt = room.updatedAt;
-    this._completedAt = room.completedAt;
   }
 
   @ApiProperty({
