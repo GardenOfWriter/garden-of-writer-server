@@ -49,6 +49,7 @@ export class ChapterEntity extends PrimaryAuditiedPK {
     title: string = '프롤로그',
   ) {
     const chapter = new ChapterEntity();
+    chapter.no = 1;
     chapter.novelRoomId = novelRoomId;
     chapter.status = status;
     chapter.title = title;
