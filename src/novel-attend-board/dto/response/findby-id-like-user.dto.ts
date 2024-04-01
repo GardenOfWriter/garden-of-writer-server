@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 export class FindByIdLikeUserDto {
-  @Exclude() private _id: number;
+  @Exclude() private _roomId: number;
   @Exclude() private _boardtTitle: string;
   @Exclude() private _boardcContent: string;
   @Exclude() private _viewCount: number;
@@ -13,7 +13,7 @@ export class FindByIdLikeUserDto {
   @Exclude() private _hasLike: boolean;
 
   constructor(board: NovelAttendBoardEntity, hasLike: boolean) {
-    this._id = board.id;
+    this._roomId = board.id;
     this._boardtTitle = board.title;
     this._boardcContent = board.content;
     this._openKakaoLink = board.openKakaoLink;
@@ -26,9 +26,9 @@ export class FindByIdLikeUserDto {
     example: 1,
     description: '공방 ID',
   })
-  @Expose({ name: 'id' })
-  get id(): number {
-    return +this._id;
+  @Expose({ name: 'roomId' })
+  get roomId(): number {
+    return +this._roomId;
   }
   @ApiProperty({
     example: '모집글 타이틀',

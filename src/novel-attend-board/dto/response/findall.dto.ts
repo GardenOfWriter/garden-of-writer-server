@@ -30,10 +30,10 @@ export class FindAllNovelAttendBoardDto {
     this._roomTitle = room.title;
     this._boardTitle = room.novelAttendBoard?.title;
     this._roomCreatedAt = room.createdAt;
-    this._writers = room.novelWriter;
     this._category = room.category;
     this._type = room.type;
     this._attendBoard = room?.novelAttendBoard;
+    this._writers = room.novelWriter;
   }
 
   @ApiProperty({
@@ -71,11 +71,21 @@ export class FindAllNovelAttendBoardDto {
   }
   @ApiProperty({
     example: convertDayFormat(new Date()),
-    description: '공방 게시일',
+    description: '소설공방 개설일',
   })
   @Expose()
   get roomCreatedAt(): Date {
     return this._roomCreatedAt;
+  }
+
+  @ApiProperty({
+    example: '대표작가 닉네임',
+    description: '대표작가',
+  })
+  @Expose()
+  get host(): string {
+    const hostWriter = this._writers.filter((writer) => writer.isHost())[0];
+    return hostWriter.user.nickname;
   }
   @ApiProperty({
     example: 5,

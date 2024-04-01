@@ -37,7 +37,6 @@ export class NovelAttendBoardService {
         user,
         dto,
       );
-    console.log(rooms);
     const items = rooms.map(
       (room) => new FindAllNovelAttendBoardDto(user, room),
     );

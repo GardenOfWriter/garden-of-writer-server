@@ -60,10 +60,6 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @ManyToOne(() => NovelRoomEntity, (room) => room.id)
   novelRoom: NovelRoomEntity;
 
-  isRepresentativeWriter(): boolean {
-    return this.category === WriterCategoryEnum.HOST;
-  }
-
   changeStatue(status: WriterStatusType): void {
     switch (status) {
       case 'attending':
@@ -85,6 +81,11 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     }
     this.writingSeq = seq;
   }
+
+  isHost(): boolean {
+    return this.category === WriterCategoryEnum.HOST;
+  }
+
   static of(
     novelRoomId: number,
     category: WriterCategoryType,

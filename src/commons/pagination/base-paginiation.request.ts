@@ -7,14 +7,12 @@ export abstract class BasePaginationRequest {
     description: '한페이지 가져올 row 갯수',
   })
   @IsNumber()
-  @IsOptional()
   chunkSize: number;
 
   @ApiProperty({
     example: 1,
     description: '조회할 페이지 번호',
   })
-  @IsOptional()
   @IsNumber()
   pageNo: number;
 
