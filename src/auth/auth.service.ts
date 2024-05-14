@@ -2,7 +2,7 @@ import { LoginUserDto } from '@app/auth/dto/login-user.dto';
 import { TokenPayload, TokenResult } from '@app/auth/interface/auth.interface';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { UserService } from '@app/user/user.service';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserIncorrectEmailException } from './exceptions/user-incorrect-email.exception';
@@ -45,5 +45,31 @@ export class AuthService {
       algorithm: 'HS256',
     });
     return { accessToken };
+  }
+
+  /**
+   * 토큰 검증
+   */
+  verifyToken(token: string) {
+    return this.jwtService.verify(token, {
+      secret: process.env.JWT_ACCESS_KEY,
+    });
+  }
+
+  /**
+   * Header로부터 토큰 받을 때
+   */
+  extractTokenFromHeader(header: string, isBearer: boolean) {
+    const splitToken = header.split(' ');
+
+    const prefix = isBearer ? 'Bearer' : 'Basic';
+
+    if (splitToken.length !== 2 || splitToken[0] !== prefix) {
+      throw new UnauthorizedException('잘못된 토큰입니다.');
+    }
+
+    const token = splitToken[1];
+
+    return token;
   }
 }

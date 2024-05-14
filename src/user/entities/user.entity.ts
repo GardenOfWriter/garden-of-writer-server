@@ -1,8 +1,10 @@
 import { ChapterLikeEntity } from '@app/chapter/entities/chapter-like.entity';
+import { ChatsEntity } from '@app/chats/entities/chats.entity';
 import {
   PASSWORD_REG_EXP,
   PASSWORD_REG_EXP_ERROR_MESSAGE,
 } from '@app/commons/reg-exp/reg-exp';
+import { MessageEntity } from '@app/message/message.entity';
 import { BoardLikeEntity } from '@app/novel-attend-board/entities/board-like.entity';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { BadRequestException } from '@nestjs/common';
@@ -12,6 +14,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -59,6 +63,13 @@ export class UserEntity {
       throw new BadRequestException(PASSWORD_REG_EXP_ERROR_MESSAGE);
     }
   }
+
+  @ManyToMany(() => ChatsEntity, (chat) => chat.users)
+  @JoinTable()
+  chats: ChatsEntity[];
+
+  @OneToMany(() => MessageEntity, (message) => message.author)
+  messages: MessageEntity;
 
   static of(email: string, nickname: string, password: string) {
     const user = new UserEntity();
