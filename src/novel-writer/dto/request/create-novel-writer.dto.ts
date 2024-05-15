@@ -21,6 +21,7 @@ export class CreateNovelWriterDto extends PickType(NovelWirterDto, [
       category,
       status,
       user,
+      false,
     );
     return entity;
   }

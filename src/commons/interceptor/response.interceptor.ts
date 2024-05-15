@@ -41,7 +41,6 @@ export class ResponseInterceptor<T>
           meta: meta || undefined,
         };
 
-        console.log('successResponse', successResponse);
         return successResponse;
       }),
     );

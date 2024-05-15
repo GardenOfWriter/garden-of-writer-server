@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Put,
   Query,
   SerializeOptions,
@@ -16,6 +17,7 @@ import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-wr
 import { NovelWriterService } from './novel-writer.service';
 import { FindNovelWriteManagementDto } from './dto/request/find-novel-writer.dto';
 import { FindWriterMangement } from './decorator/find-writer.decorator';
+import { WriterManagementService } from './writer-management.service';
 
 @ApiTags('참여 작가 관리 (대표작가)')
 @Controller('writer/management')
@@ -25,17 +27,18 @@ import { FindWriterMangement } from './decorator/find-writer.decorator';
 })
 @UseGuards(JwtGuard)
 export class WriterManagementController {
-  constructor(private novelWriterService: NovelWriterService) {}
+  constructor(private writerMgrService: WriterManagementService) {}
 
   @ApiOperation({
     summary: '참여 작가 상태 번경',
   })
   @Put('/status/:id')
   async changeWriterStatus(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateNovelWriterStatusRequestDto,
+    @CurrentUser() user: UserEntity,
   ) {
-    await this.novelWriterService.changeWriterStatus(id, dto);
+    await this.writerMgrService.changeWriterStatus(id, dto, user);
   }
 
   @FindWriterMangement()
@@ -44,6 +47,6 @@ export class WriterManagementController {
     @CurrentUser() user: UserEntity,
     @Query() dto: FindNovelWriteManagementDto,
   ) {
-    return await this.novelWriterService.findByNovelRoomIdDetails(user, dto);
+    return await this.writerMgrService.findByNovelRoomIdDetails(user, dto);
   }
 }

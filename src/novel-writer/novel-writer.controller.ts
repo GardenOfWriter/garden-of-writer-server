@@ -49,7 +49,7 @@ export class NovelWriterController {
   create(@CurrentUser() user: UserEntity, @Body() dto: CreateNovelWriterDto) {
     const writer = dto.toEntity(
       user,
-      WriterCategoryEnum.HOST,
+      WriterCategoryEnum.ATTENDEE,
       WriterStatusEnum.REVIEW,
     );
     return this.novelWriterService.create(writer);
