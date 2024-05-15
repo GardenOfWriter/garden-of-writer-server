@@ -24,6 +24,7 @@ import { EmailServiceImpl } from './commons/email/email.service.impl';
 import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.module';
 import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { UserModule } from './user/user.module';
+import { ErrorsInterceptor } from './commons/interceptor/error.interceptor';
 
 @Module({
   imports: [
@@ -42,7 +43,7 @@ import { UserModule } from './user/user.module';
       // entities: [ENtity],
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
-      logging: true,
+      logging: false,
       namingStrategy: new SnakeNamingStrategy(),
       autoLoadEntities: true,
     }),
@@ -89,10 +90,10 @@ import { UserModule } from './user/user.module';
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
     },
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: ErrorsInterceptor,
-    // },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ErrorsInterceptor,
+    },
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,

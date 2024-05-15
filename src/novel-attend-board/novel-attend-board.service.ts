@@ -1,4 +1,9 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserEntity } from '../user/entities/user.entity';
 import { FindAllNovelAttendBoardDto } from './dto/response/findall.dto';
 import { NovelAttendBoardEntity } from './entities/novel-attend-board.entity';
@@ -16,6 +21,7 @@ import { FindByIdLikeUserDto } from './dto/response/findby-id-like-user.dto';
 import { BoardLikeEntity } from './entities/board-like.entity';
 import { CreateBoardLikeDto } from './dto/request/create-board-like.dto';
 import { AlreadBoardLikeException } from './exception/already-board-like.exception';
+import { UpdateNovelRoomDto } from '@app/novel-room/dto/request/update-novel-room.dto';
 
 @Injectable()
 export class NovelAttendBoardService {
@@ -62,6 +68,18 @@ export class NovelAttendBoardService {
     );
     if (hasBoard) throw new AlreadBoardLikeException();
     await this.boardRepo.createBoardLike(dto.toBoardLikeEntity(user));
+    return;
+  }
+
+  async updateBoard(roomId: number, dto: UpdateNovelRoomDto, user: UserEntity) {
+    const board = await this.boardRepo.findById(roomId);
+    if (!board) throw new NotFoundException('일치하는 게시글이 없습니다.');
+    board.updateBoard(
+      dto.attendTitle,
+      dto.attendContent,
+      dto.attendOpenKakaoLink,
+    );
+    await this.boardRepo.updateRow(roomId, board);
     return;
   }
 }

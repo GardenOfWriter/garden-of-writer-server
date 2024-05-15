@@ -40,10 +40,16 @@ export class ResponseInterceptor<T>
           data: result || null,
           meta: meta || undefined,
         };
+
+        console.log('successResponse', successResponse);
         return successResponse;
       }),
     );
   }
+  /**
+   * 성공시 응답 코드 반환
+   * NO_CONTENT : 204 (return 이 안옴  프론드 담당자와 협의)
+   */
   getSuccessCustomsCode(method, result) {
     // 응답 데이터가 있을경우 200
     if (result) {
@@ -62,28 +68,5 @@ export class ResponseInterceptor<T>
       case 'DELETE':
         return HttpStatus.NO_CONTENT; // 204
     }
-  }
-}
-
-function getSuccessResponseMessageForStatusCode(
-  statusCode: HttpStatus,
-): string {
-  switch (statusCode) {
-    case HttpStatus.OK:
-      return 'OK';
-    case HttpStatus.CREATED:
-      return 'CREATED';
-    case HttpStatus.ACCEPTED:
-      return 'ACCEPTED';
-    case HttpStatus.NON_AUTHORITATIVE_INFORMATION:
-      return 'NON_AUTHORITATIVE_INFORMATION';
-    case HttpStatus.NO_CONTENT:
-      return 'NO_CONTENT';
-    case HttpStatus.RESET_CONTENT:
-      return 'RESET_CONTENT';
-    case HttpStatus.PARTIAL_CONTENT:
-      return 'PARTIAL_CONTENT';
-    default:
-      return 'Unkown Status';
   }
 }

@@ -12,4 +12,7 @@ export class UpdateNovelRoomDto extends PickType(CreateNovelRoomDto, [
   'bookCover',
   'category',
   'character',
+  'attendTitle',
+  'attendContent',
+  'attendOpenKakaoLink',
 ] as const) {}

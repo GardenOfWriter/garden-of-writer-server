@@ -48,4 +48,10 @@ export class NovelAttendBoardEntity {
     board.openKakaoLink = openKakaoLink;
     return board;
   }
+
+  updateBoard(title: string, content: string, openKakaoLink: string) {
+    this.title = title;
+    this.content = content;
+    this.openKakaoLink = openKakaoLink;
+  }
 }

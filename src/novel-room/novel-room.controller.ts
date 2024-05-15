@@ -125,8 +125,10 @@ export class NovelRoomController {
   async updateNovelRoom(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateNovelRoomDto,
+    @CurrentUser() user: UserEntity,
   ): Promise<NovelRoomEntity> {
     const room = await this.novelRoomService.updateRoom(id, dto);
+    await this.novelAttendBoardService.updateBoard(id, dto, user);
     await this.novelTagService.updateTags(dto.novelTags, room.id);
     return;
   }

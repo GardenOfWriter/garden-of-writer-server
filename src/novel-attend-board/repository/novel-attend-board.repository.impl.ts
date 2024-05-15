@@ -71,4 +71,10 @@ export class NovelAttendBoardRepositoryImpl
       },
     });
   }
+  async deleteRow(id: number): Promise<void> {
+    await this.dataSource.delete({ id });
+  }
+  async findById(id: number): Promise<NovelAttendBoardEntity> {
+    return await this.dataSource.findOne({ where: { id } });
+  }
 }

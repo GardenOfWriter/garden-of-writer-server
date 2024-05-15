@@ -12,6 +12,8 @@ export const NovelAttendBoardRepositoryProvider: Provider = {
 export interface NovelAttendBoardRepository {
   addRow(entity: Partial<NovelAttendBoardEntity>): Promise<void>;
   updateRow(id: number, entity: Partial<NovelAttendBoardEntity>): Promise<void>;
+  deleteRow(id: number): Promise<void>;
+  findById(id: number): Promise<NovelAttendBoardEntity>;
   findWithNovelRoom(): Promise<[NovelAttendBoardEntity[], number]>;
   findByIdWhereLikeUser(roomId: number): Promise<NovelAttendBoardEntity>;
   hasBoardLike(userId: number, roomId: number): Promise<boolean>;

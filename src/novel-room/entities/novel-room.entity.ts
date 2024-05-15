@@ -112,6 +112,9 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     this.completedAt = getToDayISO8601();
     this.status = NovelRoomStatusEnum.COMPLETE;
   }
+  checkCompleted(): boolean {
+    return this.status === NovelRoomStatusEnum.COMPLETE;
+  }
 
   updateRoom(
     subTitle: string,

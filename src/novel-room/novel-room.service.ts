@@ -3,7 +3,7 @@ import {
   NovelWriterRepository,
   NovelWriterRepositoryToken,
 } from '@app/novel-writer/repository/novel-writer.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateNovelRoomDto } from '@app/novel-room/dto/request/create-novel-room.dto';
 import { UpdateNovelRoomDto } from '@app/novel-room/dto/request/update-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
@@ -16,14 +16,16 @@ import { UserEntity } from '@app/user/entities/user.entity';
 import { FindByRoomIdDetailDto } from './dto/response/findbyid-detail.dto';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import {
+  NovelRoomRepo,
   NovelRoomRepository,
   NovelRoomRepositoryToken,
 } from './repository/novel-room.repository';
 
 @Injectable()
 export class NovelRoomService {
+  private logger = new Logger(NovelRoomService.name);
   constructor(
-    @Inject(NovelRoomRepositoryToken)
+    @NovelRoomRepo()
     private readonly novelRoomRepository: NovelRoomRepository,
     @Inject(NovelWriterRepositoryToken)
     private readonly novelWriterRepository: NovelWriterRepository,
@@ -98,6 +100,7 @@ export class NovelRoomService {
       dto.summary,
       dto.bookCover,
     );
+    this.logger.log(`NovelRoom Update Data : ${JSON.stringify(room)}`);
     await this.novelRoomRepository.saveRow(room);
     return room;
   }
@@ -106,6 +109,9 @@ export class NovelRoomService {
    */
   async completedNovelRoom(id: number): Promise<void> {
     const novelRoom = await this.novelRoomRepository.getById(id);
+    if (novelRoom.checkCompleted()) {
+      throw new ConflictException('이미 완결된 소설입니다.');
+    }
     novelRoom.setCompletedAt();
     await this.novelRoomRepository.saveRow(novelRoom);
   }

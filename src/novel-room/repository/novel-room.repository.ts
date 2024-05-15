@@ -1,4 +1,4 @@
-import { Provider } from '@nestjs/common';
+import { Inject, Provider } from '@nestjs/common';
 import { NovelRoomRepositoryImpl } from './novel-room.repository.impl';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
@@ -6,6 +6,10 @@ import { NovelRoomEntity } from '../entities/novel-room.entity';
 import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
 
 export const NovelRoomRepositoryToken = 'NovelRoomRepository';
+
+export const NovelRoomRepo = () => {
+  return Inject(NovelRoomRepositoryToken);
+};
 
 export const NovelRoomRepositoryProvider: Provider = {
   provide: NovelRoomRepositoryToken,
