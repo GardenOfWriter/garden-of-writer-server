@@ -28,6 +28,10 @@ export class AuthExceptionMsg
     '4007',
     '이미 존재하는 이메일입니다.',
   );
+  static readonly USER_NICKNAME_ALREADY_EXISTS = new AuthExceptionMsg(
+    '4009',
+    '이미 존재하는 닉네임입니다.',
+  );
   static readonly USER_NOT_FOUNDED = new AuthExceptionMsg(
     '4008',
     '해당 유저가 존재하지 않습니다.',

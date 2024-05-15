@@ -58,12 +58,6 @@ export class UserEntity {
   @OneToMany(() => ChapterLikeEntity, (chapterLike) => chapterLike.user)
   chapterLike: ChapterLikeEntity[];
 
-  checkRegexPassword() {
-    if (PASSWORD_REG_EXP.test(this.password) === false) {
-      throw new BadRequestException(PASSWORD_REG_EXP_ERROR_MESSAGE);
-    }
-  }
-
   @ManyToMany(() => ChatsEntity, (chat) => chat.users)
   @JoinTable()
   chats: ChatsEntity[];
@@ -77,5 +71,10 @@ export class UserEntity {
     user.nickname = nickname;
     user.password = password;
     return user;
+  }
+  checkRegexPassword() {
+    if (PASSWORD_REG_EXP.test(this.password) === false) {
+      throw new BadRequestException(PASSWORD_REG_EXP_ERROR_MESSAGE);
+    }
   }
 }

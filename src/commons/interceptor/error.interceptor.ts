@@ -20,8 +20,7 @@ export class ErrorsInterceptor implements NestInterceptor {
         this.logger.error(JSON.stringify(error));
         if (error instanceof BaseException) {
           // NestJS 내장 HttpException 에러 처리
-          console.log(error);
-          // return throwError(() => new HttpException(error));
+          return throwError(() => error);
         } else if (error instanceof TypeORMError) {
           this.logger.error('query fail', JSON.stringify(error.message));
           return throwError(

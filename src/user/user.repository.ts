@@ -48,4 +48,20 @@ export class UserRepository {
   async deleteUser(id: number) {
     return await this.dataSource.delete(id);
   }
+  async existEmail(email: string): Promise<boolean> {
+    const result = await this.dataSource.exist({
+      where: {
+        email,
+      },
+    });
+    return !!result;
+  }
+  async existNickname(nickname: string): Promise<boolean> {
+    const result = await this.dataSource.exist({
+      where: {
+        nickname,
+      },
+    });
+    return !!result;
+  }
 }

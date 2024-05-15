@@ -11,6 +11,8 @@ export interface UserRepository {
   addRow(entity: Partial<UserEntity>): Promise<void>;
   updateRow(id: number, entity: Partial<UserEntity>): Promise<void>;
   deleteUser(id: number): Promise<void>;
+  existEmail(email: string): Promise<boolean>;
+  existNickname(nickname: string): Promise<boolean>;
   findByUserId(userId: number): Promise<UserEntity>;
   findByEmail(email: string): Promise<UserEntity>;
   findByNicknameEmail(email: string, nickname: string): Promise<UserEntity>;

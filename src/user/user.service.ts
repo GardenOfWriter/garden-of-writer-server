@@ -1,15 +1,17 @@
+import { UserEmailAlreadyExistsException } from '@app/auth/exceptions/user-email-already-exists.exception';
+import { UserNicknameAlreadyExistsException } from '@app/auth/exceptions/user-nickname-already-exists.exception';
 import { NovelRoomDuplicationSubTitleException } from '@app/novel-room/exceptions/duplicate-subtitle.exception';
 import { UserEntity } from '@app/user/entities/user.entity';
 import {
   UserRepository,
   UserRepositoryToken,
 } from '@app/user/repository/user.repository';
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
+  private logger = new Logger(UserService.name);
   constructor(
-    // private readonly userRepository: UserRepository,
     @Inject(UserRepositoryToken)
     private userRepository: UserRepository,
   ) {}
@@ -19,15 +21,15 @@ export class UserService {
   }
 
   async create(joinUser: Partial<UserEntity>): Promise<void> {
-    const user = await this.userRepository.findByNicknameEmail(
-      joinUser.email,
+    this.logger.log(`Join User ${JSON.stringify(joinUser)}`);
+    const checkEmail = await this.userRepository.existEmail(joinUser.email);
+    if (checkEmail) throw new UserEmailAlreadyExistsException();
+    const checkNickname = await this.userRepository.existNickname(
       joinUser.nickname,
     );
-    if (user.email) throw new ConflictException('중복된 이메일이 존재합니다.');
-    if (user.nickname)
-      throw new ConflictException('중복된 닉네임이 존재합니다.');
-    user.checkRegexPassword();
-    await this.userRepository.addRow(user);
+    if (checkNickname) throw new UserNicknameAlreadyExistsException();
+    joinUser.checkRegexPassword();
+    await this.userRepository.addRow(joinUser);
     return;
   }
 

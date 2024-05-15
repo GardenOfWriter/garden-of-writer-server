@@ -8,7 +8,11 @@ import {
   ChapterStatusEnum,
   ChapterStatusType,
 } from './enums/chapter-status.enum';
-import { convertDayFormat, getToDay } from '@app/commons/util/date.util';
+import {
+  convertDayFormat,
+  getToDay,
+  getToDayISO8601,
+} from '@app/commons/util/date.util';
 import { ChapterLikeEntity } from './chapter-like.entity';
 @Entity({ name: 'chapter', schema: 'gow-server' })
 export class ChapterEntity extends PrimaryAuditiedPK {
@@ -89,8 +93,12 @@ export class ChapterEntity extends PrimaryAuditiedPK {
     this.title = title;
   }
 
+  chpaterReview() {
+    this.status = ChapterStatusEnum.REVIEW;
+  }
   chapterApproved() {
     this.approvalAt = getToDay();
+    this.status = ChapterStatusEnum.APPROVE;
   }
 
   chapterFinalWriterd() {

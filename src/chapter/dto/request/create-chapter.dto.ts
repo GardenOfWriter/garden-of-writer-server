@@ -7,7 +7,7 @@ import { ChapterDto } from '../chapter.dto';
 export class CreateChapterRequestDto extends PickType(ChapterDto, [
   'title',
   'novelRoomId',
-]) {
+] as const) {
   toEntity(user: UserEntity): Partial<ChapterEntity> {
     const entity = ChapterEntity.of(
       this.novelRoomId,

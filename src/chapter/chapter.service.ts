@@ -19,31 +19,56 @@ export class ChapterService {
     @Inject(ChapterRepositoryToken)
     private chapterRepository: ChapterRepository,
   ) {}
+
+  /**
+   *  회차 정보 저장
+   */
   async save(entity: Partial<ChapterEntity>): Promise<void> {
-    const count = await this.chapterRepository.chapterCount(entity.novelRoomId);
-    entity.setNextNo(count);
+    // const count = await this.chapterRepository.chapterCount(entity.novelRoomId);
+    // entity.setNextNo(count);
     await this.chapterRepository.saveRow(entity);
     return;
   }
+  /**
+   * 회차 정보 수정
+   */
   async update(id: number, entity: Partial<ChapterEntity>): Promise<void> {
     await this.chapterRepository.updateRow(id, entity);
     return;
   }
+  /**
+   * 회차 연재 신청
+   */
   async applyChapter(id: number): Promise<void> {
     const chapter = await this.findOneChapterId(id);
-    chapter.changeStatus(ChapterStatusEnum.REVIEW);
+    if (chapter.status !== ChapterStatusEnum.WRITING) {
+      throw new ConflictException('작성중인 회차가 아닙니다.');
+    }
+    chapter.chpaterReview();
+    this.logger.log(`Chapter Apply ${JSON.stringify(chapter)}`);
     await this.save(chapter);
   }
+  /**
+   *  회차 제목 수정
+   */
   async changeTitle(id: number, dto: ChangeTitleDto): Promise<void> {
     const chapter = await this.findOneChapterId(id);
+    if (!chapter) {
+      throw new ConflictException('존재하지 않는 회차 입니다.');
+    }
     chapter.changeTitle(dto.title);
     await this.save(chapter);
   }
+  /*
+   *  회차 삭제
+   */
   async delete(id: number, user: UserEntity): Promise<void> {
     await this.chapterRepository.deleteRow(id);
     return;
   }
-
+  /**
+   *  회차 조회
+   */
   async findChapterText(
     dto: FindByNovelRoomIdDto,
   ): Promise<PagingationResponse<FindChapterRoomIdResDto>> {
@@ -52,7 +77,6 @@ export class ChapterService {
         dto.novelRoomId,
         dto,
       );
-
     const items = chapters.map(
       (chapter) => new FindChapterRoomIdResDto(chapter),
     );
@@ -65,5 +89,9 @@ export class ChapterService {
         id,
       },
     });
+  }
+  private async nextChapterNo(novelRoomId: number): Promise<number> {
+    const chpaterNo = await this.chapterRepository.chapterCount(novelRoomId);
+    return chpaterNo + 1;
   }
 }

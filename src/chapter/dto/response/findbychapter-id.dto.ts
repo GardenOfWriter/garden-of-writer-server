@@ -91,7 +91,7 @@ export class FindChapterRoomIdResDto {
   })
   @Expose()
   get commentCount(): number {
-    return 10;
+    return 0;
   }
 
   @ApiProperty({
@@ -100,6 +100,6 @@ export class FindChapterRoomIdResDto {
   })
   @Expose()
   get likeCount(): number {
-    return 5;
+    return 0;
   }
 }

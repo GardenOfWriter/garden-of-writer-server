@@ -9,14 +9,18 @@ import {
   SerializeOptions,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { CreateChapter } from './decorator/create-chapter.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApplyChapter,
+  ChangeChapterTitle,
+  CreateChapter,
+  FindChapter,
+} from './decorator/swagger.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Param } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
 import { ChapterService } from './chapter.service';
-import { FindChapter } from './decorator/find-chapter.decorator';
 import { ApplyChapterDto } from './dto/request/apply-chapter.dto';
 import { ChangeTitleDto } from './dto/request/change-title.dto';
 import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
@@ -47,16 +51,13 @@ export class ChapterController {
     return this.chapterService.save(dto.toEntity(user));
   }
 
-  @ApiOperation({
-    summary: '회차 연재 승인 신청하기',
-  })
+  @ApplyChapter()
   @Put('/approval/:id')
   applyChapter(@Param() dto: ApplyChapterDto, @CurrentUser() user: UserEntity) {
     return this.chapterService.applyChapter(dto.id);
   }
-  @ApiOperation({
-    summary: '회차 제목 수정하기',
-  })
+
+  @ChangeChapterTitle()
   @Put('/title/:id')
   change(@Param('id', ParseIntPipe) id: number, @Body() dto: ChangeTitleDto) {
     return this.chapterService.changeTitle(id, dto);
