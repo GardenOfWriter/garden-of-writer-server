@@ -13,7 +13,7 @@ export class NovelTagService {
     private readonly novelTagRepository: Repository<NovelTagEntity>,
   ) {}
 
-  async createTag(tags: string[], roomId: number) {
+  async saveTag(tags: string[], roomId: number) {
     const tagEntities = await Promise.all(
       tags.map(async (tag) => {
         const checkTag = await this.tagRepository.findOne({
@@ -27,6 +27,26 @@ export class NovelTagService {
         return checkTag;
       }),
     );
+    tagEntities.map(async (tagEntity) => {
+      const novelTagEntity = NovelTagEntity.of(roomId, tagEntity.id);
+      await this.novelTagRepository.save(novelTagEntity);
+    });
+  }
+  async updateTags(tags: string[], roomId: number) {
+    const tagEntities = await Promise.all(
+      tags.map(async (tag) => {
+        const checkTag = await this.tagRepository.findOne({
+          where: { name: tag },
+        });
+        if (!checkTag) {
+          const entity = TagEntity.of(tag);
+          const saveTag = await this.tagRepository.save(entity);
+          return saveTag;
+        }
+        return checkTag;
+      }),
+    );
+    await this.novelTagRepository.delete({ novelRoomId: roomId });
     tagEntities.map(async (tagEntity) => {
       const novelTagEntity = NovelTagEntity.of(roomId, tagEntity.id);
       await this.novelTagRepository.save(novelTagEntity);

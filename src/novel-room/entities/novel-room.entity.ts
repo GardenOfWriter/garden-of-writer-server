@@ -16,7 +16,7 @@ import {
   NovelRoomStatusEnum,
   NovelRoomStatusType,
 } from './enum/novel-room-status.enum';
-import { convertDayFormat } from '@app/commons/util/date.util';
+import { convertDayFormat, getToDayISO8601 } from '@app/commons/util/date.util';
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 
 @Entity({ name: 'novel-room', schema: 'gow-server' })
@@ -108,8 +108,22 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     return room;
   }
 
-  updateSubTitleAndCategory(subTitle: string, category: NovelRoomCategoryType) {
+  setCompletedAt(): void {
+    this.completedAt = getToDayISO8601();
+    this.status = NovelRoomStatusEnum.COMPLETE;
+  }
+
+  updateRoom(
+    subTitle: string,
+    category: NovelRoomCategoryType,
+    character: string,
+    summary: string,
+    bookCover: string,
+  ): void {
     this.subTitle = subTitle;
     this.category = category;
+    this.character = character;
+    this.summary = summary;
+    this.bookCover = bookCover;
   }
 }

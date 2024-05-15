@@ -14,8 +14,8 @@ import { GlobalExceptionFilter } from './commons/filter/global-exception.filter'
 import { ResponseInterceptor } from './commons/interceptor/response.interceptor';
 import { NovelTextModule } from './novel-text/novel-text.module';
 
-import { MessageEntity } from '@app/message/message.entity';
-import { NovelTagModule } from '@app/novel-tag/novel-tags.module';
+import { MessageEntity } from './message/message.entity';
+import { NovelTagModule } from './novel-tag/novel-tags.module';
 import { ChapterModule } from './chapter/chapter.module';
 import { ChatsModule } from './chats/chats.module';
 import { EmailModule } from './commons/email/emai.module';
@@ -39,8 +39,9 @@ import { UserModule } from './user/user.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
+      // entities: [ENtity],
       entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: false,
       logging: true,
       namingStrategy: new SnakeNamingStrategy(),
       autoLoadEntities: true,

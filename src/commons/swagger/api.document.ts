@@ -1,5 +1,8 @@
 import { DocumentBuilder } from '@nestjs/swagger';
 
+/**
+ * Swagger API 문서 빌더
+ */
 export class BaseAPIDocumentBuilder {
   public builder = new DocumentBuilder();
   public initializeOptions() {

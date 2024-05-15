@@ -12,6 +12,10 @@ import { RoomTypeDescription } from '../../entities/enum/novel-room-type.enum';
 import { NovelRoomStatuDescription } from '../../entities/enum/novel-room-status.enum';
 import { convertDayFormat } from '../../../commons/util/date.util';
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
+import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
+import { UserEntity } from '@app/user/entities/user.entity';
+import { WriterStatusEnum } from '@app/novel-writer/entities/enums/writer-status.enum';
+import { WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
 
 export class FindByRoomIdDetailDto {
   private _createdAt: Date;
@@ -26,8 +30,9 @@ export class FindByRoomIdDetailDto {
   private _completedAt: string;
   private _status: NovelRoomStatusType;
   private _novelTags: NovelTagEntity[];
-
-  constructor(room: NovelRoomEntity) {
+  private _writers: NovelWriterEntity[];
+  private _user: UserEntity;
+  constructor(room: NovelRoomEntity, user: UserEntity) {
     this._id = room.id;
     this._title = room.title;
     this._subTitle = room.subTitle;
@@ -39,6 +44,8 @@ export class FindByRoomIdDetailDto {
     this._createdAt = room.createdAt;
     this._updatedAt = room.updatedAt;
     this._novelTags = room.novelTag;
+    this._writers = room.novelWriter;
+    this._user = user;
   }
 
   @ApiProperty({
@@ -139,5 +146,18 @@ export class FindByRoomIdDetailDto {
     return this._novelTags.map((novelTag) => {
       return novelTag.tag.name;
     });
+  }
+
+  @ApiProperty({
+    example: true,
+    description: '참여한 방에 방장인지 확인유무 = true 방장,false 참여작가',
+  })
+  @Expose()
+  get writerStatus() {
+    const me = this._writers.filter(
+      (writer) => writer.user.id === this._user.id,
+    )[0];
+    if (!me) return WriterCategoryEnum.HOST;
+    return me.category;
   }
 }

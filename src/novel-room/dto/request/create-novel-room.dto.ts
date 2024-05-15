@@ -110,16 +110,8 @@ export class CreateNovelRoomDto {
   @IsOptional()
   attendContent: string;
 
-  private _user: UserEntity;
-
-  setUserId(user: UserEntity) {
-    this._user = user;
-  }
-  getUser(): UserEntity {
-    return this._user;
-  }
   // request dto -> toEntity -> of method -> entity
-  toRoomEntity(): NovelRoomEntity {
+  toRoomEntity(user: UserEntity): NovelRoomEntity {
     return NovelRoomEntity.of(
       this.type,
       this.title,
@@ -128,7 +120,7 @@ export class CreateNovelRoomDto {
       this.character,
       this.summary,
       this.bookCover,
-      this._user,
+      user,
     );
   }
   toAttendBoardEntity(roomId: number): NovelAttendBoardEntity {

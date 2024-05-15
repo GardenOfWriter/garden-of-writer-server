@@ -15,8 +15,8 @@ export class JwtGuard extends AuthGuard('jwt') {
   ): TUser {
     if (err || !user) {
       if (info && info.name === 'TokenExpiredError') {
-        this.logger.error('err= ', JSON.stringify(err));
-        this.logger.error('user=', JSON.stringify(user));
+        this.logger.error('err = ', JSON.stringify(err));
+        this.logger.error('user =', JSON.stringify(user));
         throw new TokenExpiredException();
       } else {
         throw new UnAuthorizedAccessException();

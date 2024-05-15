@@ -10,7 +10,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:local": "nest start TZ=Asia/Seoul --watch",
-    "start:dev": "--env=dev run -- node dist/main",
+    "start:dev": "nest start --watch",
     "start:prod": "--env=prod run -- node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
@@ -98,6 +98,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
+      "^@app/(.*)$": "<rootDir>/src/$1",
       "^@app/entities(|/.*)$": "<rootDir>/src/commons/entities/$1",
       "^@app/auth(|/.*)$": "<rootDir>/src/auth/$1",
       "^@app/commons(|/.*)$": "<rootDir>/src/commons/$1",

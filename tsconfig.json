@@ -17,6 +17,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "allowJs": true,
     "paths": {
       "@app/auth/*": ["./src/auth/*"],
       "@app/commons/*": ["./src/commons/*"],

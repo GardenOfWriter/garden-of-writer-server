@@ -1,8 +1,4 @@
-import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
-import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.enum';
 import { ChapterRepositoryToken } from '@app/chapter/repository/chapter.repository';
-import { WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
-import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import {
   NovelWriterRepository,
   NovelWriterRepositoryToken,
@@ -18,7 +14,6 @@ import { NovelRoomDuplicationTitleException } from './exceptions/duplicate-title
 import { NovelRoomNotFoundException } from './exceptions/not-found.exception';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { FindByRoomIdDetailDto } from './dto/response/findbyid-detail.dto';
-import { WriterStatusEnum } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import {
   NovelRoomRepository,
@@ -35,7 +30,9 @@ export class NovelRoomService {
     @Inject(ChapterRepositoryToken)
     private readonly chapterRepository: ChapterRepository,
   ) {}
-
+  /**
+   * 소설 공방 목록 조회
+   */
   async findAllRooms(
     user: UserEntity,
     dto: FindAttendQueryDto,
@@ -52,12 +49,17 @@ export class NovelRoomService {
     );
     return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
-  async createRoom(dto: CreateNovelRoomDto): Promise<NovelRoomEntity> {
+  /**
+   * 소설 공방 생성
+   */
+  async createRoom(
+    dto: CreateNovelRoomDto,
+    user: UserEntity,
+  ): Promise<NovelRoomEntity> {
     const checkTitle = await this.novelRoomRepository.existTitle(dto.title);
     if (checkTitle) throw new NovelRoomDuplicationTitleException();
-    const room = dto.toRoomEntity();
+    const room = dto.toRoomEntity(user);
     await this.novelRoomRepository.saveRow(room);
-    const user = dto.getUser();
     const writer = dto.toWriterEntity(room.id, user);
     const chapter = dto.toChapterEntity(room.id, user);
     await Promise.all([
@@ -66,25 +68,45 @@ export class NovelRoomService {
     ]);
     return room;
   }
-
-  async getById(id: number): Promise<FindByRoomIdDetailDto> {
+  /**
+   * 소설 공방 상세 조회
+   */
+  async getById(id: number, user: UserEntity): Promise<FindByRoomIdDetailDto> {
     const room = await this.novelRoomRepository.getByIdWithTag(id);
     if (!room) throw new NovelRoomNotFoundException();
-    return new FindByRoomIdDetailDto(room);
+    return new FindByRoomIdDetailDto(room, user);
   }
-
+  /**
+   * 소설 공방 삭제
+   */
   async deleteRoom(id: number): Promise<void> {
     await this.novelRoomRepository.deleteRow(id);
   }
-
+  /**
+   * 소설 공방 정보 수정
+   */
   async updateRoom(
     id: number,
     dto: UpdateNovelRoomDto,
   ): Promise<NovelRoomEntity> {
     const room = await this.novelRoomRepository.getById(id);
     if (!room) throw new NovelRoomNotFoundException();
-    room.updateSubTitleAndCategory(dto.subTitle, dto.category);
+    room.updateRoom(
+      dto.subTitle,
+      dto.category,
+      dto.character,
+      dto.summary,
+      dto.bookCover,
+    );
     await this.novelRoomRepository.saveRow(room);
     return room;
+  }
+  /**
+   * 소설 공방 연재 완료
+   */
+  async completedNovelRoom(id: number): Promise<void> {
+    const novelRoom = await this.novelRoomRepository.getById(id);
+    novelRoom.setCompletedAt();
+    await this.novelRoomRepository.saveRow(novelRoom);
   }
 }

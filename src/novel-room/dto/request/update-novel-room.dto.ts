@@ -1,28 +1,15 @@
 import { NovelRoomCategoryType } from '@app/novel-room/entities/enum/novel-room-category.enum';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PickType } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 import { RoomCategoryDescription } from '../../entities/enum/novel-room-category.enum';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
+import { CreateNovelRoomDto } from './create-novel-room.dto';
 
-export class UpdateNovelRoomDto {
-  @ApiProperty({
-    example: '부제목 1',
-    description: '부제목',
-  })
-  @IsOptional()
-  @IsString()
-  subTitle: string;
-
-  @ApiProperty({
-    ...RoomCategoryDescription,
-  })
-  @IsOptional()
-  @IsString()
-  category: NovelRoomCategoryType;
-
-  updateEntity(room: NovelRoomEntity) {
-    room.subTitle = this.subTitle;
-    room.category = this.category;
-    return room;
-  }
-}
+export class UpdateNovelRoomDto extends PickType(CreateNovelRoomDto, [
+  'summary',
+  'subTitle',
+  'novelTags',
+  'bookCover',
+  'category',
+  'character',
+] as const) {}

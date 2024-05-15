@@ -3,13 +3,10 @@ import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import {
-  WriterCategoryEnum,
-  WriterCategoryDescription,
-} from '../../entities/enums/writer-category.enum';
+import { WriterCategoryDescription } from '../../entities/enums/writer-category.enum';
 import { NovelWriterEntity } from '../../entities/novel-writer.entity';
 import { WriterStatusDescription } from '../../entities/enums/writer-status.enum';
-import { convertDayFormat } from '@app/commons/util/date.util';
+import { getToDayISO8601 } from '@app/commons/util/date.util';
 
 export class FindByNovelWriterDetails {
   private _status: WriterStatusType;
@@ -64,7 +61,7 @@ export class FindByNovelWriterDetails {
   }
 
   @ApiProperty({
-    example: convertDayFormat(new Date()),
+    example: getToDayISO8601(),
     description: '참여신청일',
   })
   @Expose()
@@ -72,7 +69,7 @@ export class FindByNovelWriterDetails {
     return this._createdAt;
   }
   @ApiProperty({
-    example: convertDayFormat(new Date()),
+    example: getToDayISO8601(),
     description: '참여 승인/반려일',
   })
   @Expose()
@@ -80,7 +77,7 @@ export class FindByNovelWriterDetails {
     return this._notifiedAt;
   }
   @ApiProperty({
-    example: convertDayFormat(new Date()),
+    example: getToDayISO8601(),
     description: '퇴장일',
   })
   @Expose()
