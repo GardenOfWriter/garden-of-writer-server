@@ -40,11 +40,14 @@ export class NovelTextController {
 
   @CreateNovel()
   @Post('')
-  create(
+  async create(
     @CurrentUser() user: UserEntity,
     @Body() dto: CreateNovelTextRequestDto,
   ) {
-    return this.novelTextService.create(dto.novelRoomId, dto.toEntity(user));
+    return await this.novelTextService.create(
+      dto.novelRoomId,
+      dto.toEntity(user),
+    );
   }
 
   @ApiOperation({

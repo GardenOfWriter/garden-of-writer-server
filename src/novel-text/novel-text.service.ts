@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { UserEntity } from '../user/entities/user.entity';
 import { FindByChapterIdResponseDto } from './dto/response/findbychapter-id.dto';
 import { NovelTextEntity } from './entities/novel-text.entity';
@@ -14,6 +14,7 @@ import {
   NovelRoomRepo,
   NovelRoomRepository,
 } from '@app/novel-room/repository/novel-room.repository';
+import { NotCurrentlyWriterException } from './exception/novel-text.exception';
 
 @Injectable()
 export class NovelTextService {
@@ -28,26 +29,43 @@ export class NovelTextService {
     private novelRoomRepo: NovelRoomRepository,
     private chatsGateway: ChatsGateway,
   ) {}
+  /**
+   *
+   * @param roomId
+   * @param entity
+   * @returns
+   * TODO: 트랜잭션 처리 필요
+   */
   async create(
     roomId: number,
     entity: Partial<NovelTextEntity>,
   ): Promise<void> {
-    await this.novelTextRepository.addRow(entity);
-    const room = await this.novelRoomRepo.getById(roomId);
     const writers = await this.novelWriterRepository.findByNovelRoomId(roomId);
+    if (writers.length === 0) {
+      throw new NotFoundException('작성자가 없습니다.');
+    }
+    this.logger.debug(`writers: ${JSON.stringify(writers)}`);
+    // 작성자가 다음 작성자로 넘어가는 로직
     const requestWriter = writers.filter(
       (writer) => writer.user.id === entity.createdBy.id,
     )[0];
+    this.logger.debug(`requestWriter: ${JSON.stringify(requestWriter)}`);
+    if (!requestWriter.currentlyWriting) {
+      throw new NotCurrentlyWriterException();
+    }
     requestWriter.currentlyWriting = false;
     await this.novelWriterRepository.updateRow(requestWriter.id, requestWriter);
     const nextWriter = writers.filter((writer) => {
-      const dividNextSeq = (requestWriter.writingSeq + 1) / room.type;
-      const nextSeq = dividNextSeq === 0 ? room.type : writer.writingSeq;
+      const dividNextSeq = (requestWriter.writingSeq + 1) % writers.length;
+      const nextSeq = dividNextSeq === 0 ? writers.length : writer.writingSeq;
       return writer.writingSeq === nextSeq;
     })[0];
     nextWriter.currentlyWriting = true;
+    this.logger.debug(`nextWriter: ${JSON.stringify(nextWriter)}`);
     await this.novelWriterRepository.updateRow(nextWriter.id, nextWriter);
-    this.chatsGateway.server.to('').emit('enterChat', entity);
+    const textId = await this.novelTextRepository.addRow(entity);
+
+    this.chatsGateway.server.to(`room-${roomId}`).emit('enterText', { textId });
     return;
   }
   async update(id: number, entity: Partial<NovelTextEntity>): Promise<void> {

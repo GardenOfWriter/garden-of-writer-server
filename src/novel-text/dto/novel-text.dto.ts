@@ -8,8 +8,8 @@ import {
 export class NovelTextDto {
   @ApiProperty({
     enum: NovelTextStatusEnum,
-    example: 'temp_save',
-    description: 'writing (임시저장) | complete(작성완료) ',
+    example: 'temp',
+    description: 'temp (임시저장) | complete(작성완료) ',
   })
   @IsIn(Object.values(NovelTextStatusEnum))
   status: NovelTextStatusType;

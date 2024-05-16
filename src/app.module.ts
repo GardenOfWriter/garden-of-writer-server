@@ -43,7 +43,7 @@ import { ErrorsInterceptor } from './commons/interceptor/error.interceptor';
       // entities: [ENtity],
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
-      logging: false,
+      logging: true,
       namingStrategy: new SnakeNamingStrategy(),
       autoLoadEntities: true,
     }),

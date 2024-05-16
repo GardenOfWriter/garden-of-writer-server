@@ -14,7 +14,5 @@ export function CreateNovel(): MethodDecorator {
       summary: '소설 글쓰기 작성 하기 API ',
     }),
     ApiOkResponse({ type: CreateNovelTextRequestDto }),
-    ApiBadRequestResponse({ type: SwaggerExceptionDto }),
-    ApiResponse({ schema: {}, status: 2000 }),
   );
 }

@@ -13,6 +13,7 @@ import {
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -24,7 +25,9 @@ import { Server, Socket } from 'socket.io';
   // ws://localhost:3000/chats
   // namespace: 'chats',
 })
-export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class ChatsGateway
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+{
   private logger = new Logger(ChatsGateway.name);
 
   constructor(
@@ -37,41 +40,50 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   public server: Server;
 
+  afterInit(server: Server) {
+    this.logger.log('Socket Server Init Success');
+  }
   handleDisconnect(socket: Socket) {
     this.logger.log(`on disconnect called : ${socket.id}`);
   }
 
   async handleConnection(socket: Socket & { user: UserEntity }) {
-    this.logger.log(`on connect called : ${socket.id}`);
+    this.logger.log(`On connect called : ${socket.id}`);
     const headers = socket.handshake.headers;
     //Bearer xxxxxxx
-    const rawToken = headers['authorization'];
-
+    const rawToken = headers['accesstoken'] as string;
     if (!rawToken) {
       socket.disconnect();
     }
 
     try {
       // jwtToken extractTokenFromHeader
-      const token = this.authService.extractTokenFromHeader(rawToken, true);
+      // const token = this.authService.extractTokenFromHeader(rawToken, true);
       // jwtToken verifyToken
-      const payload = this.authService.verifyToken(token);
+      const payload = this.authService.verifyToken(rawToken);
       //  유저 정보를 찾는다.
       const user = await this.userService.findEmail(payload.email);
-
+      this.logger.log(`Connect user : ${JSON.stringify(user)}`);
       socket.user = user;
       return true;
     } catch (error) {
+      this.logger.error(`error on connection : ${error}`);
       socket.disconnect();
     }
   }
-
+  /**
+   * @description 공방에 입장하는 이벤트
+   * @param data
+   * @param socket 유저 소켓
+   */
   @SubscribeMessage('roomJoin')
   async roomJoin(
     @MessageBody() data: { novelRoomId: number },
     @ConnectedSocket() socket: Socket & { user: UserEntity },
   ) {
-    socket.join(`room-${data.novelRoomId}}`);
+    this.logger.debug(`Join ${data.novelRoomId} email: ${socket.user.email}`);
+    socket.join(`room-${data.novelRoomId}`);
+    // this.server.in(`room-${data.novelRoomId}`).emit('enterText', 'hello');
   }
 
   @UsePipes(

@@ -26,5 +26,12 @@ import { ChatsService } from './chats.service';
     AuthService,
     JwtService,
   ],
+  exports: [
+    ChatsGateway,
+    JwtService,
+    ChatsService,
+    ChatsMessagesService,
+    AuthService,
+  ],
 })
 export class ChatsModule {}

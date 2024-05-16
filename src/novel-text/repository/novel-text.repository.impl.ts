@@ -13,11 +13,13 @@ export class NovelTextRepositoryImpl implements NovelTextRepository {
   ): Promise<NovelTextEntity[]> {
     return await this.dataSource.find(options);
   }
-  async addRow(entity: Partial<NovelTextEntity>): Promise<void> {
-    await this.dataSource.save(entity);
+  async addRow(entity: Partial<NovelTextEntity>): Promise<number> {
+    const result = await this.dataSource.save(entity);
+    console.log(result);
+    return result.id;
   }
   async updateRow(id: number, entity: Partial<NovelTextEntity>): Promise<void> {
-    await this.dataSource.update({ id }, entity);
+    await this.dataSource.update(id, entity);
   }
   async deleteRow(id: number): Promise<void> {
     await this.dataSource.delete({ id });
