@@ -34,7 +34,6 @@ export class NovelTextService {
    * @param roomId
    * @param entity
    * @returns
-   * TODO: 트랜잭션 처리 필요
    */
   async create(
     roomId: number,

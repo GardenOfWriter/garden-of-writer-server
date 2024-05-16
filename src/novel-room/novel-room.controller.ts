@@ -13,6 +13,7 @@ import {
   Query,
   SerializeOptions,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 
 import { CaslGuard } from '@app/auth/guard/casl.guard';
@@ -37,6 +38,9 @@ import { NovelAttendBoardService } from '@app/novel-attend-board/novel-attend-bo
 import { NovelTagService } from '../novel-tag/novel-tag.service';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.dto';
+import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
+import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
+import { QueryRunner as QR } from 'typeorm';
 
 @ApiTags('소설 공방')
 @Controller('novel-room')
@@ -54,11 +58,13 @@ export class NovelRoomController {
   /**
    * 소설 공방 생성
    */
+  @UseInterceptors(TransactionInterceptor)
   @CreateNovelRoom()
   @Post('')
   async createRoom(
     @Body() dto: CreateNovelRoomDto,
     @CurrentUser() user: UserEntity,
+    @QueryRunner() qr: QR,
   ): Promise<void> {
     const room = await this.novelRoomService.createRoom(dto, user);
     await this.novelAttendBoardService.create(dto.toAttendBoardEntity(room.id));
@@ -120,12 +126,14 @@ export class NovelRoomController {
   /**
    * 소설 공방 정보 수정
    */
+  @UseInterceptors(TransactionInterceptor)
   @UpdateNovelRoom()
   @Put(':id')
   async updateNovelRoom(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateNovelRoomDto,
     @CurrentUser() user: UserEntity,
+    @QueryRunner() qr: QR,
   ): Promise<NovelRoomEntity> {
     const room = await this.novelRoomService.updateRoom(id, dto);
     await this.novelAttendBoardService.updateBoard(id, dto, user);

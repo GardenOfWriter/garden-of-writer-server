@@ -11,6 +11,7 @@ import {
   Query,
   SerializeOptions,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guard/jwt.guard';
@@ -19,7 +20,9 @@ import { CreateNovel } from './decorator/create-novel.decorator';
 import { CreateNovelTextRequestDto } from './dto/request/create-novel.dto';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
 import { NovelTextService } from './novel-text.service';
-
+import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
+import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
+import { QueryRunner as QR } from 'typeorm';
 @ApiTags('소설글쓰기')
 @Controller('novel-text')
 @ApiBearerAuth('Authorization')
@@ -37,12 +40,13 @@ export class NovelTextController {
   async findChpater(@Query('chapterId') chapterId: number) {
     return await this.novelTextService.findChapterText(chapterId);
   }
-
+  @UseInterceptors(TransactionInterceptor)
   @CreateNovel()
   @Post('')
   async create(
     @CurrentUser() user: UserEntity,
     @Body() dto: CreateNovelTextRequestDto,
+    @QueryRunner() qr?: QR,
   ) {
     return await this.novelTextService.create(
       dto.novelRoomId,

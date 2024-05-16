@@ -90,10 +90,10 @@ import { ErrorsInterceptor } from './commons/interceptor/error.interceptor';
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
     },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ErrorsInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: ErrorsInterceptor,
+    // },
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
