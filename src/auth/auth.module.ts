@@ -3,7 +3,6 @@ import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entit
 import { NovelWriterModule } from '@app/novel-writer/novel-writer.module';
 import { NovelWriterService } from '@app/novel-writer/novel-writer.service';
 import { UserEntity } from '@app/user/entities/user.entity';
-import { UserService } from '@app/user/user.service';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';

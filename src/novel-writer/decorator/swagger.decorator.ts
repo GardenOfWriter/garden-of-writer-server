@@ -4,6 +4,19 @@ import { ApiExtraModels, ApiOperation, getSchemaPath } from '@nestjs/swagger';
 import { FindByNovelRoomIdResponseDto } from '../dto/response/find-novel-room-id.dto';
 import { FindByNovelWriterDetails } from '../dto/response/find-writers-details.dto';
 
+export function ChangeWriterSeq(): MethodDecorator {
+  return applyDecorators(
+    ApiOperation({
+      summary: '소설 공방에 참여한 작가 리스트',
+      description: '소설 공방에 참여중인 상태의 작가 리스트 입니다.',
+    }),
+    ApiExtraModels(FindByNovelRoomIdResponseDto),
+    ApiCommonResponse({
+      $ref: getSchemaPath(FindByNovelRoomIdResponseDto),
+    }),
+  );
+}
+
 export function FindWriter(): MethodDecorator {
   return applyDecorators(
     ApiOperation({

@@ -16,12 +16,12 @@ import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Param } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
-import { FindWriter } from './decorator/find-writer.decorator';
 import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
 import { CreateNovelWriterDto } from './dto/request/create-novel-writer.dto';
 import { WriterCategoryEnum } from './entities/enums/writer-category.enum';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterService } from './novel-writer.service';
+import { FindWriter } from './decorator/swagger.decorator';
 
 @ApiTags('작가 리스트')
 @Controller('writer')

@@ -20,6 +20,7 @@ import {
 import { Response } from 'express';
 import { NovelWriterService } from '../novel-writer/novel-writer.service';
 import { JwtGuard } from './guard/jwt.guard';
+import { Login, Logout } from './decorator/swagger.decorator';
 
 @ApiTags('인증')
 @Controller('auth')
@@ -28,23 +29,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly writerService: NovelWriterService,
   ) {}
-  @ApiOperation({
-    summary: '로그인',
-  })
-  @ApiResponse({
-    schema: {
-      properties: {
-        accessToken: {
-          description: '로그인 토큰',
-        },
-
-        hasRoom: {
-          description:
-            '소셜 공방 참여 이력 값, 참여 이력이 있음 treu,참여 이력이 없음 : false',
-        },
-      },
-    },
-  })
+  @Login()
   @Post('/login')
   async login(
     @Body() dto: LoginUserDto,
@@ -60,19 +45,21 @@ export class AuthController {
     return { ...jwt, hasRoom };
   }
 
-  @Post('logout')
+  @Logout()
+  @Post('/logout')
   async logout(
     @Req() request: RequestUser,
     @Res({ passthrough: true }) response: Response,
   ) {
+    response.clearCookie('accessToken');
     response.setHeader('Set-Cookie', this.authService.logoutUser());
     return;
   }
 
-  @ApiBearerAuth('Authorization')
-  @UseGuards(JwtGuard)
-  @Get('guard')
-  async guardTest(@CurrentUser() user) {
-    return 'test';
-  }
+  // @ApiBearerAuth('Authorization')
+  // @UseGuards(JwtGuard)
+  // @Get('guard')
+  // async guardTest(@CurrentUser() user) {
+  //   return 'test';
+  // }
 }

@@ -44,7 +44,7 @@ export class NovelTextController {
     @CurrentUser() user: UserEntity,
     @Body() dto: CreateNovelTextRequestDto,
   ) {
-    return this.novelTextService.create(dto.toEntity(user));
+    return this.novelTextService.create(dto.novelRoomId, dto.toEntity(user));
   }
 
   @ApiOperation({

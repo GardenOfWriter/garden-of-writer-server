@@ -14,10 +14,9 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
 import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
-import { NovelWriterService } from './novel-writer.service';
 import { FindNovelWriteManagementDto } from './dto/request/find-novel-writer.dto';
-import { FindWriterMangement } from './decorator/find-writer.decorator';
 import { WriterManagementService } from './writer-management.service';
+import { FindWriterMangement } from './decorator/swagger.decorator';
 
 @ApiTags('참여 작가 관리 (대표작가)')
 @Controller('writer/management')

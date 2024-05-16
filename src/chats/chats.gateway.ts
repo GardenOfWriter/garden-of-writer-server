@@ -7,7 +7,7 @@ import { CreateMessagesDto } from '@app/message/dto/create-messages.dto';
 import { ChatsMessagesService } from '@app/message/messages.service';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { UserService } from '@app/user/user.service';
-import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Logger, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -22,9 +22,11 @@ import { Server, Socket } from 'socket.io';
 
 @WebSocketGateway({
   // ws://localhost:3000/chats
-  namespace: 'chats',
+  // namespace: 'chats',
 })
 export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private logger = new Logger(ChatsGateway.name);
+
   constructor(
     private readonly chatsService: ChatsService,
     private readonly messagesService: ChatsMessagesService,
@@ -33,17 +35,15 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {}
 
   @WebSocketServer()
-  server: Server;
+  public server: Server;
 
   handleDisconnect(socket: Socket) {
-    console.log(`on disconnect called : ${socket.id}`);
+    this.logger.log(`on disconnect called : ${socket.id}`);
   }
 
   async handleConnection(socket: Socket & { user: UserEntity }) {
-    console.log(`on connect called : ${socket.id}`);
-
+    this.logger.log(`on connect called : ${socket.id}`);
     const headers = socket.handshake.headers;
-
     //Bearer xxxxxxx
     const rawToken = headers['authorization'];
 
@@ -52,19 +52,28 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     try {
+      // jwtToken extractTokenFromHeader
       const token = this.authService.extractTokenFromHeader(rawToken, true);
-
+      // jwtToken verifyToken
       const payload = this.authService.verifyToken(token);
-
+      //  유저 정보를 찾는다.
       const user = await this.userService.findEmail(payload.email);
 
       socket.user = user;
-
       return true;
     } catch (error) {
       socket.disconnect();
     }
   }
+
+  @SubscribeMessage('roomJoin')
+  async roomJoin(
+    @MessageBody() data: { novelRoomId: number },
+    @ConnectedSocket() socket: Socket & { user: UserEntity },
+  ) {
+    socket.join(`room-${data.novelRoomId}}`);
+  }
+
   @UsePipes(
     new ValidationPipe({
       whitelist: true,
@@ -73,7 +82,7 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }),
   )
   @UseFilters(SocketCatchHttpExceptionFilter)
-  @SubscribeMessage('enter_chat')
+  @SubscribeMessage('enterChat')
   async enterChat(
     //방의 ID들을 리스트로 받는다.
     @MessageBody() data: EnterChatDto,
