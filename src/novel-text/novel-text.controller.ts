@@ -51,6 +51,7 @@ export class NovelTextController {
     return await this.novelTextService.create(
       dto.novelRoomId,
       dto.toEntity(user),
+      user,
     );
   }
 

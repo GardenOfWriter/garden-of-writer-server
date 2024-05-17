@@ -9,12 +9,8 @@ import {
   NovelWriterRepository,
   NovelWriterRepositoryToken,
 } from '@app/novel-writer/repository/novel-writer.repository';
-import { writer } from 'repl';
-import {
-  NovelRoomRepo,
-  NovelRoomRepository,
-} from '@app/novel-room/repository/novel-room.repository';
 import { NotCurrentlyWriterException } from './exception/novel-text.exception';
+import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 
 @Injectable()
 export class NovelTextService {
@@ -24,9 +20,7 @@ export class NovelTextService {
     @Inject(NovelTextRepository)
     private novelTextRepository: NovelTextRepository,
     @Inject(NovelWriterRepositoryToken)
-    private novelWriterRepository: NovelWriterRepository,
-    @NovelRoomRepo()
-    private novelRoomRepo: NovelRoomRepository,
+    private novelWriterRepo: NovelWriterRepository,
     private chatsGateway: ChatsGateway,
   ) {}
   /**
@@ -36,35 +30,17 @@ export class NovelTextService {
    * @returns
    */
   async create(
-    roomId: number,
+    novelRoomId: number,
     entity: Partial<NovelTextEntity>,
+    user: UserEntity,
   ): Promise<void> {
-    const writers = await this.novelWriterRepository.findByNovelRoomId(roomId);
-    if (writers.length === 0) {
-      throw new NotFoundException('작성자가 없습니다.');
-    }
-    this.logger.debug(`writers: ${JSON.stringify(writers)}`);
-    // 작성자가 다음 작성자로 넘어가는 로직
-    const requestWriter = writers.filter(
-      (writer) => writer.user.id === entity.createdBy.id,
-    )[0];
-    this.logger.debug(`requestWriter: ${JSON.stringify(requestWriter)}`);
-    if (!requestWriter.currentlyWriting) {
-      throw new NotCurrentlyWriterException();
-    }
-    requestWriter.currentlyWriting = false;
-    await this.novelWriterRepository.updateRow(requestWriter.id, requestWriter);
-    const nextWriter = writers.filter((writer) => {
-      const dividNextSeq = (requestWriter.writingSeq + 1) % writers.length;
-      const nextSeq = dividNextSeq === 0 ? writers.length : writer.writingSeq;
-      return writer.writingSeq === nextSeq;
-    })[0];
-    nextWriter.currentlyWriting = true;
-    this.logger.debug(`nextWriter: ${JSON.stringify(nextWriter)}`);
-    await this.novelWriterRepository.updateRow(nextWriter.id, nextWriter);
+    const writerCount =
+      await this.novelWriterRepo.countByNovelRoomId(novelRoomId);
+    await this.nextWriterUpdate(user.id, writerCount, novelRoomId);
     const textId = await this.novelTextRepository.addRow(entity);
-
-    this.chatsGateway.server.to(`room-${roomId}`).emit('enterText', { textId });
+    this.chatsGateway.server
+      .to(`room-${novelRoomId}`)
+      .emit('enterText', { textId });
     return;
   }
   async update(id: number, entity: Partial<NovelTextEntity>): Promise<void> {
@@ -90,5 +66,50 @@ export class NovelTextService {
       where: { chapterId },
     });
     return texts.map((text) => new FindByChapterIdResponseDto(text));
+  }
+
+  private async nextWriterUpdate(
+    userId: number,
+    writerCount: number,
+    novelRoomId: number,
+  ): Promise<void> {
+    const requestWriter = await this.updateRequestWriter(userId);
+    const nextSeq = requestWriter.getNextSeq(writerCount);
+    const nextWriter = await this.novelWriterRepo.findByNovelRoomIdAndWriterSeq(
+      novelRoomId,
+      nextSeq,
+    );
+    await this.updateNextWriter(nextWriter.user.id);
+    return;
+  }
+  /**
+   *
+   * @param writers
+   * @returns
+   */
+  private async updateRequestWriter(
+    userId: number,
+  ): Promise<NovelWriterEntity> {
+    const requestWriter = await this.novelWriterRepo.findByUserId(userId);
+    this.logger.debug(`requestWriter: ${JSON.stringify(requestWriter)}`);
+    if (!requestWriter || !requestWriter.isCurrentlyWriter()) {
+      throw new NotCurrentlyWriterException();
+    }
+    requestWriter.setCurrentyWriter(false);
+    await this.novelWriterRepo.updateRow(requestWriter.id, requestWriter);
+    return requestWriter;
+  }
+  /**
+   *
+   * @param writers
+   * @param currentWriteringSeq
+   * @returns
+   */
+  private async updateNextWriter(userId: number): Promise<NovelWriterEntity> {
+    const writer = await this.novelWriterRepo.findByUserId(userId);
+    writer.setCurrentyWriter(true);
+    this.logger.debug(`nextWriter: ${JSON.stringify(writer)}`);
+    await this.novelWriterRepo.updateRow(writer.id, writer);
+    return writer;
   }
 }

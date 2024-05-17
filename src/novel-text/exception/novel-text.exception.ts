@@ -7,3 +7,9 @@ export class NotCurrentlyWriterException extends BaseException {
     super(NovelTextExceptionMsg.NOT_CURRENTLY_WRITER, HttpStatus.NOT_FOUND);
   }
 }
+
+export class NotFoundRoomWriters extends BaseException {
+  constructor() {
+    super(NovelTextExceptionMsg.NOT_FOUND_ROOM_WRITERS, HttpStatus.NOT_FOUND);
+  }
+}

@@ -12,6 +12,35 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     private dataSource: Repository<NovelWriterEntity>,
   ) {}
 
+  async countByNovelRoomId(novelRoomId: number): Promise<number> {
+    return await this.dataSource.count({
+      where: {
+        novelRoomId,
+      },
+    });
+  }
+  async findByNovelRoomIdAndWriterSeq(
+    novelRoomId: number,
+    writingSeq: number,
+  ): Promise<NovelWriterEntity> {
+    return await this.dataSource.findOne({
+      where: {
+        novelRoomId,
+        writingSeq,
+      },
+    });
+  }
+
+  async findByUserId(userId: number): Promise<NovelWriterEntity> {
+    return await this.dataSource.findOne({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+    });
+  }
+
   findByUserEmail(email: string): Promise<NovelWriterEntity[]> {
     return this.dataSource.find({
       where: {

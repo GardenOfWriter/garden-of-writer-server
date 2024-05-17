@@ -117,6 +117,7 @@ export class NovelWriterService {
     const writer = writers.filter((writer) => writer.user.id === user.id);
     return writer[0];
   }
+
   private async changeSendEmail(writer: NovelWriterEntity) {
     if (
       writer.status === WriterStatusEnum.ATTENDING ||

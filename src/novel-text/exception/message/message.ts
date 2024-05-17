@@ -10,6 +10,10 @@ export class NovelTextExceptionMsg
     '4301',
     '현재 작성자가 아닙니다.',
   );
+  static readonly NOT_FOUND_ROOM_WRITERS = new NovelTextExceptionMsg(
+    '4302',
+    '공방안에 참가자가 없습니다.',
+  );
 
   private constructor(
     readonly _errorCode: string,

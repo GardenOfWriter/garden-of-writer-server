@@ -86,6 +86,18 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     return this.category === WriterCategoryEnum.HOST;
   }
 
+  setCurrentyWriter(currentlyWriter: boolean) {
+    this.currentlyWriting = currentlyWriter;
+  }
+  isCurrentlyWriter() {
+    return this.currentlyWriting;
+  }
+
+  getNextSeq(writerCount: number) {
+    const nextSeq = (this.writingSeq + 1) % writerCount;
+    return nextSeq === 0 ? writerCount : nextSeq;
+  }
+
   static of(
     novelRoomId: number,
     category: WriterCategoryType,

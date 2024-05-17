@@ -16,6 +16,12 @@ export interface NovelWriterRepository {
   saveRow(entity: Partial<NovelWriterEntity>): Promise<void>;
   saveRows(entities: Partial<NovelWriterEntity>[]);
   updateRow(id: number, entity: Partial<NovelWriterEntity>): Promise<void>;
+  countByNovelRoomId(novelRoomId: number): Promise<number>;
+  findByUserId(userId: number): Promise<NovelWriterEntity>;
+  findByNovelRoomIdAndWriterSeq(
+    novelRoomId: number,
+    writingSeq: number,
+  ): Promise<NovelWriterEntity>;
   findByUserEmail(email: string): Promise<NovelWriterEntity[]>;
   deleteRow(id: number): Promise<void>;
   findByoptions(
