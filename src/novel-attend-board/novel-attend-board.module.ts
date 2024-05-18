@@ -10,13 +10,7 @@ import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-ro
 import { BoardLikeEntity } from './entities/board-like.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      NovelAttendBoardEntity,
-      NovelRoomEntity,
-      BoardLikeEntity,
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([NovelAttendBoardEntity, NovelRoomEntity, BoardLikeEntity])],
   controllers: [NovelAttendBoardController],
   providers: [
     NovelAttendBoardService,

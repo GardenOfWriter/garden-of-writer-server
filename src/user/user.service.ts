@@ -1,12 +1,6 @@
-import {
-  UserEmailAlreadyExistsException,
-  UserNicknameAlreadyExistsException,
-} from '@app/auth/exceptions/auth.exception';
+import { UserEmailAlreadyExistsException, UserNicknameAlreadyExistsException } from '@app/auth/exceptions/auth.exception';
 import { UserEntity } from '@app/user/entities/user.entity';
-import {
-  UserRepository,
-  UserRepositoryToken,
-} from '@app/user/repository/user.repository';
+import { UserRepository, UserRepositoryToken } from '@app/user/repository/user.repository';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
@@ -25,9 +19,7 @@ export class UserService {
     this.logger.log(`Join User ${JSON.stringify(joinUser)}`);
     const checkEmail = await this.userRepository.existEmail(joinUser.email);
     if (checkEmail) throw new UserEmailAlreadyExistsException();
-    const checkNickname = await this.userRepository.existNickname(
-      joinUser.nickname,
-    );
+    const checkNickname = await this.userRepository.existNickname(joinUser.nickname);
     if (checkNickname) throw new UserNicknameAlreadyExistsException();
     joinUser.checkRegexPassword();
     await this.userRepository.addRow(joinUser);

@@ -4,15 +4,8 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { PrimaryAuditiedPK } from '../../commons/entities/primary-auditied-pk.entity';
 import { ChapterCommentEntity } from './chapter-comment.entity';
 
-import {
-  ChapterStatusEnum,
-  ChapterStatusType,
-} from './enums/chapter-status.enum';
-import {
-  convertDayFormat,
-  getToDay,
-  getToDayISO8601,
-} from '@app/commons/util/date.util';
+import { ChapterStatusEnum, ChapterStatusType } from './enums/chapter-status.enum';
+import { convertDayFormat, getToDay, getToDayISO8601 } from '@app/commons/util/date.util';
 import { ChapterLikeEntity } from './chapter-like.entity';
 @Entity({ name: 'chapter', schema: 'gow-server' })
 export class ChapterEntity extends PrimaryAuditiedPK {
@@ -65,12 +58,7 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   @OneToMany((_type) => ChapterLikeEntity, (like) => like.chapter)
   chapterLike: ChapterLikeEntity[];
 
-  static of(
-    novelRoomId: number,
-    status: ChapterStatusType,
-    user: UserEntity,
-    title: string = '프롤로그',
-  ) {
+  static of(novelRoomId: number, status: ChapterStatusType, user: UserEntity, title: string = '프롤로그') {
     const chapter = new ChapterEntity();
     chapter.no = 1;
     chapter.novelRoomId = novelRoomId;

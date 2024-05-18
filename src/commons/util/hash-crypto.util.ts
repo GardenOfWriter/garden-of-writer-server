@@ -4,18 +4,11 @@ export const getSalt = () => {
   return randomBytes(16).toString('hex'); // 랜덤 salt 값 생성
 };
 
-export const hashCrypto = async (
-  string: string,
-  salt: string,
-): Promise<string> => {
+export const hashCrypto = async (string: string, salt: string): Promise<string> => {
   return await setHashSync(string, salt);
 };
 
-export const verifyString = async (
-  hash: string,
-  salt: string,
-  string: string,
-): Promise<boolean> => {
+export const verifyString = async (hash: string, salt: string, string: string): Promise<boolean> => {
   const verifyHash = await setHashSync(string, salt);
   return verifyHash === hash ? true : false;
 };

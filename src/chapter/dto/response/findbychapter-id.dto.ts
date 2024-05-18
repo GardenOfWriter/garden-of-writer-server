@@ -1,7 +1,4 @@
-import {
-  ChapterStatusEnum,
-  ChapterStatusType,
-} from '@app/chapter/entities/enums/chapter-status.enum';
+import { ChapterStatusEnum, ChapterStatusType } from '@app/chapter/entities/enums/chapter-status.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { ChapterEntity } from '../../entities/chapter.entity';

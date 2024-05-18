@@ -1,12 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiExtraModels,
-  ApiOkResponse,
-  ApiOperation,
-  ApiResponse,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { FindChapterRoomIdResDto } from '../dto/response/findbychapter-id.dto';
 import { ApiCommonResponse } from '@app/commons/decorator/swagger/common-response.decorator';
 import { UpdateChapterRequestDto } from '../dto/request/update-chapter.dto';

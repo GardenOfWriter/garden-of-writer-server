@@ -5,8 +5,7 @@ export const ChapterStatusEnum = {
   REJECT: 'reject', // 연재 거절
 } as const;
 
-export type ChapterStatusType =
-  (typeof ChapterStatusEnum)[keyof typeof ChapterStatusEnum];
+export type ChapterStatusType = (typeof ChapterStatusEnum)[keyof typeof ChapterStatusEnum];
 
 export const ChatperStatusDescription = {
   enum: ChapterStatusEnum,

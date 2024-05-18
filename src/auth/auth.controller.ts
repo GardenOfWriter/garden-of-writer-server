@@ -2,21 +2,8 @@ import { AuthService } from '@app/auth/auth.service';
 import { LoginUserDto } from '@app/auth/dto/login-user.dto';
 import { RequestUser } from '@app/auth/interface/auth.interface';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { NovelWriterService } from '../novel-writer/novel-writer.service';
 import { JwtGuard } from './guard/jwt.guard';
@@ -31,10 +18,7 @@ export class AuthController {
   ) {}
   @Login()
   @Post('/login')
-  async login(
-    @Body() dto: LoginUserDto,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<any> {
+  async login(@Body() dto: LoginUserDto, @Res({ passthrough: true }) res: Response): Promise<any> {
     const jwt = await this.authService.validateUser(dto);
     const hasRoom = await this.writerService.checkRoomStatusAttend(dto.email);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
@@ -47,10 +31,7 @@ export class AuthController {
 
   @Logout()
   @Post('/logout')
-  async logout(
-    @Req() request: RequestUser,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  async logout(@Req() request: RequestUser, @Res({ passthrough: true }) response: Response) {
     response.clearCookie('accessToken');
     response.setHeader('Set-Cookie', this.authService.logoutUser());
     return;

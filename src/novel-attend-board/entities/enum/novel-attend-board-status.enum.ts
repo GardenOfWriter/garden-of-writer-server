@@ -5,5 +5,4 @@ export const NovelAttendBoardStatusEnum = {
   REJECT: 'reject', // 연재 거절
 } as const;
 
-export type NovelAttendBoardStatusType =
-  (typeof NovelAttendBoardStatusEnum)[keyof typeof NovelAttendBoardStatusEnum];
+export type NovelAttendBoardStatusType = (typeof NovelAttendBoardStatusEnum)[keyof typeof NovelAttendBoardStatusEnum];

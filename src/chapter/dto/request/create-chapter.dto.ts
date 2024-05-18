@@ -4,17 +4,9 @@ import { PickType } from '@nestjs/swagger';
 import { ChapterStatusEnum } from '../../entities/enums/chapter-status.enum';
 import { ChapterDto } from '../chapter.dto';
 
-export class CreateChapterRequestDto extends PickType(ChapterDto, [
-  'title',
-  'novelRoomId',
-] as const) {
+export class CreateChapterRequestDto extends PickType(ChapterDto, ['title', 'novelRoomId'] as const) {
   toEntity(user: UserEntity): Partial<ChapterEntity> {
-    const entity = ChapterEntity.of(
-      this.novelRoomId,
-      ChapterStatusEnum.WRITING,
-      user,
-      this.title,
-    );
+    const entity = ChapterEntity.of(this.novelRoomId, ChapterStatusEnum.WRITING, user, this.title);
     return entity;
   }
 }

@@ -1,12 +1,4 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Logger,
-  NestInterceptor,
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import { Observable, catchError, throwError } from 'rxjs';
 import { BaseException } from '../exception/base.exception';
 import { QueryFailedError, TypeORMError } from 'typeorm';
@@ -23,23 +15,11 @@ export class ErrorsInterceptor implements NestInterceptor {
           return throwError(() => error);
         } else if (error instanceof TypeORMError) {
           this.logger.error('query fail', JSON.stringify(error.message));
-          return throwError(
-            () =>
-              new HttpException(
-                'Internal server error',
-                HttpStatus.INTERNAL_SERVER_ERROR,
-              ),
-          );
+          return throwError(() => new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR));
         } else {
           this.logger.error(error);
           // 그 외 에러 처리 (예: 500 Internal Server Error)
-          return throwError(
-            () =>
-              new HttpException(
-                'Internal server error',
-                HttpStatus.INTERNAL_SERVER_ERROR,
-              ),
-          );
+          return throwError(() => new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR));
         }
       }),
     );

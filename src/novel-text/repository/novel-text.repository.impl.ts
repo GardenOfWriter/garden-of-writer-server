@@ -8,9 +8,7 @@ export class NovelTextRepositoryImpl implements NovelTextRepository {
     @InjectRepository(NovelTextEntity)
     private dataSource: Repository<NovelTextEntity>,
   ) {}
-  async findByChapterId(
-    options: FindOneOptions<NovelTextEntity>,
-  ): Promise<NovelTextEntity[]> {
+  async findByChapterId(options: FindOneOptions<NovelTextEntity>): Promise<NovelTextEntity[]> {
     return await this.dataSource.find(options);
   }
   async addRow(entity: Partial<NovelTextEntity>): Promise<number> {

@@ -1,15 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  ParseIntPipe,
-  Post,
-  Put,
-  Query,
-  SerializeOptions,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, ParseIntPipe, Post, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
@@ -35,10 +24,7 @@ export class NovelWriterController {
 
   @FindWriter()
   @Get('')
-  async findNovelWirters(
-    @Query('novelRoomId') novelRoomId: number,
-    @CurrentUser() user: UserEntity,
-  ) {
+  async findNovelWirters(@Query('novelRoomId') novelRoomId: number, @CurrentUser() user: UserEntity) {
     return await this.novelWriterService.findByNoveRoomId(novelRoomId, user);
   }
 
@@ -47,11 +33,7 @@ export class NovelWriterController {
   })
   @Post('/novel-room/approval')
   create(@CurrentUser() user: UserEntity, @Body() dto: CreateNovelWriterDto) {
-    const writer = dto.toEntity(
-      user,
-      WriterCategoryEnum.ATTENDEE,
-      WriterStatusEnum.REVIEW,
-    );
+    const writer = dto.toEntity(user, WriterCategoryEnum.ATTENDEE, WriterStatusEnum.REVIEW);
     return this.novelWriterService.create(writer);
   }
 
@@ -59,10 +41,7 @@ export class NovelWriterController {
     summary: '작가 순서 변경',
   })
   @Put('/sequence')
-  async changePriorty(
-    @Body() dto: ChangeWriterSeqRequestDto,
-    @CurrentUser() user: UserEntity,
-  ) {
+  async changePriorty(@Body() dto: ChangeWriterSeqRequestDto, @CurrentUser() user: UserEntity) {
     return await this.novelWriterService.changeWriterSeq(dto, user);
   }
 

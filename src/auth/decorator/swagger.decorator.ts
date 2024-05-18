@@ -14,8 +14,7 @@ export function Login(): MethodDecorator {
           },
 
           hasRoom: {
-            description:
-              '소셜 공방 참여 이력 값, 참여 이력이 있음 treu,참여 이력이 없음 : false',
+            description: '소셜 공방 참여 이력 값, 참여 이력이 있음 treu,참여 이력이 없음 : false',
           },
         },
       },

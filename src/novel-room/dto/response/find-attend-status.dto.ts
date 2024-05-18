@@ -5,10 +5,7 @@ import { UserEntity } from '../../../user/entities/user.entity';
 import { NovelRoomEntity } from '../../entities/novel-room.entity';
 import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  RoomCategoryDescription,
-  findCategoryName,
-} from '../../entities/enum/novel-room-category.enum';
+import { RoomCategoryDescription, findCategoryName } from '../../entities/enum/novel-room-category.enum';
 import { RoomTypeDescription } from '../../entities/enum/novel-room-type.enum';
 import { WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
 import { NovelRoomStatuDescription } from '../../entities/enum/novel-room-status.enum';
@@ -34,9 +31,7 @@ export class FindAttendStatusNovelRoomDto {
     this._createdAt = room.createdAt;
     this._type = room.type;
     this._writers = room.novelWriter;
-    this._me = room.novelWriter.filter(
-      (writer) => writer.user.id === user.id,
-    )[0];
+    this._me = room.novelWriter.filter((writer) => writer.user.id === user.id)[0];
     this._status = room.status;
     this._completedAt = room.completedAt;
   }

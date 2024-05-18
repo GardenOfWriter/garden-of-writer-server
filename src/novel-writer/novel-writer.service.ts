@@ -1,25 +1,15 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { In } from 'typeorm';
 
-import {
-  EmailService,
-  EmailServiceToken,
-} from '@app/commons/email/email.service';
+import { EmailService, EmailServiceToken } from '@app/commons/email/email.service';
 import { EmailTemplate } from '@app/commons/email/enums/teamplate.enums';
 import { UserEntity } from '../user/entities/user.entity';
 import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
 import { FindByNovelRoomIdResponseDto } from './dto/response/find-novel-room-id.dto';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
-import {
-  NovelWriterRepo,
-  NovelWriterRepository,
-} from './repository/novel-writer.repository';
-import {
-  AlreadyExistWriterExcetpion,
-  BadChangeWriterIdSeqExcetpion,
-  NotAccessWriterManagementExcetpion,
-} from './exceptions/novel-writer.exception';
+import { NovelWriterRepo, NovelWriterRepository } from './repository/novel-writer.repository';
+import { AlreadyExistWriterExcetpion, BadChangeWriterIdSeqExcetpion, NotAccessWriterManagementExcetpion } from './exceptions/novel-writer.exception';
 
 @Injectable()
 export class NovelWriterService {
@@ -66,9 +56,7 @@ export class NovelWriterService {
   async findByNoveRoomId(novelRoomId: number, user: UserEntity) {
     const writers = await this.novelWriterRepo.findByNovelRoomId(novelRoomId);
     this.logger.log(`Join Writer List ${JSON.stringify(writers)}`);
-    return writers.map(
-      (writer, index) => new FindByNovelRoomIdResponseDto(writer, index),
-    );
+    return writers.map((writer, index) => new FindByNovelRoomIdResponseDto(writer, index));
   }
   async checkRoomStatusAttend(email: string): Promise<boolean> {
     const writers = await this.novelWriterRepo.findByoptions({
@@ -113,30 +101,18 @@ export class NovelWriterService {
     }
   }
 
-  private filterCurrentWriter(
-    writers: NovelWriterEntity[],
-    user: UserEntity,
-  ): NovelWriterEntity {
+  private filterCurrentWriter(writers: NovelWriterEntity[], user: UserEntity): NovelWriterEntity {
     const writer = writers.filter((writer) => writer.user.id === user.id);
     return writer[0];
   }
 
   private async changeSendEmail(writer: NovelWriterEntity) {
-    if (
-      writer.status === WriterStatusEnum.ATTENDING ||
-      writer.status === WriterStatusEnum.REJECT
-    ) {
-      const template =
-        writer.status == WriterStatusEnum.ATTENDING
-          ? EmailTemplate.WRITER_ATTENDING
-          : EmailTemplate.WRITER_REJECT;
-      await this.emailService.sendEmail(
-        writer.user.email,
-        template.title,
-        ' ',
-        template,
-        { username: writer.user.nickname, room: writer.novelRoom.title },
-      );
+    if (writer.status === WriterStatusEnum.ATTENDING || writer.status === WriterStatusEnum.REJECT) {
+      const template = writer.status == WriterStatusEnum.ATTENDING ? EmailTemplate.WRITER_ATTENDING : EmailTemplate.WRITER_REJECT;
+      await this.emailService.sendEmail(writer.user.email, template.title, ' ', template, {
+        username: writer.user.nickname,
+        room: writer.novelRoom.title,
+      });
     }
   }
 }

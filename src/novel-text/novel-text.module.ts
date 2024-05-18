@@ -16,17 +16,7 @@ import { NovelWriterRepositoryProvider } from '@app/novel-writer/repository/nove
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 
 @Module({
-  imports: [
-    ChatsModule,
-    TypeOrmModule.forFeature([
-      NovelTextEntity,
-      ChatsEntity,
-      MessageEntity,
-      UserEntity,
-      NovelRoomEntity,
-      NovelWriterEntity,
-    ]),
-  ],
+  imports: [ChatsModule, TypeOrmModule.forFeature([NovelTextEntity, ChatsEntity, MessageEntity, UserEntity, NovelRoomEntity, NovelWriterEntity])],
   controllers: [NovelTextController],
   providers: [
     NovelTextService,

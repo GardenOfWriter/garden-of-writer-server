@@ -9,11 +9,5 @@ export const EmailServiceProvider: Provider = {
   useClass: EmailServiceImpl,
 };
 export interface EmailService {
-  sendEmail(
-    to: string,
-    subject: string,
-    text: string,
-    template?: EmailTemplate,
-    teamplateArg?: any,
-  ): Promise<void>;
+  sendEmail(to: string, subject: string, text: string, template?: EmailTemplate, teamplateArg?: any): Promise<void>;
 }

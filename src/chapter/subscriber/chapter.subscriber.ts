@@ -1,14 +1,8 @@
-import {
-  EntitySubscriberInterface,
-  EventSubscriber,
-  InsertEvent,
-} from 'typeorm';
+import { EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
 import { ChapterEntity } from '../entities/chapter.entity';
 
 @EventSubscriber()
-export class ChapterSubscriber
-  implements EntitySubscriberInterface<ChapterEntity>
-{
+export class ChapterSubscriber implements EntitySubscriberInterface<ChapterEntity> {
   //   constructor(
   //     @InjectRepository(ChapterEntity)
   //     private chapterRepository: Repository<ChapterEntity>,

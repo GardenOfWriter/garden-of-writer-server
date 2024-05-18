@@ -4,9 +4,7 @@ import { NovelAttendBoardEntity } from '../entities/novel-attend-board.entity';
 import { NovelAttendBoardRepository } from './novel-attend-board.repository';
 import { BoardLikeEntity } from '../entities/board-like.entity';
 
-export class NovelAttendBoardRepositoryImpl
-  implements NovelAttendBoardRepository
-{
+export class NovelAttendBoardRepositoryImpl implements NovelAttendBoardRepository {
   constructor(
     @InjectRepository(NovelAttendBoardEntity)
     private dataSource: Repository<NovelAttendBoardEntity>,
@@ -22,15 +20,7 @@ export class NovelAttendBoardRepositoryImpl
   async findWithNovelRoom(): Promise<[NovelAttendBoardEntity[], number]> {
     return await this.dataSource
       .createQueryBuilder('nad')
-      .select([
-        'novelRoom.title',
-        'novelRoom.createdAt',
-        'novelRoom.user',
-        'novelRoom.type',
-        'nad.title',
-        'nad.content',
-        'nad.viewCount',
-      ])
+      .select(['novelRoom.title', 'novelRoom.createdAt', 'novelRoom.user', 'novelRoom.type', 'nad.title', 'nad.content', 'nad.viewCount'])
       .leftJoin('nad.novelRoom', 'novelRoom')
       .leftJoinAndSelect('novelRoom.novelWriter', 'novelWriter')
       .getManyAndCount();

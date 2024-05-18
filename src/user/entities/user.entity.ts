@@ -1,25 +1,12 @@
 import { ChapterLikeEntity } from '@app/chapter/entities/chapter-like.entity';
 import { ChatsEntity } from '@app/chats/entities/chats.entity';
-import {
-  PASSWORD_REG_EXP,
-  PASSWORD_REG_EXP_ERROR_MESSAGE,
-} from '@app/commons/reg-exp/reg-exp';
+import { PASSWORD_REG_EXP, PASSWORD_REG_EXP_ERROR_MESSAGE } from '@app/commons/reg-exp/reg-exp';
 import { MessageEntity } from '@app/message/message.entity';
 import { BoardLikeEntity } from '@app/novel-attend-board/entities/board-like.entity';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import {
-  BeforeInsert,
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'user', schema: 'gow-server' })
 export class UserEntity {

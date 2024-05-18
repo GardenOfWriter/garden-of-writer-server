@@ -4,19 +4,13 @@ import { NovelWriterExceptionMsg } from './message/novel-writer.message';
 
 export class NotAccessWriterManagementExcetpion extends BaseException {
   constructor() {
-    super(
-      NovelWriterExceptionMsg.NOT_ACCESS_PARTICIATE_WRITER,
-      HttpStatus.CONFLICT,
-    );
+    super(NovelWriterExceptionMsg.NOT_ACCESS_PARTICIATE_WRITER, HttpStatus.CONFLICT);
   }
 }
 
 export class BadChangeWriterIdSeqExcetpion extends BaseException {
   constructor() {
-    super(
-      NovelWriterExceptionMsg.BAD_CHANGE_WRITERID_SEQ,
-      HttpStatus.BAD_REQUEST,
-    );
+    super(NovelWriterExceptionMsg.BAD_CHANGE_WRITERID_SEQ, HttpStatus.BAD_REQUEST);
   }
 }
 

@@ -5,7 +5,6 @@ import { NovelRoomService } from '@app/novel-room/novel-room.service';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
 import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
 import { ChapterRepositoryProvider } from '@app/chapter/repository/chapter.repository';
 import { AbilityFactory } from '@app/commons/abilities/ability.factory';

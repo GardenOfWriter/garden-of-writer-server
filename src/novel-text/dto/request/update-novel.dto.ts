@@ -4,11 +4,7 @@ import { UserEntity } from '../../../user/entities/user.entity';
 import { NovelTextEntity } from '../../entities/novel-text.entity';
 import { NovelTextDto } from '../novel-text.dto';
 
-export class UpdateTextNovelRequestDto extends PickType(NovelTextDto, [
-  'status',
-  'content',
-  'chapterId',
-]) {
+export class UpdateTextNovelRequestDto extends PickType(NovelTextDto, ['status', 'content', 'chapterId']) {
   @ApiProperty({
     example: '글 Id',
     description: '해당 유저의 임시 저장이 된 글 Id',
@@ -17,12 +13,7 @@ export class UpdateTextNovelRequestDto extends PickType(NovelTextDto, [
   id: number;
 
   toEntity(user: UserEntity): Partial<NovelTextEntity> {
-    const entity = NovelTextEntity.of(
-      this.chapterId,
-      this.status,
-      this.content,
-      user,
-    );
+    const entity = NovelTextEntity.of(this.chapterId, this.status, this.content, user);
 
     return entity;
   }

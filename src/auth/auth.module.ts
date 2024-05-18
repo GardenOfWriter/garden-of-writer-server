@@ -26,13 +26,7 @@ import { UserModule } from '@app/user/user.module';
   ],
 
   exports: [TypeOrmModule, JwtGuard],
-  providers: [
-    AuthService,
-    JwtGuard,
-    AccessTokenStrategy,
-    NovelWriterService,
-    NovelWriterRepositoryProvider,
-  ],
+  providers: [AuthService, JwtGuard, AccessTokenStrategy, NovelWriterService, NovelWriterRepositoryProvider],
   controllers: [AuthController],
 })
 export class AuthModule {}

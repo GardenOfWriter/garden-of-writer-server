@@ -9,13 +9,7 @@ import { EmailTemplate } from './enums/teamplate.enums';
 export class EmailServiceImpl implements EmailService {
   constructor(private readonly mailService: MailerService) {}
   //   private logger = new Logger('EmailService');
-  async sendEmail(
-    to: string,
-    subject: string,
-    text: string,
-    template?: EmailTemplate,
-    templateArgs?: any,
-  ): Promise<void> {
+  async sendEmail(to: string, subject: string, text: string, template?: EmailTemplate, templateArgs?: any): Promise<void> {
     let templateMessage;
     if (template) {
       templateMessage = this.getTemplate(template, templateArgs);
@@ -31,10 +25,7 @@ export class EmailServiceImpl implements EmailService {
     await this.mailService.sendMail(mailOptions);
   }
   private getTemplate(emailTemplate: EmailTemplate, teamplateArgs: any) {
-    const teamplatePath = join(
-      process.env.PWD,
-      `/templates/${emailTemplate.path}`,
-    );
+    const teamplatePath = join(process.env.PWD, `/templates/${emailTemplate.path}`);
     const emailTemplateSource = readFileSync(teamplatePath, 'utf8');
     const template = compile(emailTemplateSource);
     const htmlSendMessage = template({ ...teamplateArgs });

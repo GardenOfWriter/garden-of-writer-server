@@ -30,11 +30,6 @@ export class NovelAttnedBoardDto {
   openKakaoLink: string;
 
   toEntity(): Partial<NovelAttendBoardEntity> {
-    return NovelAttendBoardEntity.of(
-      this.novelRoomId,
-      this.title,
-      this.content,
-      this.openKakaoLink,
-    );
+    return NovelAttendBoardEntity.of(this.novelRoomId, this.title, this.content, this.openKakaoLink);
   }
 }

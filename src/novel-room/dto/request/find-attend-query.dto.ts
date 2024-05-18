@@ -1,15 +1,8 @@
 import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
-import {
-  WriterStatusEnum,
-  WriterStatusType,
-} from '@app/novel-writer/entities/enums/writer-status.enum';
+import { WriterStatusEnum, WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString } from 'class-validator';
-import {
-  DescriptionProperty,
-  NovelRoomAttendQueryEnum,
-  NovelRoomAttendQueryType,
-} from './enum/room-attend-query.enum';
+import { DescriptionProperty, NovelRoomAttendQueryEnum, NovelRoomAttendQueryType } from './enum/room-attend-query.enum';
 
 export class FindAttendQueryDto extends BasePaginationRequest {
   @ApiProperty({ ...DescriptionProperty })
@@ -20,8 +13,6 @@ export class FindAttendQueryDto extends BasePaginationRequest {
   roomStatus: NovelRoomAttendQueryType;
 
   queryConvertStatus(): WriterStatusType[] {
-    return this.roomStatus === NovelRoomAttendQueryEnum.ATTENDING
-      ? [WriterStatusEnum.ATTENDING]
-      : [WriterStatusEnum.REVIEW];
+    return this.roomStatus === NovelRoomAttendQueryEnum.ATTENDING ? [WriterStatusEnum.ATTENDING] : [WriterStatusEnum.REVIEW];
   }
 }

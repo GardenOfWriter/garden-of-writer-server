@@ -19,10 +19,7 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
       },
     });
   }
-  async findByNovelRoomIdAndWriterSeq(
-    novelRoomId: number,
-    writingSeq: number,
-  ): Promise<NovelWriterEntity> {
+  async findByNovelRoomIdAndWriterSeq(novelRoomId: number, writingSeq: number): Promise<NovelWriterEntity> {
     return await this.dataSource.findOne({
       where: {
         novelRoomId,
@@ -60,16 +57,11 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     });
   }
 
-  findOneByOptions(
-    options: FindOneOptions<NovelWriterEntity>,
-  ): Promise<NovelWriterEntity> {
+  findOneByOptions(options: FindOneOptions<NovelWriterEntity>): Promise<NovelWriterEntity> {
     return this.dataSource.findOne(options);
   }
 
-  async findOneByUserIdAndNovelRoomId(
-    userId: number,
-    novelRoomId: number,
-  ): Promise<NovelWriterEntity> {
+  async findOneByUserIdAndNovelRoomId(userId: number, novelRoomId: number): Promise<NovelWriterEntity> {
     return await this.dataSource.findOne({
       where: {
         user: {
@@ -84,14 +76,7 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
 
   async findByNovelRoomId(novelRoomId: number): Promise<NovelWriterEntity[]> {
     return await this.dataSource.find({
-      select: [
-        'id',
-        'status',
-        'category',
-        'writingSeq',
-        'currentlyWriting',
-        'user',
-      ],
+      select: ['id', 'status', 'category', 'writingSeq', 'currentlyWriting', 'user'],
       relations: ['user'],
       where: {
         status: WriterStatusEnum.ATTENDING,
@@ -105,16 +90,11 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     });
   }
 
-  async findByoptions(
-    options: FindOneOptions<NovelWriterEntity>,
-  ): Promise<NovelWriterEntity[]> {
+  async findByoptions(options: FindOneOptions<NovelWriterEntity>): Promise<NovelWriterEntity[]> {
     return await this.dataSource.find(options);
   }
 
-  async findByNovelRoomIdDetails(
-    novelRoomId: number,
-    pagination: BasePaginationRequest,
-  ): Promise<[NovelWriterEntity[], number]> {
+  async findByNovelRoomIdDetails(novelRoomId: number, pagination: BasePaginationRequest): Promise<[NovelWriterEntity[], number]> {
     return await this.dataSource.findAndCount({
       relations: ['user'],
       where: {
@@ -134,10 +114,7 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     await this.dataSource.save(entities);
     return;
   }
-  async updateRow(
-    id: number,
-    entity: Partial<NovelWriterEntity>,
-  ): Promise<void> {
+  async updateRow(id: number, entity: Partial<NovelWriterEntity>): Promise<void> {
     await this.dataSource.update({ id }, entity);
     return;
   }

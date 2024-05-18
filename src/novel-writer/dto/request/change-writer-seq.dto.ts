@@ -3,9 +3,7 @@ import { ArrayMaxSize, ArrayMinSize, IsArray, IsNumber } from 'class-validator';
 import { NovelWriterEntity } from '../../entities/novel-writer.entity';
 import { NovelWirterDto } from '../novel-writer.dto';
 
-export class ChangeWriterSeqRequestDto extends PickType(NovelWirterDto, [
-  'novelRoomId',
-]) {
+export class ChangeWriterSeqRequestDto extends PickType(NovelWirterDto, ['novelRoomId']) {
   @ApiProperty({
     example: [17, 18, 19, 20, 21],
     description: '작가 순서를 담은 WriterId의 array',

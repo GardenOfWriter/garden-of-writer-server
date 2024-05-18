@@ -35,10 +35,7 @@ export class UserRepositoryImpl implements UserRepository {
     });
     return result;
   }
-  async findByNicknameEmail(
-    email: string,
-    nickname: string,
-  ): Promise<UserEntity> {
+  async findByNicknameEmail(email: string, nickname: string): Promise<UserEntity> {
     const result = await this.dataSource.findOne({
       where: {
         email,
@@ -49,10 +46,7 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async findAll() {
-    return await this.dataSource
-      .createQueryBuilder()
-      .select('user.ems')
-      .getRawMany();
+    return await this.dataSource.createQueryBuilder().select('user.ems').getRawMany();
   }
 
   async existEmail(email: string): Promise<boolean> {

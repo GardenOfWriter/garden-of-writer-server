@@ -13,25 +13,9 @@ import { ChatsController } from './chats.controller';
 import { ChatsService } from './chats.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ChatsEntity, MessageEntity]),
-    AuthModule,
-    UserModule,
-  ],
+  imports: [TypeOrmModule.forFeature([ChatsEntity, MessageEntity]), AuthModule, UserModule],
   controllers: [ChatsController, MessagesController],
-  providers: [
-    ChatsGateway,
-    ChatsService,
-    ChatsMessagesService,
-    AuthService,
-    JwtService,
-  ],
-  exports: [
-    ChatsGateway,
-    JwtService,
-    ChatsService,
-    ChatsMessagesService,
-    AuthService,
-  ],
+  providers: [ChatsGateway, ChatsService, ChatsMessagesService, AuthService, JwtService],
+  exports: [ChatsGateway, JwtService, ChatsService, ChatsMessagesService, AuthService],
 })
 export class ChatsModule {}

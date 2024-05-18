@@ -5,10 +5,7 @@ import { NovelTextEntity } from './entities/novel-text.entity';
 import { NovelTextRepository } from './repository/novel-text.repository';
 import { ChatsService } from '@app/chats/chats.service';
 import { ChatsGateway } from '@app/chats/chats.gateway';
-import {
-  NovelWriterRepository,
-  NovelWriterRepositoryToken,
-} from '@app/novel-writer/repository/novel-writer.repository';
+import { NovelWriterRepository, NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
 import { NotCurrentlyWriterException } from './exception/novel-text.exception';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 
@@ -29,18 +26,11 @@ export class NovelTextService {
    * @param entity
    * @returns
    */
-  async create(
-    novelRoomId: number,
-    entity: Partial<NovelTextEntity>,
-    user: UserEntity,
-  ): Promise<void> {
-    const writerCount =
-      await this.novelWriterRepo.countByNovelRoomId(novelRoomId);
+  async create(novelRoomId: number, entity: Partial<NovelTextEntity>, user: UserEntity): Promise<void> {
+    const writerCount = await this.novelWriterRepo.countByNovelRoomId(novelRoomId);
     await this.nextWriterUpdate(user.id, writerCount, novelRoomId);
     const textId = await this.novelTextRepository.addRow(entity);
-    this.chatsGateway.server
-      .to(`room-${novelRoomId}`)
-      .emit('enterText', { textId });
+    this.chatsGateway.server.to(`room-${novelRoomId}`).emit('enterText', { textId });
     return;
   }
   async update(id: number, entity: Partial<NovelTextEntity>): Promise<void> {
@@ -68,17 +58,10 @@ export class NovelTextService {
     return texts.map((text) => new FindByChapterIdResponseDto(text));
   }
 
-  private async nextWriterUpdate(
-    userId: number,
-    writerCount: number,
-    novelRoomId: number,
-  ): Promise<void> {
+  private async nextWriterUpdate(userId: number, writerCount: number, novelRoomId: number): Promise<void> {
     const requestWriter = await this.updateRequestWriter(userId);
     const nextSeq = requestWriter.getNextSeq(writerCount);
-    const nextWriter = await this.novelWriterRepo.findByNovelRoomIdAndWriterSeq(
-      novelRoomId,
-      nextSeq,
-    );
+    const nextWriter = await this.novelWriterRepo.findByNovelRoomIdAndWriterSeq(novelRoomId, nextSeq);
     await this.updateNextWriter(nextWriter.user.id);
     return;
   }
@@ -87,9 +70,7 @@ export class NovelTextService {
    * @param writers
    * @returns
    */
-  private async updateRequestWriter(
-    userId: number,
-  ): Promise<NovelWriterEntity> {
+  private async updateRequestWriter(userId: number): Promise<NovelWriterEntity> {
     const requestWriter = await this.novelWriterRepo.findByUserId(userId);
     this.logger.debug(`requestWriter: ${JSON.stringify(requestWriter)}`);
     if (!requestWriter || !requestWriter.isCurrentlyWriter()) {

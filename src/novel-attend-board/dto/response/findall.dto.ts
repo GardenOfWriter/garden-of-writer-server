@@ -1,17 +1,11 @@
-import {
-  NovelRoomType,
-  NovelRoomTypeEnum,
-} from '@app/novel-room/entities/enum/novel-room-type.enum';
+import { NovelRoomType, NovelRoomTypeEnum } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { convertDayFormat } from '@app/commons/util/date.util';
-import {
-  RoomCategoryDescription,
-  findCategoryName,
-} from '@app/novel-room/entities/enum/novel-room-category.enum';
+import { RoomCategoryDescription, findCategoryName } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { NovelAttendBoardEntity } from '@app/novel-attend-board/entities/novel-attend-board.entity';
 
 export class FindAllNovelAttendBoardDto {

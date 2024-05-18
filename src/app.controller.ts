@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Inject,
-  Post,
-  Put,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Post, Put, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { EmailService, EmailServiceToken } from './commons/email/email.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';

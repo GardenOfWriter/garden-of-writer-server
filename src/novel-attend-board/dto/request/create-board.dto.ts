@@ -2,18 +2,8 @@ import { PickType } from '@nestjs/swagger';
 import { NovelAttnedBoardDto } from '../novel-attend-board.dto';
 import { NovelAttendBoardEntity } from '../../entities/novel-attend-board.entity';
 
-export class CreateNovelAttnedBoardDto extends PickType(NovelAttnedBoardDto, [
-  'novelRoomId',
-  'content',
-  'openKakaoLink',
-  'title',
-]) {
+export class CreateNovelAttnedBoardDto extends PickType(NovelAttnedBoardDto, ['novelRoomId', 'content', 'openKakaoLink', 'title']) {
   toEntity(): Partial<NovelAttendBoardEntity> {
-    return NovelAttendBoardEntity.of(
-      this.novelRoomId,
-      this.title,
-      this.content,
-      this.openKakaoLink,
-    );
+    return NovelAttendBoardEntity.of(this.novelRoomId, this.title, this.content, this.openKakaoLink);
   }
 }

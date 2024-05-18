@@ -5,10 +5,7 @@ import { UserService } from '@app/user/user.service';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import {
-  UserIncorrectEmailException,
-  UserIncorrectPasswordException,
-} from './exceptions/auth.exception';
+import { UserIncorrectEmailException, UserIncorrectPasswordException } from './exceptions/auth.exception';
 
 @Injectable()
 export class AuthService {
@@ -36,10 +33,7 @@ export class AuthService {
   /*
    * 토큰 생성 함수
    */
-  private async generateAccessToken(
-    id: number,
-    email: string,
-  ): Promise<TokenResult> {
+  private async generateAccessToken(id: number, email: string): Promise<TokenResult> {
     const payload: TokenPayload = { id, email };
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_KEY,

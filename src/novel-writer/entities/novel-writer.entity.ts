@@ -3,10 +3,7 @@ import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '../../commons/entities/primary-generated-pk-with-meta-time.entity';
-import {
-  WriterCategoryType,
-  WriterCategoryEnum,
-} from './enums/writer-category.enum';
+import { WriterCategoryType, WriterCategoryEnum } from './enums/writer-category.enum';
 import { WriterStatusEnum, WriterStatusType } from './enums/writer-status.enum';
 
 @Entity({ name: 'novel-writer', schema: 'gow-server' })
@@ -99,10 +96,7 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   }
 
   isStatusAttendingOrReject() {
-    return (
-      this.status === WriterStatusEnum.ATTENDING ||
-      this.status === WriterStatusEnum.REJECT
-    );
+    return this.status === WriterStatusEnum.ATTENDING || this.status === WriterStatusEnum.REJECT;
   }
 
   static of(

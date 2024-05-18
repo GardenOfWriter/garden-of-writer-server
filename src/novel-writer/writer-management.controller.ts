@@ -1,15 +1,5 @@
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  ParseIntPipe,
-  Put,
-  Query,
-  SerializeOptions,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
@@ -32,20 +22,13 @@ export class WriterManagementController {
     summary: '참여 작가 상태 번경',
   })
   @Put('/status/:id')
-  async changeWriterStatus(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() dto: UpdateNovelWriterStatusRequestDto,
-    @CurrentUser() user: UserEntity,
-  ) {
+  async changeWriterStatus(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateNovelWriterStatusRequestDto, @CurrentUser() user: UserEntity) {
     await this.writerMgrService.changeWriterStatus(id, dto, user);
   }
 
   @FindWriterMangement()
   @Get('')
-  async findWriterManagement(
-    @CurrentUser() user: UserEntity,
-    @Query() dto: FindNovelWriteManagementDto,
-  ) {
+  async findWriterManagement(@CurrentUser() user: UserEntity, @Query() dto: FindNovelWriteManagementDto) {
     return await this.writerMgrService.findByNovelRoomIdDetails(user, dto);
   }
 }

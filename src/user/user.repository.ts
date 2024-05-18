@@ -11,10 +11,7 @@ export class UserRepository {
   ) {}
 
   async getAll() {
-    return await this.dataSource
-      .createQueryBuilder()
-      .select('user.ems')
-      .getRawMany();
+    return await this.dataSource.createQueryBuilder().select('user.ems').getRawMany();
   }
   async getById(id: number): Promise<UserEntity> {
     return await this.dataSource.findOne({
@@ -30,10 +27,7 @@ export class UserRepository {
     });
     return result;
   }
-  async getByNicknameEmail(
-    email: string,
-    nickname: string,
-  ): Promise<UserEntity> {
+  async getByNicknameEmail(email: string, nickname: string): Promise<UserEntity> {
     return await this.dataSource.findOne({
       where: {
         email,

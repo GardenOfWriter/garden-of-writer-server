@@ -1,9 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNumber, IsString } from 'class-validator';
-import {
-  NovelTextStatusEnum,
-  NovelTextStatusType,
-} from '../entities/enum/novel-text-status.enum';
+import { NovelTextStatusEnum, NovelTextStatusType } from '../entities/enum/novel-text-status.enum';
 
 export class NovelTextDto {
   @ApiProperty({

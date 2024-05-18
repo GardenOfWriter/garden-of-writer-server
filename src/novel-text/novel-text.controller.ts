@@ -1,26 +1,9 @@
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-  Put,
-  Query,
-  SerializeOptions,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, SerializeOptions, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
-import {
-  CreateNovelText,
-  FindNovelText,
-  UpdateNovelText,
-} from './decorator/novel-text.decorator';
+import { CreateNovelText, FindNovelText, UpdateNovelText } from './decorator/novel-text.decorator';
 import { CreateNovelTextRequestDto } from './dto/request/create-novel.dto';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
 import { NovelTextService } from './novel-text.service';
@@ -45,32 +28,17 @@ export class NovelTextController {
   @UseInterceptors(TransactionInterceptor)
   @CreateNovelText()
   @Post('')
-  async create(
-    @CurrentUser() user: UserEntity,
-    @Body() dto: CreateNovelTextRequestDto,
-    @QueryRunner() qr?: QR,
-  ) {
-    return await this.novelTextService.create(
-      dto.novelRoomId,
-      dto.toEntity(user),
-      user,
-    );
+  async create(@CurrentUser() user: UserEntity, @Body() dto: CreateNovelTextRequestDto, @QueryRunner() qr?: QR) {
+    return await this.novelTextService.create(dto.novelRoomId, dto.toEntity(user), user);
   }
   @UpdateNovelText()
   @Put(':id')
-  update(
-    @Param('id', ParseIntPipe) id,
-    @CurrentUser() user: UserEntity,
-    @Body() dto: UpdateTextNovelRequestDto,
-  ) {
+  update(@Param('id', ParseIntPipe) id, @CurrentUser() user: UserEntity, @Body() dto: UpdateTextNovelRequestDto) {
     return this.novelTextService.update(id, dto.toEntity(user));
   }
 
   @Delete(':id')
-  async delete(
-    @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: UserEntity,
-  ) {
+  async delete(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserEntity) {
     return await this.novelTextService.delete(id, user);
   }
 }

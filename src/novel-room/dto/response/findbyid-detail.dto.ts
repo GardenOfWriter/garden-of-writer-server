@@ -1,7 +1,4 @@
-import {
-  NovelRoomCategoryType,
-  findCategoryName,
-} from '@app/novel-room/entities/enum/novel-room-category.enum';
+import { NovelRoomCategoryType, findCategoryName } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { NovelRoomStatusType } from '@app/novel-room/entities/enum/novel-room-status.enum';
 import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
@@ -154,9 +151,7 @@ export class FindByRoomIdDetailDto {
   })
   @Expose()
   get writerStatus() {
-    const me = this._writers.filter(
-      (writer) => writer.user.id === this._user.id,
-    )[0];
+    const me = this._writers.filter((writer) => writer.user.id === this._user.id)[0];
     if (!me) return WriterCategoryEnum.HOST;
     return me.category;
   }

@@ -1,15 +1,7 @@
 import { JoinUserDto } from '@app/user/dto/join-user.dto';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { UserService } from '@app/user/user.service';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('유저')

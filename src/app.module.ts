@@ -79,9 +79,7 @@ import { ErrorsInterceptor } from './commons/interceptor/error.interceptor';
           forbidNonWhitelisted: true,
           transform: true,
           exceptionFactory: (errors: ValidationError[]) => {
-            const constraints = errors.map((_error) =>
-              Object.values(_error.constraints),
-            )[0];
+            const constraints = errors.map((_error) => Object.values(_error.constraints))[0];
             throw new ArgumentInvalidException(constraints);
           },
         }),

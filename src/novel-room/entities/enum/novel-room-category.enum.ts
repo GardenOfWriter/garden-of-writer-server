@@ -10,8 +10,7 @@ export const NovelRoomCategoryEnum = {
   HORROR_DETECTIVE: 9,
 } as const;
 
-export type NovelRoomCategoryType =
-  (typeof NovelRoomCategoryEnum)[keyof typeof NovelRoomCategoryEnum];
+export type NovelRoomCategoryType = (typeof NovelRoomCategoryEnum)[keyof typeof NovelRoomCategoryEnum];
 
 export const findCategoryName = (category: number) => {
   switch (category) {

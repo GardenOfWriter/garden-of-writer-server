@@ -4,8 +4,7 @@ export const NovelRoomStatusEnum = {
   REMOVE: 'remove', // 삭제
 } as const;
 
-export type NovelRoomStatusType =
-  (typeof NovelRoomStatusEnum)[keyof typeof NovelRoomStatusEnum];
+export type NovelRoomStatusType = (typeof NovelRoomStatusEnum)[keyof typeof NovelRoomStatusEnum];
 
 export const NovelRoomStatuDescription = {
   enum: NovelRoomStatusEnum,

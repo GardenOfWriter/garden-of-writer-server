@@ -3,8 +3,7 @@ export const NovelRoomAttendQueryEnum = {
   ATTEND_APPLY: 'apptendApply',
 } as const;
 
-export type NovelRoomAttendQueryType =
-  (typeof NovelRoomAttendQueryEnum)[keyof typeof NovelRoomAttendQueryEnum];
+export type NovelRoomAttendQueryType = (typeof NovelRoomAttendQueryEnum)[keyof typeof NovelRoomAttendQueryEnum];
 
 export const DescriptionProperty = {
   enum: NovelRoomAttendQueryEnum,

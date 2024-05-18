@@ -5,8 +5,7 @@ export const WriterStatusEnum = {
   EXIT: 'exit', // 퇴장
 } as const;
 
-export type WriterStatusType =
-  (typeof WriterStatusEnum)[keyof typeof WriterStatusEnum];
+export type WriterStatusType = (typeof WriterStatusEnum)[keyof typeof WriterStatusEnum];
 
 export const WriterStatusDescription = {
   enum: WriterStatusEnum,

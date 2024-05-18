@@ -1,10 +1,4 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  HttpStatus,
-  Injectable,
-  NestInterceptor,
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, HttpStatus, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 import { getToDayISO8601 } from '../util/date.util';
 import { Request, Response } from 'express';
@@ -15,13 +9,8 @@ export interface ICommonResponse<T> {
 }
 
 @Injectable()
-export class ResponseInterceptor<T>
-  implements NestInterceptor<T, ICommonResponse<T>>
-{
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler<T>,
-  ): Observable<ICommonResponse<T>> | Promise<Observable<ICommonResponse<T>>> {
+export class ResponseInterceptor<T> implements NestInterceptor<T, ICommonResponse<T>> {
+  intercept(context: ExecutionContext, next: CallHandler<T>): Observable<ICommonResponse<T>> | Promise<Observable<ICommonResponse<T>>> {
     return next.handle().pipe(
       map((result: any) => {
         const req = context.switchToHttp().getRequest<Request>();

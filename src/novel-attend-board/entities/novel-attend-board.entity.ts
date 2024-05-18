@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToMany,
-  OneToOne,
-  PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 import { NovelRoomEntity } from '../../novel-room/entities/novel-room.entity';
 import { BoardLikeEntity } from './board-like.entity';
 
@@ -35,12 +28,7 @@ export class NovelAttendBoardEntity {
   @OneToMany((_type) => BoardLikeEntity, (boardLike) => boardLike.attendBoard)
   boardLike: BoardLikeEntity[];
 
-  static of(
-    roomId: number,
-    title: string,
-    content: string,
-    openKakaoLink: string,
-  ) {
+  static of(roomId: number, title: string, content: string, openKakaoLink: string) {
     const board = new NovelAttendBoardEntity();
     board.noveRoom = { id: roomId } as NovelRoomEntity;
     board.title = title;

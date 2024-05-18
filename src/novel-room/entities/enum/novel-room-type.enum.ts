@@ -6,8 +6,7 @@ export const NovelRoomTypeEnum = {
   GROUP5: 5,
 } as const;
 
-export type NovelRoomType =
-  (typeof NovelRoomTypeEnum)[keyof typeof NovelRoomTypeEnum];
+export type NovelRoomType = (typeof NovelRoomTypeEnum)[keyof typeof NovelRoomTypeEnum];
 
 export const RoomTypeDescription = {
   enum: NovelRoomTypeEnum,

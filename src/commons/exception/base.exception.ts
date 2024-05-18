@@ -9,15 +9,8 @@ export interface IBaseException extends ICommonResponse<null> {
   message: string;
 }
 
-export class BaseException
-  extends HttpException
-  implements IBaseException, CoreErrorMessage
-{
-  constructor(
-    errorMessage: CoreErrorMessage,
-    statusCode: number,
-    validate?: string[],
-  ) {
+export class BaseException extends HttpException implements IBaseException, CoreErrorMessage {
+  constructor(errorMessage: CoreErrorMessage, statusCode: number, validate?: string[]) {
     super(errorMessage.errorCode, statusCode, {
       description: errorMessage.message,
     });

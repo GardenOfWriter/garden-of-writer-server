@@ -1,21 +1,6 @@
-import {
-  Body,
-  Controller,
-  Get,
-  ParseIntPipe,
-  Post,
-  Put,
-  Query,
-  SerializeOptions,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, ParseIntPipe, Post, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import {
-  ApplyChapter,
-  ChangeChapterTitle,
-  CreateChapter,
-  FindChapter,
-} from './decorator/swagger.decorator';
+import { ApplyChapter, ChangeChapterTitle, CreateChapter, FindChapter } from './decorator/swagger.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Param } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
@@ -44,10 +29,7 @@ export class ChapterController {
 
   @CreateChapter()
   @Post('')
-  create(
-    @CurrentUser() user: UserEntity,
-    @Body() dto: CreateChapterRequestDto,
-  ) {
+  create(@CurrentUser() user: UserEntity, @Body() dto: CreateChapterRequestDto) {
     return this.chapterService.save(dto.toEntity(user));
   }
 

@@ -25,9 +25,7 @@ import { Server, Socket } from 'socket.io';
   // ws://localhost:3000/chats
   // namespace: 'chats',
 })
-export class ChatsGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
-{
+export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   private logger = new Logger(ChatsGateway.name);
 
   constructor(
@@ -77,10 +75,7 @@ export class ChatsGateway
    * @param socket 유저 소켓
    */
   @SubscribeMessage('roomJoin')
-  async roomJoin(
-    @MessageBody() data: { novelRoomId: number },
-    @ConnectedSocket() socket: Socket & { user: UserEntity },
-  ) {
+  async roomJoin(@MessageBody() data: { novelRoomId: number }, @ConnectedSocket() socket: Socket & { user: UserEntity }) {
     this.logger.debug(`Join ${data.novelRoomId} email: ${socket.user.email}`);
     socket.join(`room-${data.novelRoomId}`);
     // this.server.in(`room-${data.novelRoomId}`).emit('enterText', 'hello');
@@ -123,10 +118,7 @@ export class ChatsGateway
   )
   @UseFilters(SocketCatchHttpExceptionFilter)
   @SubscribeMessage('create_chat')
-  async createChat(
-    @MessageBody() data: CreateChatDto,
-    @ConnectedSocket() socket: Socket & { user: UserEntity },
-  ) {
+  async createChat(@MessageBody() data: CreateChatDto, @ConnectedSocket() socket: Socket & { user: UserEntity }) {
     const chat = await this.chatsService.createChat(data);
   }
 
@@ -139,23 +131,15 @@ export class ChatsGateway
   )
   @UseFilters(SocketCatchHttpExceptionFilter)
   @SubscribeMessage('send_message')
-  async sendMessage(
-    @MessageBody() dto: CreateMessagesDto,
-    @ConnectedSocket() socket: Socket & { user: UserEntity },
-  ) {
+  async sendMessage(@MessageBody() dto: CreateMessagesDto, @ConnectedSocket() socket: Socket & { user: UserEntity }) {
     const chatExists = await this.chatsService.checkIfChatExists(dto.chatId);
 
     if (!chatExists) {
       throw new WsException(`존재하는 않는 방입니다. Chat ID : ${dto.chatId}`);
     }
 
-    const message = await this.messagesService.createMessage(
-      dto,
-      socket.user.id,
-    );
+    const message = await this.messagesService.createMessage(dto, socket.user.id);
 
-    this.server
-      .in(message.chat.id.toString())
-      .emit('receive_message', message.message);
+    this.server.in(message.chat.id.toString()).emit('receive_message', message.message);
   }
 }

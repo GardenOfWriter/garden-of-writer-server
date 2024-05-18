@@ -1,20 +1,8 @@
-import {
-  NovelRoomCategoryType,
-  NovelRoomCategoryEnum,
-} from '@app/novel-room/entities/enum/novel-room-category.enum';
-import {
-  NovelRoomType,
-  NovelRoomTypeEnum,
-} from '@app/novel-room/entities/enum/novel-room-type.enum';
+import { NovelRoomCategoryType, NovelRoomCategoryEnum } from '@app/novel-room/entities/enum/novel-room-category.enum';
+import { NovelRoomType, NovelRoomTypeEnum } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsArray,
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { NovelRoomEntity } from '../../entities/novel-room.entity';
 import { NovelAttendBoardEntity } from '@app/novel-attend-board/entities/novel-attend-board.entity';
 import { TagEntity } from '@app/novel-tag/entities/tag.entity';
@@ -112,24 +100,10 @@ export class CreateNovelRoomDto {
 
   // request dto -> toEntity -> of method -> entity
   toRoomEntity(user: UserEntity): NovelRoomEntity {
-    return NovelRoomEntity.of(
-      this.type,
-      this.title,
-      this.subTitle,
-      this.category,
-      this.character,
-      this.summary,
-      this.bookCover,
-      user,
-    );
+    return NovelRoomEntity.of(this.type, this.title, this.subTitle, this.category, this.character, this.summary, this.bookCover, user);
   }
   toAttendBoardEntity(roomId: number): NovelAttendBoardEntity {
-    return NovelAttendBoardEntity.of(
-      roomId,
-      this.attendTitle,
-      this.attendContent,
-      this.attendOpenKakaoLink,
-    );
+    return NovelAttendBoardEntity.of(roomId, this.attendTitle, this.attendContent, this.attendOpenKakaoLink);
   }
 
   toChapterEntity(roomId: number, user: UserEntity): ChapterEntity {

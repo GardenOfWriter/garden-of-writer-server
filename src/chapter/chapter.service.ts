@@ -2,10 +2,7 @@ import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { FindChapterRoomIdResDto } from './dto/response/findbychapter-id.dto';
 import { ChapterEntity } from './entities/chapter.entity';
 import { FindByNovelRoomIdDto } from './dto/request/findby-novel-room-id.dto';
-import {
-  ChapterRepository,
-  ChapterRepositoryToken,
-} from './repository/chapter.repository';
+import { ChapterRepository, ChapterRepositoryToken } from './repository/chapter.repository';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { ChapterStatusEnum } from './entities/enums/chapter-status.enum';
 import { ChangeTitleDto } from './dto/request/change-title.dto';
@@ -69,17 +66,9 @@ export class ChapterService {
   /**
    *  회차 조회
    */
-  async findChapterText(
-    dto: FindByNovelRoomIdDto,
-  ): Promise<PagingationResponse<FindChapterRoomIdResDto>> {
-    const [chapters, totalCount] =
-      await this.chapterRepository.findChpaterByRoomIdAndCount(
-        dto.novelRoomId,
-        dto,
-      );
-    const items = chapters.map(
-      (chapter) => new FindChapterRoomIdResDto(chapter),
-    );
+  async findChapterText(dto: FindByNovelRoomIdDto): Promise<PagingationResponse<FindChapterRoomIdResDto>> {
+    const [chapters, totalCount] = await this.chapterRepository.findChpaterByRoomIdAndCount(dto.novelRoomId, dto);
+    const items = chapters.map((chapter) => new FindChapterRoomIdResDto(chapter));
     return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
 

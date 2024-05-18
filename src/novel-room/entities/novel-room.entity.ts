@@ -1,21 +1,11 @@
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '@app/commons/entities/primary-generated-pk-with-meta-time.entity';
-import {
-  NovelRoomCategoryType,
-  NovelRoomCategoryEnum,
-} from '@app/novel-room/entities/enum/novel-room-category.enum';
-import {
-  NovelRoomType,
-  NovelRoomTypeEnum,
-} from '@app/novel-room/entities/enum/novel-room-type.enum';
+import { NovelRoomCategoryType, NovelRoomCategoryEnum } from '@app/novel-room/entities/enum/novel-room-category.enum';
+import { NovelRoomType, NovelRoomTypeEnum } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { NovelAttendBoardEntity } from '../../novel-attend-board/entities/novel-attend-board.entity';
 import { NovelWriterEntity } from '../../novel-writer/entities/novel-writer.entity';
-
-import {
-  NovelRoomStatusEnum,
-  NovelRoomStatusType,
-} from './enum/novel-room-status.enum';
+import { NovelRoomStatusEnum, NovelRoomStatusType } from './enum/novel-room-status.enum';
 import { convertDayFormat, getToDayISO8601 } from '@app/commons/util/date.util';
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 
@@ -116,17 +106,11 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     return this.status === NovelRoomStatusEnum.COMPLETE;
   }
 
-  updateRoom(
-    subTitle: string,
-    category: NovelRoomCategoryType,
-    character: string,
-    summary: string,
-    bookCover: string,
-  ): void {
-    this.subTitle = subTitle;
-    this.category = category;
-    this.character = character;
-    this.summary = summary;
-    this.bookCover = bookCover;
+  updateRoom(updateEntity: Partial<NovelRoomEntity>): void {
+    this.subTitle = updateEntity.subTitle;
+    this.category = updateEntity.category;
+    this.character = updateEntity.character;
+    this.summary = updateEntity.summary;
+    this.bookCover = updateEntity.bookCover;
   }
 }

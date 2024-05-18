@@ -19,26 +19,13 @@ export interface NovelWriterRepository {
   updateRow(id: number, entity: Partial<NovelWriterEntity>): Promise<void>;
   countByNovelRoomId(novelRoomId: number): Promise<number>;
   findByUserId(userId: number): Promise<NovelWriterEntity>;
-  findByNovelRoomIdAndWriterSeq(
-    novelRoomId: number,
-    writingSeq: number,
-  ): Promise<NovelWriterEntity>;
+  findByNovelRoomIdAndWriterSeq(novelRoomId: number, writingSeq: number): Promise<NovelWriterEntity>;
   findByUserEmail(email: string): Promise<NovelWriterEntity[]>;
   deleteRow(id: number): Promise<void>;
-  findByoptions(
-    options: FindOneOptions<NovelWriterEntity>,
-  ): Promise<NovelWriterEntity[]>;
+  findByoptions(options: FindOneOptions<NovelWriterEntity>): Promise<NovelWriterEntity[]>;
   findByNovelRoomId(novelRoomId: number): Promise<NovelWriterEntity[]>;
-  findOneByUserIdAndNovelRoomId(
-    userId: number,
-    novelRoomId: number,
-  ): Promise<NovelWriterEntity>;
-  findOneByOptions(
-    options: FindOneOptions<NovelWriterEntity>,
-  ): Promise<NovelWriterEntity>;
+  findOneByUserIdAndNovelRoomId(userId: number, novelRoomId: number): Promise<NovelWriterEntity>;
+  findOneByOptions(options: FindOneOptions<NovelWriterEntity>): Promise<NovelWriterEntity>;
   findBynovelRoomIdAttendingCount(novelRoomId: number): Promise<number>;
-  findByNovelRoomIdDetails(
-    novelRoomId: number,
-    pagination: BasePaginationRequest,
-  ): Promise<[NovelWriterEntity[], number]>;
+  findByNovelRoomIdDetails(novelRoomId: number, pagination: BasePaginationRequest): Promise<[NovelWriterEntity[], number]>;
 }

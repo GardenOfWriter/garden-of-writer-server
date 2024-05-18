@@ -8,21 +8,9 @@ import { NovelWirterDto } from '../novel-writer.dto';
 /**
  *  참여 작가로 조인
  */
-export class CreateNovelWriterDto extends PickType(NovelWirterDto, [
-  'novelRoomId',
-]) {
-  toEntity(
-    user: UserEntity,
-    category: WriterCategoryType,
-    status: WriterStatusType,
-  ): Partial<NovelWriterEntity> {
-    const entity = NovelWriterEntity.of(
-      this.novelRoomId,
-      category,
-      status,
-      user,
-      false,
-    );
+export class CreateNovelWriterDto extends PickType(NovelWirterDto, ['novelRoomId']) {
+  toEntity(user: UserEntity, category: WriterCategoryType, status: WriterStatusType): Partial<NovelWriterEntity> {
+    const entity = NovelWriterEntity.of(this.novelRoomId, category, status, user, false);
     return entity;
   }
 }

@@ -12,9 +12,7 @@ export class ChapterRepositoryImpl implements ChapterRepository {
   async saveRow(entity: Partial<ChapterEntity>): Promise<void> {
     await this.dataSource.save(entity);
   }
-  async findOneByOptions(
-    options: FindOneOptions<ChapterEntity>,
-  ): Promise<ChapterEntity> {
+  async findOneByOptions(options: FindOneOptions<ChapterEntity>): Promise<ChapterEntity> {
     return await this.dataSource.findOne(options);
   }
   async chapterCount(noveRoomId: number): Promise<number> {
@@ -24,10 +22,7 @@ export class ChapterRepositoryImpl implements ChapterRepository {
       },
     });
   }
-  findChpaterByRoomIdAndCount(
-    novelRoomId: number,
-    pagination: BasePaginationRequest,
-  ): Promise<[ChapterEntity[], number]> {
+  findChpaterByRoomIdAndCount(novelRoomId: number, pagination: BasePaginationRequest): Promise<[ChapterEntity[], number]> {
     return this.dataSource.findAndCount({
       take: pagination.take,
       skip: pagination.skip,
@@ -39,9 +34,7 @@ export class ChapterRepositoryImpl implements ChapterRepository {
       },
     });
   }
-  async findByoptions(
-    options: FindOneOptions<ChapterEntity>,
-  ): Promise<ChapterEntity[]> {
+  async findByoptions(options: FindOneOptions<ChapterEntity>): Promise<ChapterEntity[]> {
     return await this.dataSource.find(options);
   }
 
