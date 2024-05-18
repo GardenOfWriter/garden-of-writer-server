@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { TokenPayload } from '../interface/auth.interface';
 import { UserService } from '../../user/user.service';
-import { UserNotExistsException } from '../exceptions/user-not-exists.exception';
+import { UserNotExistsException } from '../exceptions/auth.exception';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(Strategy) {

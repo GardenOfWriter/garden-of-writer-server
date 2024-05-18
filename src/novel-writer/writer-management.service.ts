@@ -11,7 +11,6 @@ import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-wr
 import { FindByNovelWriterDetails } from './dto/response/find-writers-details.dto';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
-import { NotAccessWriterManagementExcetpion } from './exceptions/not-access-management-writer.excetpion';
 import {
   NovelWriterRepository,
   NovelWriterRepositoryToken,
@@ -22,6 +21,7 @@ import {
   NovelRoomRepo,
   NovelRoomRepository,
 } from '@app/novel-room/repository/novel-room.repository';
+import { NotAccessWriterManagementExcetpion } from './exceptions/novel-writer.exception';
 
 @Injectable()
 export class WriterManagementService {
@@ -94,6 +94,15 @@ export class WriterManagementService {
       throw new NotAccessWriterManagementExcetpion();
     }
   }
+
+  /**
+   * 현재 작가 정보 가져오기
+
+   * @private
+   * @param {NovelWriterEntity[]} writers
+   * @param {UserEntity} user
+   * @returns {NovelWriterEntity}
+   */
   private filterCurrentWriter(
     writers: NovelWriterEntity[],
     user: UserEntity,
@@ -101,11 +110,17 @@ export class WriterManagementService {
     const writer = writers.filter((writer) => writer.user.id === user.id);
     return writer[0];
   }
-  private async changeSendEmail(writer: NovelWriterEntity) {
-    if (
-      writer.status === WriterStatusEnum.ATTENDING ||
-      writer.status === WriterStatusEnum.REJECT
-    ) {
+
+  /**
+   * 작가 상태 변경시 이메일 발송
+   *
+   * @private
+   * @async
+   * @param {NovelWriterEntity} writer  작가 정보
+   * @returns {Promise<void>}
+   */
+  private async changeSendEmail(writer: NovelWriterEntity): Promise<void> {
+    if (writer.isStatusAttendingOrReject()) {
       const template =
         writer.status == WriterStatusEnum.ATTENDING
           ? EmailTemplate.WRITER_ATTENDING

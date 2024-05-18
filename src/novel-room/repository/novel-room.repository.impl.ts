@@ -50,7 +50,6 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
       relations: ['novelWriter', 'novelWriter.user'],
       where: {
         novelWriter: {
-          user: { id: user.id },
           status: In(writerStatus),
         },
       },

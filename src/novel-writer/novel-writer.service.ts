@@ -11,13 +11,15 @@ import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
 import { FindByNovelRoomIdResponseDto } from './dto/response/find-novel-room-id.dto';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
-import { AlreadyExistWriterExcetpion } from './exceptions/already-exist-writer.excetpion';
-import { BadChangeWriterIdSeqExcetpion } from './exceptions/bad-change-writer-id-seq.exception';
-import { NotAccessWriterManagementExcetpion } from './exceptions/not-access-management-writer.excetpion';
 import {
+  NovelWriterRepo,
   NovelWriterRepository,
-  NovelWriterRepositoryToken,
 } from './repository/novel-writer.repository';
+import {
+  AlreadyExistWriterExcetpion,
+  BadChangeWriterIdSeqExcetpion,
+  NotAccessWriterManagementExcetpion,
+} from './exceptions/novel-writer.exception';
 
 @Injectable()
 export class NovelWriterService {
@@ -25,9 +27,9 @@ export class NovelWriterService {
 
   constructor(
     @Inject(EmailServiceToken)
-    private emailService: EmailService,
-    @Inject(NovelWriterRepositoryToken)
-    private novelWriterRepo: NovelWriterRepository,
+    private readonly emailService: EmailService,
+    @NovelWriterRepo()
+    private readonly novelWriterRepo: NovelWriterRepository,
   ) {}
   async create(entity: Partial<NovelWriterEntity>): Promise<void> {
     /**
@@ -110,6 +112,7 @@ export class NovelWriterService {
       throw new NotAccessWriterManagementExcetpion();
     }
   }
+
   private filterCurrentWriter(
     writers: NovelWriterEntity[],
     user: UserEntity,

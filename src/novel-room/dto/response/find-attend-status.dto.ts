@@ -23,7 +23,6 @@ export class FindAttendStatusNovelRoomDto {
   private _writers: NovelWriterEntity[];
   private _type: NovelRoomType;
   private _id: number;
-  private _currentWriter: any;
   private _bookCover: string;
   private _status: NovelRoomStatusType;
   private _me: NovelWriterEntity;
@@ -116,7 +115,11 @@ export class FindAttendStatusNovelRoomDto {
   })
   @Expose({ name: 'currentWriter' })
   get currentWriter(): string {
-    return this._writers[0].user.nickname;
+    const currentWriter = this._writers.filter((writer) => {
+      return writer.currentlyWriting === true;
+    })[0];
+    console.log('currentWriter : ', currentWriter);
+    return currentWriter.user.nickname;
   }
 
   @ApiProperty({

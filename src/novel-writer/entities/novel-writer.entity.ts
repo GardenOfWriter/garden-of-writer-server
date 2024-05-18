@@ -98,6 +98,13 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     return nextSeq === 0 ? writerCount : nextSeq;
   }
 
+  isStatusAttendingOrReject() {
+    return (
+      this.status === WriterStatusEnum.ATTENDING ||
+      this.status === WriterStatusEnum.REJECT
+    );
+  }
+
   static of(
     novelRoomId: number,
     category: WriterCategoryType,

@@ -13,10 +13,14 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
-import { CreateNovel } from './decorator/create-novel.decorator';
+import {
+  CreateNovelText,
+  FindNovelText,
+  UpdateNovelText,
+} from './decorator/novel-text.decorator';
 import { CreateNovelTextRequestDto } from './dto/request/create-novel.dto';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
 import { NovelTextService } from './novel-text.service';
@@ -33,15 +37,13 @@ import { QueryRunner as QR } from 'typeorm';
 export class NovelTextController {
   constructor(private novelTextService: NovelTextService) {}
 
-  @ApiOperation({
-    summary: '해당 회차 소설 글쓰기 정보 조회하기',
-  })
+  @FindNovelText()
   @Get('')
   async findChpater(@Query('chapterId') chapterId: number) {
     return await this.novelTextService.findChapterText(chapterId);
   }
   @UseInterceptors(TransactionInterceptor)
-  @CreateNovel()
+  @CreateNovelText()
   @Post('')
   async create(
     @CurrentUser() user: UserEntity,
@@ -54,10 +56,7 @@ export class NovelTextController {
       user,
     );
   }
-
-  @ApiOperation({
-    summary: '소설 글쓰기 수정 하기 API ',
-  })
+  @UpdateNovelText()
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id,

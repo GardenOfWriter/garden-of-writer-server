@@ -1,12 +1,13 @@
-import { UserEmailAlreadyExistsException } from '@app/auth/exceptions/user-email-already-exists.exception';
-import { UserNicknameAlreadyExistsException } from '@app/auth/exceptions/user-nickname-already-exists.exception';
-import { NovelRoomDuplicationSubTitleException } from '@app/novel-room/exceptions/duplicate-subtitle.exception';
+import {
+  UserEmailAlreadyExistsException,
+  UserNicknameAlreadyExistsException,
+} from '@app/auth/exceptions/auth.exception';
 import { UserEntity } from '@app/user/entities/user.entity';
 import {
   UserRepository,
   UserRepositoryToken,
 } from '@app/user/repository/user.repository';
-import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class UserService {

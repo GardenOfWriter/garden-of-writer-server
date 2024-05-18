@@ -5,8 +5,10 @@ import { UserService } from '@app/user/user.service';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UserIncorrectEmailException } from './exceptions/user-incorrect-email.exception';
-import { UserIncorrectPasswordException } from './exceptions/user-incorrect-password.exception';
+import {
+  UserIncorrectEmailException,
+  UserIncorrectPasswordException,
+} from './exceptions/auth.exception';
 
 @Injectable()
 export class AuthService {
