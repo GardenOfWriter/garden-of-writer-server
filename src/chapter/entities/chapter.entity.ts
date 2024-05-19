@@ -81,7 +81,7 @@ export class ChapterEntity extends PrimaryAuditiedPK {
     this.title = title;
   }
 
-  chpaterReview() {
+  setReviewStatus() {
     this.status = ChapterStatusEnum.REVIEW;
   }
   chapterApproved() {
@@ -91,5 +91,8 @@ export class ChapterEntity extends PrimaryAuditiedPK {
 
   chapterFinalWriterd() {
     this.finalAt = getToDay();
+  }
+  isWritingStatus(): boolean {
+    return this.status === ChapterStatusEnum.WRITING;
   }
 }

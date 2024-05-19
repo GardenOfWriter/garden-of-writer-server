@@ -12,9 +12,16 @@ export class UpdateTextNovelRequestDto extends PickType(NovelTextDto, ['status',
   @IsNumber()
   id: number;
 
+  @ApiProperty({
+    example: '소설 공방 Id',
+    description: '해당 유저의 소설 공방 Id',
+  })
+  @IsNumber()
+  novelRoomId: number;
+
   toEntity(user: UserEntity): Partial<NovelTextEntity> {
     const entity = NovelTextEntity.of(this.chapterId, this.status, this.content, user);
-
+    entity.id = this.id;
     return entity;
   }
 }

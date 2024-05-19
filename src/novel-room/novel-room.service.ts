@@ -80,7 +80,7 @@ export class NovelRoomService {
    * @param {UserEntity} user 사용자 정보
    * @returns {Promise<FindByRoomIdDetailDto>} 소설 공방 상세 정보
    */
-  async getById(id: number, user: UserEntity): Promise<FindByRoomIdDetailDto> {
+  async findById(id: number, user: UserEntity): Promise<FindByRoomIdDetailDto> {
     const room = await this.novelRoomRepo.getByIdWithTag(id);
     if (!room) throw new NovelRoomNotFoundException();
     return new FindByRoomIdDetailDto(room, user);

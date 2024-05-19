@@ -6,7 +6,7 @@ import { UpdateTextNovelRequestDto } from '../dto/request/update-novel.dto';
 export function CreateNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '소설 글쓰기 작성 하기 API ',
+      summary: '소설 글쓰기 작성 하기',
     }),
     ApiOkResponse({ type: CreateNovelTextRequestDto }),
   );
@@ -15,7 +15,7 @@ export function CreateNovelText(): MethodDecorator {
 export function FindNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '소설 글쓰기 조회 하기 API ',
+      summary: '소설 글쓰기 조회 하기',
     }),
   );
 }
@@ -23,7 +23,22 @@ export function FindNovelText(): MethodDecorator {
 export function UpdateNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '소설 글쓰기 수정 하기 API ',
+      summary: '소설 글쓰기 수정 하기',
+    }),
+    ApiOkResponse({ type: UpdateTextNovelRequestDto }),
+  );
+}
+export function DeleteNovelText(): MethodDecorator {
+  return applyDecorators(
+    ApiOperation({
+      summary: '소설 글쓰기 삭제 하기',
+    }),
+  );
+}
+export function FindByIdNovelText(): MethodDecorator {
+  return applyDecorators(
+    ApiOperation({
+      summary: '소설 글쓰기 상세정보 조회하기',
     }),
     ApiOkResponse({ type: UpdateTextNovelRequestDto }),
   );

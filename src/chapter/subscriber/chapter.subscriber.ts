@@ -1,6 +1,10 @@
 import { EntitySubscriberInterface, EventSubscriber, InsertEvent } from 'typeorm';
 import { ChapterEntity } from '../entities/chapter.entity';
-
+/**
+ * 사용되지 않는 클래스
+ *
+ *
+ */
 @EventSubscriber()
 export class ChapterSubscriber implements EntitySubscriberInterface<ChapterEntity> {
   //   constructor(

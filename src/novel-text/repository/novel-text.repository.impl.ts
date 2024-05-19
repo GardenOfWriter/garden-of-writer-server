@@ -8,12 +8,11 @@ export class NovelTextRepositoryImpl implements NovelTextRepository {
     @InjectRepository(NovelTextEntity)
     private dataSource: Repository<NovelTextEntity>,
   ) {}
-  async findByChapterId(options: FindOneOptions<NovelTextEntity>): Promise<NovelTextEntity[]> {
-    return await this.dataSource.find(options);
+  async findByChapterId(chapterId: number): Promise<NovelTextEntity[]> {
+    return await this.dataSource.find({ where: { chapterId } });
   }
   async addRow(entity: Partial<NovelTextEntity>): Promise<number> {
     const result = await this.dataSource.save(entity);
-    console.log(result);
     return result.id;
   }
   async updateRow(id: number, entity: Partial<NovelTextEntity>): Promise<void> {
@@ -21,5 +20,8 @@ export class NovelTextRepositoryImpl implements NovelTextRepository {
   }
   async deleteRow(id: number): Promise<void> {
     await this.dataSource.delete({ id });
+  }
+  async findById(id: number): Promise<NovelTextEntity> {
+    return await this.dataSource.findOne({ where: { id } });
   }
 }

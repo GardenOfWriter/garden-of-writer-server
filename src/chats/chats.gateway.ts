@@ -36,16 +36,34 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   ) {}
 
   @WebSocketServer()
-  public server: Server;
+  private readonly server: Server;
 
+  /**
+   * 소켓 서버 초기화
+   *
+   * @param {Server} server 소켓 서버
+   */
   afterInit(server: Server) {
     this.logger.log('Socket Server Init Success');
   }
+
+  /**
+   * 소켓 연결종료 이벤트
+   *
+   * @param {Socket} socket
+   */
   handleDisconnect(socket: Socket) {
     this.logger.log(`on disconnect called : ${socket.id}`);
   }
 
-  async handleConnection(socket: Socket & { user: UserEntity }) {
+  /**
+   * 소켓 연결 이벤트
+   *
+   * @async
+   * @param {(Socket & { user: UserEntity })} socket 소켓 정보
+   * @returns {Promise<boolean>}
+   */
+  async handleConnection(socket: Socket & { user: UserEntity }): Promise<boolean> {
     this.logger.log(`On connect called : ${socket.id}`);
     const headers = socket.handshake.headers;
     //Bearer xxxxxxx
@@ -63,22 +81,38 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
       const user = await this.userService.findEmail(payload.email);
       this.logger.log(`Connect user : ${JSON.stringify(user)}`);
       socket.user = user;
+      // return true ?? 의미 파악 필요
       return true;
     } catch (error) {
       this.logger.error(`error on connection : ${error}`);
       socket.disconnect();
     }
   }
+
   /**
-   * @description 공방에 입장하는 이벤트
-   * @param data
-   * @param socket 유저 소켓
+   * 공방 입장 이벤트
+   *
+   * @async
+   * @param {{ novelRoomId: number }} data 공방 ID
+   * @param {(Socket & { user: UserEntity })} socket 소켓 정보
+   * @returns {Promise<void>}
    */
   @SubscribeMessage('roomJoin')
-  async roomJoin(@MessageBody() data: { novelRoomId: number }, @ConnectedSocket() socket: Socket & { user: UserEntity }) {
+  async roomJoin(@MessageBody() data: { novelRoomId: number }, @ConnectedSocket() socket: Socket & { user: UserEntity }): Promise<void> {
     this.logger.debug(`Join ${data.novelRoomId} email: ${socket.user.email}`);
     socket.join(`room-${data.novelRoomId}`);
-    // this.server.in(`room-${data.novelRoomId}`).emit('enterText', 'hello');
+  }
+
+  /**
+   * 공방 방 안에 있는 유저에게 이벤트 전달 (소켓)
+   *
+   * @param {number} novelRoomId 공방 ID
+   * @param {string} emitEvent 이벤트 이름
+   * @param {string} message 메시지
+   */
+  sendNovelRoomInMessage(novelRoomId: number, emitEvent: string, message: string): void {
+    if (!novelRoomId || !emitEvent || !message) return;
+    this.server.to(`room-${novelRoomId}`).emit(emitEvent, message);
   }
 
   @UsePipes(

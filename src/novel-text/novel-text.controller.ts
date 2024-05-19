@@ -3,7 +3,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, S
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
-import { CreateNovelText, FindNovelText, UpdateNovelText } from './decorator/novel-text.decorator';
+import { CreateNovelText, DeleteNovelText, FindByIdNovelText, FindNovelText, UpdateNovelText } from './decorator/novel-text.decorator';
 import { CreateNovelTextRequestDto } from './dto/request/create-novel.dto';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
 import { NovelTextService } from './novel-text.service';
@@ -23,8 +23,14 @@ export class NovelTextController {
   @FindNovelText()
   @Get('')
   async findChpater(@Query('chapterId') chapterId: number) {
-    return await this.novelTextService.findChapterText(chapterId);
+    return await this.novelTextService.findByChapterIdNovelText(chapterId);
   }
+  @FindByIdNovelText()
+  @Get(':id')
+  async findById(@Param('id', ParseIntPipe) id: number) {
+    return await this.novelTextService.findById(id);
+  }
+
   @UseInterceptors(TransactionInterceptor)
   @CreateNovelText()
   @Post('')
@@ -37,6 +43,7 @@ export class NovelTextController {
     return this.novelTextService.update(id, dto.toEntity(user));
   }
 
+  @DeleteNovelText()
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserEntity) {
     return await this.novelTextService.delete(id, user);

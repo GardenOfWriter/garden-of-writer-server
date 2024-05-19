@@ -82,7 +82,7 @@ export class NovelRoomController {
   @FindByDetailNovelRoom()
   @Get(':id')
   getRoomById(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserEntity) {
-    return this.novelRoomService.getById(id, user);
+    return this.novelRoomService.findById(id, user);
   }
   /**
    * 소설 공방 삭제
@@ -101,8 +101,16 @@ export class NovelRoomController {
     await this.novelRoomService.completedNovelRoom(id);
     return;
   }
+
   /**
-   * 소설 공방 정보 수정
+   * 소설 공방 수정 컨트롤러
+   *
+   * @async
+   * @param {number} id 소설 공방 id
+   * @param {UpdateNovelRoomDto} dto 수정할 소설 공방 정보
+   * @param {UserEntity} user 사용자 정보
+   * @param {QR} qr QueryRunner 트랜잭션
+   * @returns {Promise<NovelRoomEntity>} 수정된 소설 공방 정보
    */
   @UseInterceptors(TransactionInterceptor)
   @UpdateNovelRoom()

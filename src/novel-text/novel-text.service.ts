@@ -1,11 +1,10 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { UserEntity } from '../user/entities/user.entity';
 import { FindByChapterIdResponseDto } from './dto/response/findbychapter-id.dto';
 import { NovelTextEntity } from './entities/novel-text.entity';
-import { NovelTextRepository } from './repository/novel-text.repository';
-import { ChatsService } from '@app/chats/chats.service';
+import { NovelTextRepo, NovelTextRepository } from './repository/novel-text.repository';
 import { ChatsGateway } from '@app/chats/chats.gateway';
-import { NovelWriterRepository, NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
+import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
 import { NotCurrentlyWriterException } from './exception/novel-text.exception';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 
@@ -14,48 +13,81 @@ export class NovelTextService {
   private logger = new Logger(NovelTextService.name);
 
   constructor(
-    @Inject(NovelTextRepository)
-    private novelTextRepository: NovelTextRepository,
-    @Inject(NovelWriterRepositoryToken)
+    @NovelTextRepo()
+    private novelTextRepo: NovelTextRepository,
+    @NovelWriterRepo()
     private novelWriterRepo: NovelWriterRepository,
     private chatsGateway: ChatsGateway,
   ) {}
+
   /**
+   * 소설 텍스트 생성
    *
-   * @param roomId
-   * @param entity
-   * @returns
+   * @async
+   * @param {number} novelRoomId 공방 Id
+   * @param {Partial<NovelTextEntity>} entity  소설 텍스트 정보 엔티티
+   * @param {UserEntity} user 유저 정보 엔티티
+   * @returns {Promise<void>}
    */
   async create(novelRoomId: number, entity: Partial<NovelTextEntity>, user: UserEntity): Promise<void> {
     const writerCount = await this.novelWriterRepo.countByNovelRoomId(novelRoomId);
     await this.nextWriterUpdate(user.id, writerCount, novelRoomId);
-    const textId = await this.novelTextRepository.addRow(entity);
-    this.chatsGateway.server.to(`room-${novelRoomId}`).emit('enterText', { textId });
-    return;
-  }
-  async update(id: number, entity: Partial<NovelTextEntity>): Promise<void> {
-    await this.novelTextRepository.updateRow(id, entity);
-    this.chatsGateway.server.to('').emit('updateChat', entity);
+    const textId = await this.novelTextRepo.addRow(entity);
+    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, 'enterText', JSON.stringify({ textId }));
     return;
   }
 
+  /**
+   * 소설 텍스트 수정
+   *
+   * @async
+   * @param {number} novelRoomId 공방 Id
+   * @param {number} id 소설 텍스트 Id
+   * @param {Partial<NovelTextEntity>} entity 소설 텍스트 정보 엔티티
+   * @returns {Promise<void>}
+   */
+  async update(novelRoomId: number, entity: Partial<NovelTextEntity>): Promise<void> {
+    await this.novelTextRepo.updateRow(entity.id, entity);
+    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, 'updateText', JSON.stringify({ textId: entity.id }));
+    return;
+  }
+
+  /**
+   * 소설 텍스트 삭제
+   *
+   * @async
+   * @param {number} id 소설 텍스트 Id
+   * @param {UserEntity} user 유저 정보 엔티티
+   * @returns {Promise<void>}
+   */
   async delete(id: number, user: UserEntity): Promise<void> {
-    const novelText = await this.novelTextRepository.findByChapterId({
-      where: { id },
-    });
+    // const novelText = await this.novelTextRepo.findByChapterId();
     // 아래 validation 반드시 필요. 추후 구현
     // if (novelText.createdBy.id !== user.id) {
     //   throw new ConflictException('작성자가 아닙니다.');
     // }
-    await this.novelTextRepository.deleteRow(id);
+    await this.novelTextRepo.deleteRow(id);
     return;
   }
 
-  async findChapterText(chapterId: number) {
-    const texts = await this.novelTextRepository.findByChapterId({
-      where: { chapterId },
-    });
+  /**
+   * 소설 텍스트 조회 (회차 ID로 조회))
+   *
+   * @async
+   * @param {number} chapterId 회차 ID
+   * @returns {Promise<FindByChapterIdResponseDto[]>} 조회된 소설 텍스트 정보 DTO
+   */
+  async findByChapterIdNovelText(chapterId: number): Promise<FindByChapterIdResponseDto[]> {
+    const texts = await this.novelTextRepo.findByChapterId(chapterId);
     return texts.map((text) => new FindByChapterIdResponseDto(text));
+  }
+
+  async findById(id: number): Promise<NovelTextEntity> {
+    const text = await this.novelTextRepo.findById(id);
+    if (!text) {
+      throw new NotFoundException();
+    }
+    return text;
   }
 
   private async nextWriterUpdate(userId: number, writerCount: number, novelRoomId: number): Promise<void> {
@@ -65,14 +97,18 @@ export class NovelTextService {
     await this.updateNextWriter(nextWriter.user.id);
     return;
   }
+
   /**
+   * 현재 글쓰기 요청자 업데이트
    *
-   * @param writers
-   * @returns
+   * @private
+   * @async
+   * @param {number} userId 유저 ID
+   * @returns {Promise<NovelWriterEntity>} 현재 글쓰기 요청자 엔티티
    */
   private async updateRequestWriter(userId: number): Promise<NovelWriterEntity> {
     const requestWriter = await this.novelWriterRepo.findByUserId(userId);
-    this.logger.debug(`requestWriter: ${JSON.stringify(requestWriter)}`);
+    this.logger.debug(`현재 글쓰기 : ${JSON.stringify(requestWriter)}`);
     if (!requestWriter || !requestWriter.isCurrentlyWriter()) {
       throw new NotCurrentlyWriterException();
     }
@@ -80,16 +116,19 @@ export class NovelTextService {
     await this.novelWriterRepo.updateRow(requestWriter.id, requestWriter);
     return requestWriter;
   }
+
   /**
+   * 다음 글쓰기 업데이트
    *
-   * @param writers
-   * @param currentWriteringSeq
-   * @returns
+   * @private
+   * @async
+   * @param {number} userId 유저 ID
+   * @returns {Promise<NovelWriterEntity>} 다음 글쓰기 엔티티
    */
   private async updateNextWriter(userId: number): Promise<NovelWriterEntity> {
     const writer = await this.novelWriterRepo.findByUserId(userId);
     writer.setCurrentyWriter(true);
-    this.logger.debug(`nextWriter: ${JSON.stringify(writer)}`);
+    this.logger.debug(`다음 글쓰기 : ${JSON.stringify(writer)}`);
     await this.novelWriterRepo.updateRow(writer.id, writer);
     return writer;
   }
