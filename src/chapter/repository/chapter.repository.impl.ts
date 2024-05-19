@@ -15,7 +15,7 @@ export class ChapterRepositoryImpl implements ChapterRepository {
   async findOneByOptions(options: FindOneOptions<ChapterEntity>): Promise<ChapterEntity> {
     return await this.dataSource.findOne(options);
   }
-  async chapterCount(noveRoomId: number): Promise<number> {
+  async countByNovelRoomId(noveRoomId: number): Promise<number> {
     return await this.dataSource.count({
       where: {
         novelRoom: { id: noveRoomId },

@@ -77,5 +77,5 @@ export interface ChapterRepository {
    * @param {number} noveRoomId 소설 공방 id
    * @returns {Promise<number>} 조회된 회차 정보
    */
-  count(noveRoomId: number): Promise<number>;
+  countByNovelRoomId(noveRoomId: number): Promise<number>;
 }

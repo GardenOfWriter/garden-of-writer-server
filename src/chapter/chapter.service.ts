@@ -124,7 +124,7 @@ export class ChapterService {
     });
   }
   private async nextChapterNo(novelRoomId: number): Promise<number> {
-    const chpaterNo = await this.chapterRepository.count(novelRoomId);
+    const chpaterNo = await this.chapterRepository.countByNovelRoomId(novelRoomId);
     return chpaterNo + 1;
   }
 }
