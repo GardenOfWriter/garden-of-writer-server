@@ -23,7 +23,7 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   })
   status: ChapterStatusType;
 
-  @Column({ name: 'novel_room_id' })
+  @Column('bigint', { name: 'novel_room_id' })
   novelRoomId: number;
 
   @ManyToOne(() => NovelRoomEntity, (room) => room.id)

@@ -9,6 +9,10 @@ export class ChapterRepositoryImpl implements ChapterRepository {
     @InjectRepository(ChapterEntity)
     private dataSource: Repository<ChapterEntity>,
   ) {}
+
+  async findById(id: number): Promise<ChapterEntity> {
+    return await this.dataSource.findOne({ where: { id } });
+  }
   async saveRow(entity: Partial<ChapterEntity>): Promise<void> {
     await this.dataSource.save(entity);
   }

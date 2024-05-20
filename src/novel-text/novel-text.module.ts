@@ -14,9 +14,14 @@ import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-room.repository';
 import { NovelWriterRepositoryProvider } from '@app/novel-writer/repository/novel-writer.repository';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
+import { ChapterModule } from '@app/chapter/chapter.module';
 
 @Module({
-  imports: [ChatsModule, TypeOrmModule.forFeature([NovelTextEntity, ChatsEntity, MessageEntity, UserEntity, NovelRoomEntity, NovelWriterEntity])],
+  imports: [
+    ChatsModule,
+    ChapterModule,
+    TypeOrmModule.forFeature([NovelTextEntity, ChatsEntity, MessageEntity, UserEntity, NovelRoomEntity, NovelWriterEntity]),
+  ],
   controllers: [NovelTextController],
   providers: [
     NovelTextService,

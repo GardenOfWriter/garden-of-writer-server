@@ -8,6 +8,7 @@ import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/reposi
 import { NotCurrentlyWriterException, NotFoundTextException } from './exception/novel-text.exception';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
+import { ChapterRepo, ChapterRepository } from '@app/chapter/repository/chapter.repository';
 
 /**
  * 소설 텍스트 서비스
@@ -25,6 +26,8 @@ export class NovelTextService {
     private novelTextRepo: NovelTextRepository,
     @NovelWriterRepo()
     private novelWriterRepo: NovelWriterRepository,
+    @ChapterRepo()
+    private chapterRepo: ChapterRepository,
     private chatsGateway: ChatsGateway,
   ) {}
 
@@ -37,11 +40,13 @@ export class NovelTextService {
    * @param {UserEntity} user 유저 정보 엔티티
    * @returns {Promise<void>}
    */
-  async create(novelRoomId: number, entity: Partial<NovelTextEntity>, user: UserEntity): Promise<void> {
-    const writerCount = await this.novelWriterRepo.countByNovelRoomId(novelRoomId);
-    await this.nextWriterUpdate(user.id, writerCount, novelRoomId);
+  async create(entity: Partial<NovelTextEntity>): Promise<void> {
+    const chapter = await this.chapterRepo.findById(entity.chapterId);
+    console.log(chapter.novelRoomId);
+    const writerCount = await this.novelWriterRepo.countByNovelRoomId(+chapter.novelRoomId);
+    await this.nextWriterUpdate(entity.createdBy.id, writerCount, chapter.novelRoomId);
     const textId = await this.novelTextRepo.addRow(entity);
-    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId }));
+    this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId }));
     return;
   }
 
@@ -54,9 +59,9 @@ export class NovelTextService {
    * @param {Partial<NovelTextEntity>} entity 소설 텍스트 정보 엔티티
    * @returns {Promise<void>}
    */
-  async update(novelRoomId: number, entity: Partial<NovelTextEntity>): Promise<void> {
+  async update(entity: Partial<NovelTextEntity>): Promise<void> {
     await this.novelTextRepo.updateRow(entity.id, entity);
-    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: entity.id }));
+    this.chatsGateway.sendNovelRoomInMessage(entity.createdBy.id, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: entity.id }));
     return;
   }
 

@@ -45,7 +45,7 @@ export class NovelTextController {
   @CreateNovelText()
   @Post('')
   async create(@CurrentUser() user: UserEntity, @Body() dto: CreateNovelTextRequestDto, @QueryRunner() qr?: QR) {
-    return await this.novelTextService.create(dto.novelRoomId, dto.toEntity(user), user);
+    return await this.novelTextService.create(dto.toEntity(user));
   }
 
   /**
@@ -54,7 +54,7 @@ export class NovelTextController {
   @UpdateNovelText()
   @Put(':id')
   update(@Param('id', ParseIntPipe) id, @CurrentUser() user: UserEntity, @Body() dto: UpdateTextNovelRequestDto) {
-    return this.novelTextService.update(id, dto.toEntity(user));
+    return this.novelTextService.update(dto.toEntity(user));
   }
 
   /**

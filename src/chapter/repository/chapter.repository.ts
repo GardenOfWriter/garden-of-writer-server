@@ -78,4 +78,12 @@ export interface ChapterRepository {
    * @returns {Promise<number>} 조회된 회차 정보
    */
   countByNovelRoomId(noveRoomId: number): Promise<number>;
+
+  /**
+   * 회차 정보 조회 (ID로 조회)
+   *
+   * @param {number} id 회차 ID
+   * @returns {Promise<ChapterEntity>} 조회된 회차 정보
+   */
+  findById(id: number): Promise<ChapterEntity>;
 }

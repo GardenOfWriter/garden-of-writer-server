@@ -22,6 +22,7 @@ import {
 import { instrument } from '@socket.io/admin-ui';
 import { Server, Socket } from 'socket.io';
 import { SOCKET_EVENT_TYPE } from './enums/socket.event';
+import { onlineList } from './onlineList';
 
 //localhost:3000/room-1}
 
@@ -85,6 +86,7 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
       const user = await this.userService.findEmail(payload.email);
       this.logger.log(`Connect user : ${JSON.stringify(user)}`);
       socket.user = user;
+      console.log(roomNamespace);
       socket.join(roomNamespace);
       // return true ?? 의미 파악 필요
       return true;
@@ -94,20 +96,6 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     }
   }
 
-  // /**
-  //  * 공방 입장 이벤트
-  //  *
-  //  * @async
-  //  * @param {{ novelRoomId: number }} data 공방 ID
-  //  * @param {(Socket & { user: UserEntity })} socket 소켓 정보
-  //  * @returns {Promise<void>}
-  //  */
-  // @SubscribeMessage('roomJoin')
-  // async roomJoin(@MessageBody() data: { novelRoomId: number }, @ConnectedSocket() socket: Socket & { user: UserEntity }): Promise<void> {
-  //   this.logger.debug(`Join ${data.novelRoomId} email: ${socket.user.email}`);
-  //   socket.join(`room-${data.novelRoomId}`);
-  // }
-
   /**
    * 공방 방 안에 있는 유저에게 이벤트 전달 (소켓)
    *
@@ -116,8 +104,8 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    * @param {string} message 메시지
    */
   sendNovelRoomInMessage(novelRoomId: number, socketEvent: SOCKET_EVENT_TYPE, message: string): void {
-    if (!novelRoomId || !socketEvent || !message) return;
-    this.server.to(`room-${novelRoomId}`).emit(socketEvent, message);
+    this.logger.debug(`room ${JSON.stringify(novelRoomId)}`);
+    this.server.emit(socketEvent, message);
   }
 
   @UsePipes(
