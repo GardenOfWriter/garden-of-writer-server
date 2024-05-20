@@ -153,7 +153,7 @@ export class NovelTextService {
   private async updateNextWriter(userId: number): Promise<NovelWriterEntity> {
     const writer = await this.novelWriterRepo.findByUserId(userId);
     writer.setCurrentyWriter(true);
-    this.logger.debug(`다음 글쓰기 : ${JSON.stringify(writer)}`);
+    this.logger.debug(`Next Writer : ${JSON.stringify(writer)}`);
     await this.novelWriterRepo.updateRow(writer.id, writer);
     return writer;
   }
