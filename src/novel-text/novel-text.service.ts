@@ -5,9 +5,17 @@ import { NovelTextEntity } from './entities/novel-text.entity';
 import { NovelTextRepo, NovelTextRepository } from './repository/novel-text.repository';
 import { ChatsGateway } from '@app/chats/chats.gateway';
 import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
-import { NotCurrentlyWriterException } from './exception/novel-text.exception';
+import { NotCurrentlyWriterException, NotFoundTextException } from './exception/novel-text.exception';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
+import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 
+/**
+ * 소설 텍스트 서비스
+ *
+ * @export
+ * @class NovelTextService
+ * @typedef {NovelTextService}
+ */
 @Injectable()
 export class NovelTextService {
   private logger = new Logger(NovelTextService.name);
@@ -33,7 +41,7 @@ export class NovelTextService {
     const writerCount = await this.novelWriterRepo.countByNovelRoomId(novelRoomId);
     await this.nextWriterUpdate(user.id, writerCount, novelRoomId);
     const textId = await this.novelTextRepo.addRow(entity);
-    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, 'enter/text', JSON.stringify({ textId }));
+    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId }));
     return;
   }
 
@@ -48,7 +56,7 @@ export class NovelTextService {
    */
   async update(novelRoomId: number, entity: Partial<NovelTextEntity>): Promise<void> {
     await this.novelTextRepo.updateRow(entity.id, entity);
-    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, 'update/text', JSON.stringify({ textId: entity.id }));
+    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: entity.id }));
     return;
   }
 
@@ -82,14 +90,31 @@ export class NovelTextService {
     return texts.map((text) => new FindByChapterIdResponseDto(text));
   }
 
-  async findById(id: number): Promise<NovelTextEntity> {
-    const text = await this.novelTextRepo.findById(id);
+  /**
+   * 소설 텍스트 조회 (ID로 조회)
+   *
+   * @async
+   * @param {number} textId
+   * @returns {Promise<NovelTextEntity>} 조회된 소설 텍스트 정보 엔티티
+   */
+  async findById(textId: number): Promise<NovelTextEntity> {
+    const text = await this.novelTextRepo.findById(textId);
     if (!text) {
-      throw new NotFoundException();
+      throw new NotFoundTextException();
     }
     return text;
   }
 
+  /**
+   * 다음 글쓰기 업데이트
+   *
+   * @private
+   * @async
+   * @param {number} userId 유저 ID
+   * @param {number} writerCount 작가 수
+   * @param {number} novelRoomId 공방 ID
+   * @returns {Promise<void>}
+   */
   private async nextWriterUpdate(userId: number, writerCount: number, novelRoomId: number): Promise<void> {
     const requestWriter = await this.updateRequestWriter(userId);
     const nextSeq = requestWriter.getNextSeq(writerCount);

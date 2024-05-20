@@ -12,6 +12,10 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     private dataSource: Repository<NovelWriterEntity>,
   ) {}
 
+  async findById(id: number): Promise<NovelWriterEntity> {
+    return await this.dataSource.findOne({ where: { id } });
+  }
+
   async countByNovelRoomId(novelRoomId: number): Promise<number> {
     return await this.dataSource.count({
       where: {

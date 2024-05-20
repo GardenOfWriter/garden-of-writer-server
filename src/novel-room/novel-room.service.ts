@@ -11,6 +11,7 @@ import { FindByRoomIdDetailDto } from './dto/response/findbyid-detail.dto';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { NovelRoomRepo, NovelRoomRepository } from './repository/novel-room.repository';
 import {
+  NovelRoomAccessDeniedException,
   NovelRoomAlreadyComplatedException,
   NovelRoomDuplicationTitleException,
   NovelRoomNotFoundException,
@@ -77,12 +78,16 @@ export class NovelRoomService {
    * 소설 공방 상세 조회
    *
    * @async
-   * @param {number} id 소설 공방 id
+   * @param {number} novelRoomId 소설 공방 id
    * @param {UserEntity} user 사용자 정보
    * @returns {Promise<FindByRoomIdDetailDto>} 소설 공방 상세 정보
    */
-  async findById(id: number, user: UserEntity): Promise<FindByRoomIdDetailDto> {
-    const room = await this.novelRoomRepo.getByIdWithTag(id);
+  async findById(novelRoomId: number, user: UserEntity): Promise<FindByRoomIdDetailDto> {
+    const room = await this.novelRoomRepo.getByIdWithTag(novelRoomId);
+    const reqWriter = await this.novelWriterRepo.findByUserId(user.id);
+    if (!reqWriter.isStatusAttending()) {
+      throw new NovelRoomAccessDeniedException();
+    }
     if (!room) throw new NovelRoomNotFoundException();
     return new FindByRoomIdDetailDto(room, user);
   }

@@ -8,8 +8,14 @@ export class NotCurrentlyWriterException extends BaseException {
   }
 }
 
-export class NotFoundRoomWriters extends BaseException {
+export class NotFoundRoomWritersException extends BaseException {
   constructor() {
     super(NovelTextExceptionMsg.NOT_FOUND_ROOM_WRITERS, HttpStatus.NOT_FOUND);
+  }
+}
+
+export class NotFoundTextException extends BaseException {
+  constructor() {
+    super(NovelTextExceptionMsg.NOT_FOUND_TEXT, HttpStatus.NOT_FOUND);
   }
 }

@@ -4,6 +4,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { convertDayFormat } from '../../../commons/util/date.util';
 import { NovelRoomType, RoomTypeDescription } from '@app/novel-room/entities/enum/novel-room-type.enum';
+import { UserEntity } from '@app/user/entities/user.entity';
+import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 
 export class FindByIdLikeUserDto {
   @Exclude() private _roomId: number;
@@ -16,8 +18,10 @@ export class FindByIdLikeUserDto {
   @Exclude() private _createdAt: Date;
   @Exclude() private _currentAttendCnt: number;
   @Exclude() private _type: NovelRoomType;
+  @Exclude() private _host: UserEntity;
+  @Exclude() private _roomTitle: string;
 
-  constructor(board: NovelAttendBoardEntity, hasLike: boolean, currentAttendCnt: number) {
+  constructor(board: NovelAttendBoardEntity, hasLike: boolean, writers: NovelWriterEntity[]) {
     this._roomId = board.id;
     this._createdAt = board.novelRoom.createdAt;
     this._boardtTitle = board.title;
@@ -26,8 +30,10 @@ export class FindByIdLikeUserDto {
     this._viewCount = board.viewCount;
     this._likeCount = board.boardLike.length;
     this._hasLike = hasLike;
-    this._currentAttendCnt = currentAttendCnt;
+    this._currentAttendCnt = writers.length;
     this._type = board.novelRoom.type;
+    this._host = writers.filter((writer) => writer.isHost)[0].user;
+    this._roomTitle = board.novelRoom.title;
   }
 
   @ApiProperty({
@@ -48,6 +54,15 @@ export class FindByIdLikeUserDto {
   }
 
   @ApiProperty({
+    example: '소설 제목',
+    description: '소설 제목',
+  })
+  @Expose({ name: 'roomTitle' })
+  get roomTitle(): string {
+    return this._roomTitle;
+  }
+
+  @ApiProperty({
     example: convertDayFormat(new Date()),
     description: '공방 게시일',
   })
@@ -63,6 +78,15 @@ export class FindByIdLikeUserDto {
   @Expose({ name: 'boardContent' })
   get boardContent(): string {
     return this._boardcContent;
+  }
+
+  @ApiProperty({
+    example: '대표작가',
+    description: '대표작가',
+  })
+  @Expose({ name: 'host' })
+  get host(): string {
+    return this._host.nickname;
   }
   @ApiProperty({
     example: 3,

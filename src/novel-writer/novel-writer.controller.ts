@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, ParseIntPipe, Post, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, ParseIntPipe, Patch, Post, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
@@ -10,7 +10,7 @@ import { CreateNovelWriterDto } from './dto/request/create-novel-writer.dto';
 import { WriterCategoryEnum } from './entities/enums/writer-category.enum';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterService } from './novel-writer.service';
-import { FindWriter } from './decorator/swagger.decorator';
+import { ApplyNovelRoomWriter, ChangeWriterSeqRequest, ExitWriter, FindWriter } from './decorator/swagger.decorator';
 
 @ApiTags('작가 리스트')
 @Controller('writer')
@@ -22,34 +22,38 @@ import { FindWriter } from './decorator/swagger.decorator';
 export class NovelWriterController {
   constructor(private novelWriterService: NovelWriterService) {}
 
+  /**
+   * 소설 공방에 참여한 작가 리스트
+   */
   @FindWriter()
   @Get('')
   async findNovelWirters(@Query('novelRoomId') novelRoomId: number, @CurrentUser() user: UserEntity) {
     return await this.novelWriterService.findByNoveRoomId(novelRoomId, user);
   }
-
-  @ApiOperation({
-    summary: '소설 공방에 참여 작가로 참여 신청',
-  })
+  /**
+   * 소설 공방에 참여 신청
+   */
+  @ApplyNovelRoomWriter()
   @Post('/novel-room/approval')
   create(@CurrentUser() user: UserEntity, @Body() dto: CreateNovelWriterDto) {
     const writer = dto.toEntity(user, WriterCategoryEnum.ATTENDEE, WriterStatusEnum.REVIEW);
     return this.novelWriterService.create(writer);
   }
 
-  @ApiOperation({
-    summary: '작가 순서 변경',
-  })
+  /**
+   * 작가 순서 변경
+   */
+  @ChangeWriterSeqRequest()
   @Put('/sequence')
   async changePriorty(@Body() dto: ChangeWriterSeqRequestDto, @CurrentUser() user: UserEntity) {
     return await this.novelWriterService.changeWriterSeq(dto, user);
   }
-
-  @ApiOperation({
-    summary: '소설 참여 작가 퇴장 API ',
-  })
-  @Delete(':id')
+  /**
+   *  작가 퇴출
+   */
+  @ExitWriter()
+  @Patch('/exit/:id')
   async delete(@Param('id', ParseIntPipe) id: number) {
-    return await this.novelWriterService.delete(id);
+    return await this.novelWriterService.exitWriter(id);
   }
 }

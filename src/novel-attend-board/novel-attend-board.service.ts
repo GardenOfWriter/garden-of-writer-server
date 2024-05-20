@@ -59,9 +59,9 @@ export class NovelAttendBoardService {
    */
   async findById(novelRoomId: number, user: UserEntity): Promise<FindByIdLikeUserDto> {
     const board = await this.boardRepo.findByIdWhereLikeUserJoinNovelRoom(novelRoomId);
-    const writerCount = await this.novelWriterRepo.countByNovelRoomId(novelRoomId);
+    const writers = await this.novelWriterRepo.findByNovelRoomId(novelRoomId);
     const hasBoard = await this.boardRepo.hasBoardLike(user.id, novelRoomId);
-    return new FindByIdLikeUserDto(board, hasBoard, writerCount);
+    return new FindByIdLikeUserDto(board, hasBoard, writers);
   }
 
   /**

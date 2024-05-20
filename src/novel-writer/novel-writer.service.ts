@@ -59,13 +59,7 @@ export class NovelWriterService {
     return writers.map((writer, index) => new FindByNovelRoomIdResponseDto(writer, index));
   }
   async checkRoomStatusAttend(email: string): Promise<boolean> {
-    const writers = await this.novelWriterRepo.findByoptions({
-      where: {
-        user: {
-          email,
-        },
-      },
-    });
+    const writers = await this.novelWriterRepo.findByUserEmail(email);
     return writers.length === 0 ? false : true;
   }
 
@@ -91,9 +85,25 @@ export class NovelWriterService {
   }
 
   /**
-   * 작가 리스트에서 자신이 해당 소설공방에 대한 정보를 가져오기
+   * 소설 공방 작가 퇴장
+   *
+   * @async
+   * @param {number} writerId 공방 참여 작가
+   * @returns {Promise<void>}
    */
+  async exitWriter(writerId: number): Promise<void> {
+    const writer = await this.novelWriterRepo.findById(writerId);
+    writer.changeStatue(WriterStatusEnum.EXIT);
+    await this.novelWriterRepo.saveRow(writer);
+  }
 
+  /**
+   * 소설 공방 작가 관리 접근 권한 체크
+   *
+   * @private
+   * @param {NovelWriterEntity[]} writers 공방 작가 리스트
+   * @param {UserEntity} user 유저 정보 엔티티
+   */
   private writerPemissionCheck(writers: NovelWriterEntity[], user: UserEntity) {
     const currentWriter = this.filterCurrentWriter(writers, user);
     if (!currentWriter || !currentWriter.isHost()) {
@@ -101,6 +111,14 @@ export class NovelWriterService {
     }
   }
 
+  /**
+   * 현재 작가 정보 필터링
+   *
+   * @private
+   * @param {NovelWriterEntity[]} writers 공방 작가 리스트
+   * @param {UserEntity} user  유저 정보 엔티티
+   * @returns {NovelWriterEntity} 현재 작가 정보
+   */
   private filterCurrentWriter(writers: NovelWriterEntity[], user: UserEntity): NovelWriterEntity {
     const writer = writers.filter((writer) => writer.user.id === user.id);
     return writer[0];

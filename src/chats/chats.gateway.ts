@@ -21,6 +21,7 @@ import {
 } from '@nestjs/websockets';
 import { instrument } from '@socket.io/admin-ui';
 import { Server, Socket } from 'socket.io';
+import { SOCKET_EVENT_TYPE } from './enums/socket.event';
 
 //localhost:3000/room-1}
 
@@ -114,9 +115,9 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    * @param {string} emitEvent 이벤트 이름
    * @param {string} message 메시지
    */
-  sendNovelRoomInMessage(novelRoomId: number, emitEvent: string, message: string): void {
-    if (!novelRoomId || !emitEvent || !message) return;
-    this.server.to(`room-${novelRoomId}`).emit(emitEvent, message);
+  sendNovelRoomInMessage(novelRoomId: number, socketEvent: SOCKET_EVENT_TYPE, message: string): void {
+    if (!novelRoomId || !socketEvent || !message) return;
+    this.server.to(`room-${novelRoomId}`).emit(socketEvent, message);
   }
 
   @UsePipes(

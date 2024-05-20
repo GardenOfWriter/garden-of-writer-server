@@ -42,3 +42,30 @@ export function FindWriterMangement(): MethodDecorator {
     }),
   );
 }
+
+export function ApplyNovelRoomWriter(): MethodDecorator {
+  return applyDecorators(
+    ApiOperation({
+      summary: '소설 공방에 참여 작가로 참여 신청',
+      description: '소설 공방에 참여한 작가로 참여 신청 API 입니다.',
+    }),
+  );
+}
+
+export function ChangeWriterSeqRequest(): MethodDecorator {
+  return applyDecorators(
+    ApiOperation({
+      summary: '작가 순서 변경',
+      description: '작가 순서 변경 API 입니다.',
+    }),
+  );
+}
+
+export function ExitWriter(): MethodDecorator {
+  return applyDecorators(
+    ApiOperation({
+      summary: '소설 참여 작가 퇴장 API',
+      description: '소설 참여 작가 퇴장 API 입니다.',
+    }),
+  );
+}

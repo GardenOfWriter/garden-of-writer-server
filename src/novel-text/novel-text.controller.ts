@@ -20,29 +20,46 @@ import { QueryRunner as QR } from 'typeorm';
 export class NovelTextController {
   constructor(private novelTextService: NovelTextService) {}
 
+  /**
+   *  소설 글쓰기 조회
+   */
   @FindNovelText()
   @Get('')
   async findChpater(@Query('chapterId') chapterId: number) {
     return await this.novelTextService.findByChapterIdNovelText(chapterId);
   }
+
+  /**
+   * 소설 글쓰기 상세 조회
+   */
   @FindByIdNovelText()
   @Get(':id')
   async findById(@Param('id', ParseIntPipe) id: number) {
     return await this.novelTextService.findById(id);
   }
 
+  /**
+   * 소설 글쓰기 생성
+   */
   @UseInterceptors(TransactionInterceptor)
   @CreateNovelText()
   @Post('')
   async create(@CurrentUser() user: UserEntity, @Body() dto: CreateNovelTextRequestDto, @QueryRunner() qr?: QR) {
     return await this.novelTextService.create(dto.novelRoomId, dto.toEntity(user), user);
   }
+
+  /**
+   * 소설 글쓰기 수정
+   */
   @UpdateNovelText()
   @Put(':id')
   update(@Param('id', ParseIntPipe) id, @CurrentUser() user: UserEntity, @Body() dto: UpdateTextNovelRequestDto) {
     return this.novelTextService.update(id, dto.toEntity(user));
   }
 
+  /**
+   * 소설 글쓰기 삭제
+   */
   @DeleteNovelText()
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserEntity) {
