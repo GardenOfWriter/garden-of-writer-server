@@ -74,7 +74,9 @@ export class NovelRoomController {
     @CurrentUser() user: UserEntity,
     @Query() query: FindAttendQueryDto,
   ): Promise<PagingationResponse<FindAttendStatusNovelRoomDto>> {
-    return this.novelRoomService.findAllRooms(user, query);
+    const result = await this.novelRoomService.findAllRooms(user, query);
+    console.log(result);
+    return result;
   }
   /**
    * 소설 공방 상세 조회

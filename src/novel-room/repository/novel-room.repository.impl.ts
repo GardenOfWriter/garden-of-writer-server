@@ -11,8 +11,8 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
     @InjectRepository(NovelRoomEntity)
     private dataSource: Repository<NovelRoomEntity>,
   ) {}
-  findAllWithUserAndCount(user: UserEntity, pagination: Pagination): Promise<[NovelRoomEntity[], number]> {
-    return this.dataSource.findAndCount({
+  async findAllWithUserAndCount(user: UserEntity, pagination: Pagination): Promise<[NovelRoomEntity[], number]> {
+    return await this.dataSource.findAndCount({
       take: pagination.take,
       skip: pagination.skip,
       relations: ['user', 'novelRoom'],
@@ -31,10 +31,13 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
   }
 
   async findAllJoinWriterByStatus(user: UserEntity, writerStatus: WriterStatusType[], pagination: Pagination): Promise<[NovelRoomEntity[], number]> {
-    return await this.dataSource.findAndCount({
-      relations: ['novelWriter', 'novelWriter.user'],
+    const result = await this.dataSource.findAndCount({
+      relations: ['novelWriter', 'user'],
       where: {
         novelWriter: {
+          user: {
+            id: user.id,
+          },
           status: In(writerStatus),
         },
       },
@@ -44,6 +47,7 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
         createdAt: 'DESC',
       },
     });
+    return result;
   }
 
   async getById(id: number): Promise<NovelRoomEntity> {

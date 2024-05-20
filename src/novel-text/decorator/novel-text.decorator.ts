@@ -38,7 +38,7 @@ export function DeleteNovelText(): MethodDecorator {
 export function FindByIdNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '소설 글쓰기 상세정보 조회하기',
+      summary: '특정 소설 글쓰기 Id로 조회하기',
     }),
     ApiOkResponse({ type: UpdateTextNovelRequestDto }),
   );

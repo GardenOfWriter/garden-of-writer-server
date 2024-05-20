@@ -13,24 +13,28 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, ICommonRespons
   intercept(context: ExecutionContext, next: CallHandler<T>): Observable<ICommonResponse<T>> | Promise<Observable<ICommonResponse<T>>> {
     return next.handle().pipe(
       map((result: any) => {
-        const req = context.switchToHttp().getRequest<Request>();
-        const res = context.switchToHttp().getResponse<Response>();
-        const statusCode = res.statusCode;
-        const method = req.method;
-        const customStatusCode = this.getSuccessCustomsCode(method, result);
-        let meta = undefined;
-        res.status(customStatusCode);
-        if (result?.meta) {
-          const { items, meta: resMeta } = result;
-          result = items;
-          meta = resMeta;
-        }
-        const successResponse: ICommonResponse<T> = {
-          data: result || null,
-          meta: meta || undefined,
-        };
+        try {
+          const req = context.switchToHttp().getRequest<Request>();
+          const res = context.switchToHttp().getResponse<Response>();
+          const statusCode = res.statusCode;
+          const method = req.method;
+          const customStatusCode = this.getSuccessCustomsCode(method, result);
+          res.status(customStatusCode);
+          let meta = undefined;
+          if (result?.meta) {
+            const { items, meta: resMeta } = result;
+            result = items;
+            meta = resMeta;
+          }
+          const successResponse: ICommonResponse<T> = {
+            data: result || null,
+            meta: meta || undefined,
+          };
 
-        return successResponse;
+          return successResponse;
+        } catch (error) {
+          console.error(error);
+        }
       }),
     );
   }

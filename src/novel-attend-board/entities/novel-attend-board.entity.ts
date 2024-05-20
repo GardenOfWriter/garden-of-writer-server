@@ -11,7 +11,7 @@ export class NovelAttendBoardEntity {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'id' })
-  noveRoom: NovelRoomEntity;
+  novelRoom: NovelRoomEntity;
 
   @Column({ length: 255 })
   title: string;
@@ -30,7 +30,7 @@ export class NovelAttendBoardEntity {
 
   static of(roomId: number, title: string, content: string, openKakaoLink: string) {
     const board = new NovelAttendBoardEntity();
-    board.noveRoom = { id: roomId } as NovelRoomEntity;
+    board.novelRoom = { id: roomId } as NovelRoomEntity;
     board.title = title;
     board.content = content;
     board.openKakaoLink = openKakaoLink;

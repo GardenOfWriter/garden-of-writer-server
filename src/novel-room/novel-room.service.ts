@@ -50,6 +50,7 @@ export class NovelRoomService {
    */
   async findAllRooms(user: UserEntity, dto: FindAttendQueryDto): Promise<PagingationResponse<FindAttendStatusNovelRoomDto>> {
     const roomFilter = dto.queryConvertStatus();
+    console.log(roomFilter);
     const [rooms, totalCount] = await this.novelRoomRepo.findAllJoinWriterByStatus(user, roomFilter, dto);
     const items = rooms.map((room: NovelRoomEntity) => new FindAttendStatusNovelRoomDto(user, room));
     return new PagingationResponse(totalCount, dto.chunkSize, items);
@@ -107,7 +108,7 @@ export class NovelRoomService {
     const room = await this.novelRoomRepo.getById(id);
     if (!room) throw new NovelRoomNotFoundException();
     room.updateRoom(updateNovelRoom);
-    this.logger.log(`NovelRoom Update Data : ${JSON.stringify(room)}`);
+    this.logger.log(`NovelRoom Update : ${JSON.stringify(room)}`);
     await this.novelRoomRepo.saveRow(room);
     return room;
   }

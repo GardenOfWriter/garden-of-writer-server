@@ -3,8 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
 import { NovelWriterController } from './novel-writer.controller';
 import { NovelWriterService } from './novel-writer.service';
-import { NovelWriterRepositoryToken } from './repository/novel-writer.repository';
-import { NovelWriterRepositoryImpl } from './repository/novel-writer.repository.impl';
+import { NovelWriterRepositoryProvider } from './repository/novel-writer.repository';
 import { WriterManagementController } from './writer-management.controller';
 import { EmailServiceToken } from '@app/commons/email/email.service';
 import { EmailServiceImpl } from '@app/commons/email/email.service.impl';
@@ -19,14 +18,12 @@ import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
     NovelWriterService,
     WriterManagementService,
     NovelRoomRepositoryProvider,
-    {
-      provide: NovelWriterRepositoryToken,
-      useClass: NovelWriterRepositoryImpl,
-    },
+    NovelWriterRepositoryProvider,
     {
       provide: EmailServiceToken,
       useClass: EmailServiceImpl,
     },
   ],
+  exports: [NovelWriterRepositoryProvider],
 })
 export class NovelWriterModule {}

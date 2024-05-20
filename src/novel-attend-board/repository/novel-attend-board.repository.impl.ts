@@ -26,9 +26,9 @@ export class NovelAttendBoardRepositoryImpl implements NovelAttendBoardRepositor
       .getManyAndCount();
   }
 
-  async findByIdWhereLikeUser(roomId: number): Promise<NovelAttendBoardEntity> {
+  async findByIdWhereLikeUserJoinNovelRoom(roomId: number): Promise<NovelAttendBoardEntity> {
     return await this.dataSource.findOne({
-      relations: ['boardLike'],
+      relations: ['boardLike', 'novelRoom'],
       where: {
         id: roomId,
       },

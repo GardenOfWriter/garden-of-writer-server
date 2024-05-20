@@ -34,8 +34,8 @@ export class ChapterService {
    * @returns {Promise<void>}
    */
   async save(entity: Partial<ChapterEntity>): Promise<void> {
-    // const count = await this.chapterRepository.chapterCount(entity.novelRoomId);
-    // entity.setNextNo(count);
+    const count = await this.nextChapterNo(entity.novelRoomId);
+    entity.setNo(count);
     await this.chapterRepository.saveRow(entity);
     return;
   }
@@ -66,6 +66,7 @@ export class ChapterService {
     chapter.setReviewStatus();
     this.logger.log(`Chapter Apply ${JSON.stringify(chapter)}`);
     await this.save(chapter);
+    return;
   }
 
   /**
@@ -81,6 +82,7 @@ export class ChapterService {
     if (!isEmpty(chapter)) throw new NotFoundChapterException();
     chapter.changeTitle(dto.title);
     await this.save(chapter);
+    return;
   }
 
   /**
@@ -123,6 +125,15 @@ export class ChapterService {
       },
     });
   }
+
+  /**
+   * 다음 회차 번호 조회
+   *
+   * @private
+   * @async
+   * @param {number} novelRoomId 소설 공방 Id
+   * @returns {Promise<number>} 다음 회차 번호
+   */
   private async nextChapterNo(novelRoomId: number): Promise<number> {
     const chpaterNo = await this.chapterRepository.countByNovelRoomId(novelRoomId);
     return chpaterNo + 1;

@@ -9,6 +9,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const response = ctx.getResponse<Response>();
     // TODO: 위 두개를 한꺼번에 합칠수 있는 방법은 없을까 ?
+    this.logger.error(exception);
     const statusCode = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
     const message = exception instanceof HttpException ? exception.message : 'INTERNAL SERVER ERROR';
     response.status(statusCode);

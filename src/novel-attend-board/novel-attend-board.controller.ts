@@ -26,8 +26,8 @@ export class NovelAttendBoardController {
 
   @FindDetailBoard()
   @Get(':roomId')
-  async findByIdDetail(@Param('roomId', ParseIntPipe) roomId: number, @CurrentUser() user: UserEntity) {
-    return await this.novelAttendBoardService.findById(roomId, user);
+  async findByIdDetail(@Param('roomId', ParseIntPipe) novelRoomId: number, @CurrentUser() user: UserEntity) {
+    return await this.novelAttendBoardService.findById(novelRoomId, user);
   }
 
   @CreateBoardLike()

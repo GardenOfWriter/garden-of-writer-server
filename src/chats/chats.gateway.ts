@@ -19,12 +19,12 @@ import {
   WebSocketServer,
   WsException,
 } from '@nestjs/websockets';
+import { instrument } from '@socket.io/admin-ui';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway({
-  // ws://localhost:3000/chats
-  // namespace: 'chats',
-})
+//localhost:3000/room-1}
+
+@WebSocketGateway({ namespace: /\/room-.+/ })
 export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   private logger = new Logger(ChatsGateway.name);
 
@@ -44,6 +44,10 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    * @param {Server} server 소켓 서버
    */
   afterInit(server: Server) {
+    // instrument(server, {
+    //   auth: false,
+    //   mode: 'development',
+    // });
     this.logger.log('Socket Server Init Success');
   }
 
@@ -65,22 +69,22 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    */
   async handleConnection(socket: Socket & { user: UserEntity }): Promise<boolean> {
     this.logger.log(`On connect called : ${socket.id}`);
-    const headers = socket.handshake.headers;
-    //Bearer xxxxxxx
-    const rawToken = headers['accesstoken'] as string;
-    if (!rawToken) {
+    const roomNamespace = socket.nsp.name.replace('/', '');
+    const headers = socket.handshake.headers.cookie;
+    console.log(headers);
+    const accessToken = socket.handshake.headers.cookie['accesstoken'] as string;
+    if (!accessToken) {
+      this.logger.error(`Not Found Cookie accessToken : ${accessToken}`);
       socket.disconnect();
     }
 
     try {
-      // jwtToken extractTokenFromHeader
-      // const token = this.authService.extractTokenFromHeader(rawToken, true);
-      // jwtToken verifyToken
-      const payload = this.authService.verifyToken(rawToken);
+      const payload = this.authService.verifyToken(accessToken);
       //  유저 정보를 찾는다.
       const user = await this.userService.findEmail(payload.email);
       this.logger.log(`Connect user : ${JSON.stringify(user)}`);
       socket.user = user;
+      socket.join(roomNamespace);
       // return true ?? 의미 파악 필요
       return true;
     } catch (error) {
@@ -89,19 +93,19 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     }
   }
 
-  /**
-   * 공방 입장 이벤트
-   *
-   * @async
-   * @param {{ novelRoomId: number }} data 공방 ID
-   * @param {(Socket & { user: UserEntity })} socket 소켓 정보
-   * @returns {Promise<void>}
-   */
-  @SubscribeMessage('roomJoin')
-  async roomJoin(@MessageBody() data: { novelRoomId: number }, @ConnectedSocket() socket: Socket & { user: UserEntity }): Promise<void> {
-    this.logger.debug(`Join ${data.novelRoomId} email: ${socket.user.email}`);
-    socket.join(`room-${data.novelRoomId}`);
-  }
+  // /**
+  //  * 공방 입장 이벤트
+  //  *
+  //  * @async
+  //  * @param {{ novelRoomId: number }} data 공방 ID
+  //  * @param {(Socket & { user: UserEntity })} socket 소켓 정보
+  //  * @returns {Promise<void>}
+  //  */
+  // @SubscribeMessage('roomJoin')
+  // async roomJoin(@MessageBody() data: { novelRoomId: number }, @ConnectedSocket() socket: Socket & { user: UserEntity }): Promise<void> {
+  //   this.logger.debug(`Join ${data.novelRoomId} email: ${socket.user.email}`);
+  //   socket.join(`room-${data.novelRoomId}`);
+  // }
 
   /**
    * 공방 방 안에 있는 유저에게 이벤트 전달 (소켓)

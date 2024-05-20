@@ -12,7 +12,6 @@ import { NovelRoomStatuDescription } from '../../entities/enum/novel-room-status
 import { convertDayFormat } from '@app/commons/util/date.util';
 
 export class FindAttendStatusNovelRoomDto {
-  private _no: number;
   private _category: number;
   private _title: string;
   private _createdAt: Date;
@@ -22,7 +21,7 @@ export class FindAttendStatusNovelRoomDto {
   private _id: number;
   private _bookCover: string;
   private _status: NovelRoomStatusType;
-  private _me: NovelWriterEntity;
+  private _requestUser: NovelWriterEntity;
 
   constructor(user: UserEntity, room: NovelRoomEntity) {
     this._id = room.id;
@@ -31,7 +30,7 @@ export class FindAttendStatusNovelRoomDto {
     this._createdAt = room.createdAt;
     this._type = room.type;
     this._writers = room.novelWriter;
-    this._me = room.novelWriter.filter((writer) => writer.user.id === user.id)[0];
+    this._requestUser = room.novelWriter.filter((writer) => writer.user.id === user.id)[0];
     this._status = room.status;
     this._completedAt = room.completedAt;
   }
@@ -74,7 +73,7 @@ export class FindAttendStatusNovelRoomDto {
   })
   @Expose({ name: 'writerStatus' })
   get writerStatus(): string {
-    return this._me.category;
+    return this._requestUser.category;
   }
 
   @ApiProperty({ ...RoomTypeDescription })
@@ -101,9 +100,6 @@ export class FindAttendStatusNovelRoomDto {
     return this._bookCover;
   }
 
-  /**
-   *  TODO: 수정 필요
-   */
   @ApiProperty({
     example: 3,
     description: '현 작성자',
@@ -113,8 +109,7 @@ export class FindAttendStatusNovelRoomDto {
     const currentWriter = this._writers.filter((writer) => {
       return writer.currentlyWriting === true;
     })[0];
-    console.log('currentWriter : ', currentWriter);
-    return currentWriter.user.nickname;
+    return currentWriter?.user.nickname;
   }
 
   @ApiProperty({
@@ -130,8 +125,8 @@ export class FindAttendStatusNovelRoomDto {
   })
   @Expose({ name: 'notifiedAt' })
   get notifiedAt(): string | null {
-    const date = convertDayFormat(this._me.notifiedAt);
-    return this._me.notifiedAt ? date : null;
+    const date = convertDayFormat(this._requestUser.notifiedAt);
+    return this._requestUser.notifiedAt ? date : null;
   }
 
   @ApiProperty({
@@ -140,8 +135,8 @@ export class FindAttendStatusNovelRoomDto {
   })
   @Expose({ name: 'exitedAt' })
   get exitedAt(): string | null {
-    const date = convertDayFormat(this._me.exitedAt);
-    return this._me.exitedAt ? date : null;
+    const date = convertDayFormat(this._requestUser.exitedAt);
+    return this._requestUser.exitedAt ? date : null;
   }
 
   @ApiProperty({

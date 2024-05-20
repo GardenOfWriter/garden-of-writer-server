@@ -10,6 +10,7 @@ import { FindByIdLikeUserDto } from './dto/response/findby-id-like-user.dto';
 import { CreateBoardLikeDto } from './dto/request/create-board-like.dto';
 import { AlreadBoardLikeException } from './exception/already-board-like.exception';
 import { UpdateNovelRoomDto } from '@app/novel-room/dto/request/update-novel-room.dto';
+import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
 
 @Injectable()
 export class NovelAttendBoardService {
@@ -18,6 +19,8 @@ export class NovelAttendBoardService {
     private boardRepo: NovelAttendBoardRepository,
     @NovelRoomRepo()
     private novelRoomRepo: NovelRoomRepository,
+    @NovelWriterRepo()
+    private novelWriterRepo: NovelWriterRepository,
   ) {}
 
   /**
@@ -50,14 +53,15 @@ export class NovelAttendBoardService {
    *  게시글 조회 (유저 좋아요 여부 포함)
    *
    * @async
-   * @param {number} roomId 방 번호
+   * @param {number} novelRoomId 소설 공방 Id
    * @param {UserEntity} user 유저 정보 엔티티
    * @returns {Promise<FindByIdLikeUserDto>} 조회된 게시글 DTO
    */
   async findById(novelRoomId: number, user: UserEntity): Promise<FindByIdLikeUserDto> {
-    const board = await this.boardRepo.findByIdWhereLikeUser(novelRoomId);
+    const board = await this.boardRepo.findByIdWhereLikeUserJoinNovelRoom(novelRoomId);
+    const writerCount = await this.novelWriterRepo.countByNovelRoomId(novelRoomId);
     const hasBoard = await this.boardRepo.hasBoardLike(user.id, novelRoomId);
-    return new FindByIdLikeUserDto(board, hasBoard);
+    return new FindByIdLikeUserDto(board, hasBoard, writerCount);
   }
 
   /**

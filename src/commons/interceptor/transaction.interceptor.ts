@@ -14,7 +14,6 @@ export class TransactionInterceptor implements NestInterceptor {
     return next.handle().pipe(
       catchError(async (e) => {
         await qr.rollbackTransaction();
-        await qr.release();
         throw e;
       }),
       tap(async () => {

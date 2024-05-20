@@ -33,7 +33,7 @@ export class NovelTextService {
     const writerCount = await this.novelWriterRepo.countByNovelRoomId(novelRoomId);
     await this.nextWriterUpdate(user.id, writerCount, novelRoomId);
     const textId = await this.novelTextRepo.addRow(entity);
-    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, 'enterText', JSON.stringify({ textId }));
+    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, 'enter/text', JSON.stringify({ textId }));
     return;
   }
 
@@ -48,7 +48,7 @@ export class NovelTextService {
    */
   async update(novelRoomId: number, entity: Partial<NovelTextEntity>): Promise<void> {
     await this.novelTextRepo.updateRow(entity.id, entity);
-    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, 'updateText', JSON.stringify({ textId: entity.id }));
+    this.chatsGateway.sendNovelRoomInMessage(novelRoomId, 'update/text', JSON.stringify({ textId: entity.id }));
     return;
   }
 

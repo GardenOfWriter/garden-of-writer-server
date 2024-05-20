@@ -61,12 +61,12 @@ export interface NovelAttendBoardRepository {
   findWithNovelRoom(): Promise<[NovelAttendBoardEntity[], number]>;
 
   /**
-   *  게시글 조회 (유저 좋아요 여부 포함)
+   *  게시글 조회 (유저 좋아요 여부 및 공방 정보 포함))
    *
    * @param {number} novelRoomId 공방 Id
    * @returns {Promise<NovelAttendBoardEntity>} 조회된 게시글 정보 엔티티
    */
-  findByIdWhereLikeUser(novelRoomId: number): Promise<NovelAttendBoardEntity>;
+  findByIdWhereLikeUserJoinNovelRoom(novelRoomId: number): Promise<NovelAttendBoardEntity>;
 
   /**
    * 게시글 좋아요 여부 확인

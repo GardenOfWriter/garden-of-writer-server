@@ -10,3 +10,14 @@ import _ from 'lodash';
 export const isEmpty = (data: any): boolean => {
   return _.isEmpty(data);
 };
+
+// /**
+//  * 배열의 길이를 반환합니다.
+//  *
+//  * @param {*} data
+//  * @returns {*}
+//  */
+// export const getSize = (data: any) => {
+//   console.log('size:', size);
+//   return size;
+// };

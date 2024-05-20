@@ -70,7 +70,7 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @OneToMany((_type) => NovelWriterEntity, (writer) => writer.novelRoom)
   novelWriter: NovelWriterEntity[];
 
-  @OneToOne((_type) => NovelAttendBoardEntity, (board) => board.noveRoom)
+  @OneToOne((_type) => NovelAttendBoardEntity, (board) => board.novelRoom)
   novelAttendBoard: NovelAttendBoardEntity;
 
   @OneToMany(() => NovelTagEntity, (novelTag) => novelTag.novelRoom)

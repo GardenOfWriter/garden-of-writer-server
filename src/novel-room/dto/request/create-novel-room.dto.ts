@@ -5,7 +5,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { NovelRoomEntity } from '../../entities/novel-room.entity';
 import { NovelAttendBoardEntity } from '@app/novel-attend-board/entities/novel-attend-board.entity';
-import { TagEntity } from '@app/novel-tag/entities/tag.entity';
 import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
 import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.enum';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
@@ -56,14 +55,16 @@ export class CreateNovelRoomDto {
     example: '등장 인물',
     description: '등장인물',
   })
-  @IsNotEmpty()
+  @IsOptional()
+  @IsString()
   character: string;
 
   @ApiProperty({
     example: '줄거리',
     description: '줄거리',
   })
-  @IsNotEmpty()
+  @IsOptional()
+  @IsString()
   summary: string;
 
   @ApiProperty({
@@ -112,9 +113,8 @@ export class CreateNovelRoomDto {
   }
 
   toWriterEntity(roomId: number, user: UserEntity) {
-    const writerStatus = WriterStatusEnum.ATTENDING;
     const host = WriterCategoryEnum.HOST;
     // Room 생성할때 host는 자동으로 현재 작성 유저로 설정
-    return NovelWriterEntity.of(roomId, host, writerStatus, user, true);
+    return NovelWriterEntity.of(roomId, host, WriterStatusEnum.ATTENDING, user, true);
   }
 }

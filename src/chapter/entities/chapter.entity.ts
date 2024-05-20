@@ -69,8 +69,8 @@ export class ChapterEntity extends PrimaryAuditiedPK {
     return chapter;
   }
 
-  setNextNo(prevNo: number) {
-    this.no = prevNo + 1;
+  setNo(no: number) {
+    this.no = no;
   }
 
   changeStatus(status: ChapterStatusType) {

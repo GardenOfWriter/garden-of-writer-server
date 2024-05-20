@@ -8,9 +8,11 @@ import { NovelAttendBoardRepositryToken } from './repository/novel-attend-board.
 import { NovelAttendBoardRepositoryImpl } from './repository/novel-attend-board.repository.impl';
 import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-room.repository';
 import { BoardLikeEntity } from './entities/board-like.entity';
+import { NovelWriterModule } from '../novel-writer/novel-writer.module';
+import { NovelWriterEntity } from '../novel-writer/entities/novel-writer.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([NovelAttendBoardEntity, NovelRoomEntity, BoardLikeEntity])],
+  imports: [NovelWriterModule, TypeOrmModule.forFeature([NovelAttendBoardEntity, NovelWriterEntity, NovelRoomEntity, BoardLikeEntity])],
   controllers: [NovelAttendBoardController],
   providers: [
     NovelAttendBoardService,
