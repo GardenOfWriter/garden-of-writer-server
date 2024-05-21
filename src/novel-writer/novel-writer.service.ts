@@ -10,6 +10,8 @@ import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
 import { NovelWriterRepo, NovelWriterRepository } from './repository/novel-writer.repository';
 import { AlreadyExistWriterExcetpion, BadChangeWriterIdSeqExcetpion, NotAccessWriterManagementExcetpion } from './exceptions/novel-writer.exception';
+import { ChatsGateway } from '@app/chats/chats.gateway';
+import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 
 @Injectable()
 export class NovelWriterService {
@@ -20,6 +22,7 @@ export class NovelWriterService {
     private readonly emailService: EmailService,
     @NovelWriterRepo()
     private readonly novelWriterRepo: NovelWriterRepository,
+    private readonly chatsGateway: ChatsGateway,
   ) {}
   async create(entity: Partial<NovelWriterEntity>): Promise<void> {
     /**
@@ -95,6 +98,7 @@ export class NovelWriterService {
     const writer = await this.novelWriterRepo.findById(writerId);
     writer.changeStatue(WriterStatusEnum.EXIT);
     await this.novelWriterRepo.saveRow(writer);
+    await this.chatsGateway.sendNovelRoomInMessage(writer.novelRoom.id, SOCKET_EVENT.EXIT_WRITER, JSON.stringify({ writerId }));
   }
 
   /**

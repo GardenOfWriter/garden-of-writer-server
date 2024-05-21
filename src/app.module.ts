@@ -1,5 +1,5 @@
 import { NovelRoomModule } from '@app/novel-room/novel-room.module';
-import { Module, ValidationError, ValidationPipe } from '@nestjs/common';
+import { Module, ValidationError, ValidationPipe, forwardRef } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
@@ -49,16 +49,15 @@ import { ErrorsInterceptor } from './commons/interceptor/error.interceptor';
     EmailModule,
     PassportModule,
     JwtModule.register({}),
+    forwardRef(() => NovelRoomModule),
     UserModule,
     NovelTextModule,
     AuthModule,
-    NovelRoomModule,
     NovelWriterModule,
     ChapterModule,
     NovelAttendBoardModule,
     NovelTagModule,
     ChatsModule,
-    MessageEntity,
   ],
   controllers: [AppController],
   providers: [

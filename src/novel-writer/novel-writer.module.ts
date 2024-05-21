@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
 import { NovelWriterController } from './novel-writer.controller';
@@ -10,20 +10,22 @@ import { EmailServiceImpl } from '@app/commons/email/email.service.impl';
 import { WriterManagementService } from './writer-management.service';
 import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-room.repository';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
+import { ChatsModule } from '@app/chats/chats.module';
+import { NovelTagService } from '@app/novel-tag/novel-tag.service';
+import { NovelRoomModule } from '@app/novel-room/novel-room.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([NovelWriterEntity, NovelRoomEntity])],
+  imports: [forwardRef(() => NovelRoomModule), ChatsModule, TypeOrmModule.forFeature([NovelWriterEntity, NovelRoomEntity])],
   controllers: [NovelWriterController, WriterManagementController],
   providers: [
     NovelWriterService,
     WriterManagementService,
-    NovelRoomRepositoryProvider,
     NovelWriterRepositoryProvider,
     {
       provide: EmailServiceToken,
       useClass: EmailServiceImpl,
     },
   ],
-  exports: [NovelWriterRepositoryProvider],
+  exports: [NovelWriterRepositoryProvider, NovelWriterService],
 })
 export class NovelWriterModule {}

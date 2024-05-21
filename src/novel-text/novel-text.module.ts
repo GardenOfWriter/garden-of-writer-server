@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NovelTextEntity } from './entities/novel-text.entity';
 import { NovelTextController } from './novel-text.controller';
@@ -8,18 +8,17 @@ import { NovelTextRepositoryImpl } from './repository/novel-text.repository.impl
 import { ChatsModule } from '@app/chats/chats.module';
 import { ChatsEntity } from '@app/chats/entities/chats.entity';
 import { MessageEntity } from '@app/message/message.entity';
-import { UserRepositoryProvider } from '@app/user/repository/user.repository';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
-import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-room.repository';
-import { NovelWriterRepositoryProvider } from '@app/novel-writer/repository/novel-writer.repository';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { ChapterModule } from '@app/chapter/chapter.module';
+import { NovelWriterModule } from '@app/novel-writer/novel-writer.module';
 
 @Module({
   imports: [
-    ChatsModule,
+    forwardRef(() => ChatsModule),
     ChapterModule,
+    NovelWriterModule,
     TypeOrmModule.forFeature([NovelTextEntity, ChatsEntity, MessageEntity, UserEntity, NovelRoomEntity, NovelWriterEntity]),
   ],
   controllers: [NovelTextController],
@@ -29,9 +28,13 @@ import { ChapterModule } from '@app/chapter/chapter.module';
       provide: NovelTextRepository,
       useClass: NovelTextRepositoryImpl,
     },
-    UserRepositoryProvider,
-    NovelRoomRepositoryProvider,
-    NovelWriterRepositoryProvider,
+  ],
+  exports: [
+    NovelTextService,
+    {
+      provide: NovelTextRepository,
+      useClass: NovelTextRepositoryImpl,
+    },
   ],
 })
 export class NovelTextModule {}

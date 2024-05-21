@@ -3,7 +3,7 @@ import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entit
 import { NovelWriterModule } from '@app/novel-writer/novel-writer.module';
 import { NovelWriterService } from '@app/novel-writer/novel-writer.service';
 import { UserEntity } from '@app/user/entities/user.entity';
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
@@ -17,7 +17,7 @@ import { UserModule } from '@app/user/user.module';
   imports: [
     EmailModule,
     UserModule,
-    NovelWriterModule,
+    forwardRef(() => NovelWriterModule),
     TypeOrmModule.forFeature([UserEntity, NovelWriterEntity]),
     JwtModule.register({
       secret: 'SECRET_KEY',
@@ -25,8 +25,8 @@ import { UserModule } from '@app/user/user.module';
     }),
   ],
 
-  exports: [TypeOrmModule, JwtGuard],
-  providers: [AuthService, JwtGuard, AccessTokenStrategy, NovelWriterService, NovelWriterRepositoryProvider],
+  providers: [AuthService, JwtGuard, AccessTokenStrategy],
+  exports: [JwtGuard, AuthService, AccessTokenStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

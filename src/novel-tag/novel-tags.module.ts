@@ -10,14 +10,16 @@ import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entit
 import { NovelWriterRepositoryProvider, NovelWriterRepositoryToken } from '@app/novel-writer/repository/novel-writer.repository';
 import { NovelWriterRepositoryImpl } from '@app/novel-writer/repository/novel-writer.repository.impl';
 import { UserEntity } from '@app/user/entities/user.entity';
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagEntity } from './entities/tag.entity';
 import { NovelTagService } from '@app/novel-tag/novel-tag.service';
 import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-room.repository';
+import { NovelRoomModule } from '@app/novel-room/novel-room.module';
 
 @Module({
   imports: [
+    forwardRef(() => NovelRoomModule),
     TypeOrmModule.forFeature([
       UserEntity,
       NovelTagEntity, //
@@ -27,14 +29,7 @@ import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-ro
       TagEntity,
     ]),
   ],
-  providers: [
-    NovelRoomService,
-    NovelTagService,
-    NovelWriterRepositoryProvider,
-    EmailServiceProvider,
-    ChapterRepositoryProvider,
-    NovelRoomRepositoryProvider,
-  ],
+  providers: [NovelTagService, EmailServiceProvider],
   exports: [NovelTagService],
 })
 export class NovelTagModule {}
