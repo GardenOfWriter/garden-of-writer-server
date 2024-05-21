@@ -61,8 +61,8 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     });
   }
 
-  findOneByOptions(options: FindOneOptions<NovelWriterEntity>): Promise<NovelWriterEntity> {
-    return this.dataSource.findOne(options);
+  async findOneByOptions(options: FindOneOptions<NovelWriterEntity>): Promise<NovelWriterEntity> {
+    return await this.dataSource.findOne(options);
   }
 
   async findOneByUserIdAndNovelRoomId(userId: number, novelRoomId: number): Promise<NovelWriterEntity> {

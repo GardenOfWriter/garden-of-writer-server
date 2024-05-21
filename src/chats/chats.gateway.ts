@@ -74,7 +74,6 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     const roomNamespace = socket.nsp.name.replace('/', '');
     const headers = socket.handshake.headers.cookie.split(';');
     const accessToken = headers.find((header) => header.includes('accessToken')).split('=')[1];
-    console.log(accessToken);
     if (!accessToken) {
       this.logger.error(`Not Found Cookie accessToken : ${accessToken}`);
       socket.disconnect();
@@ -86,7 +85,6 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
       const user = await this.userService.findEmail(payload.email);
       this.logger.log(`Connect user : ${JSON.stringify(user)}`);
       socket.user = user;
-      console.log(roomNamespace);
       socket.join(roomNamespace);
       // return true ?? 의미 파악 필요
       return true;

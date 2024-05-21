@@ -1,8 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { In } from 'typeorm';
-
 import { EmailService, EmailServiceToken } from '@app/commons/email/email.service';
-import { EmailTemplate } from '@app/commons/email/enums/teamplate.enums';
 import { UserEntity } from '../user/entities/user.entity';
 import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
 import { FindByNovelRoomIdResponseDto } from './dto/response/find-novel-room-id.dto';
@@ -13,6 +11,13 @@ import { AlreadyExistWriterExcetpion, BadChangeWriterIdSeqExcetpion, NotAccessWr
 import { ChatsGateway } from '@app/chats/chats.gateway';
 import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 
+/**
+ * 소설 공방 작가 서비스
+ *
+ * @export
+ * @class NovelWriterService
+ * @typedef {NovelWriterService}
+ */
 @Injectable()
 export class NovelWriterService {
   private logger = new Logger(NovelWriterService.name);
@@ -24,6 +29,14 @@ export class NovelWriterService {
     private readonly novelWriterRepo: NovelWriterRepository,
     private readonly chatsGateway: ChatsGateway,
   ) {}
+
+  /**
+   * 소설 공방 작가 등록
+   *
+   * @async
+   * @param {Partial<NovelWriterEntity>} entity 작가 정보
+   * @returns {Promise<void>}
+   */
   async create(entity: Partial<NovelWriterEntity>): Promise<void> {
     /**
      *  TODO: 참여 작가로 참여하는건 2개를 초과해서는 안됨
@@ -41,11 +54,27 @@ export class NovelWriterService {
     await this.novelWriterRepo.saveRow(entity);
     return;
   }
+
+  /**
+   * 소설 공방 작가 정보 수정
+   *
+   * @async
+   * @param {number} id
+   * @param {Partial<NovelWriterEntity>} entity
+   * @returns {Promise<void>}
+   */
   async update(id: number, entity: Partial<NovelWriterEntity>): Promise<void> {
     await this.novelWriterRepo.updateRow(id, entity);
     return;
   }
 
+  /**
+   * 소설 공방 작가 정보 삭제
+   *
+   * @async
+   * @param {number} id
+   * @returns {Promise<void>}
+   */
   async delete(id: number): Promise<void> {
     const chapter = await this.novelWriterRepo.findByoptions({
       where: { id },
@@ -56,17 +85,41 @@ export class NovelWriterService {
     return;
   }
 
+  /**
+   * 소설 공방 작가 정보 조회 (소설 공방 ID)
+   *
+   * @async
+   * @param {number} novelRoomId 소설 공방 ID
+   * @param {UserEntity} user 유저 정보 엔티티
+   * @returns {unknown}
+   */
   async findByNoveRoomId(novelRoomId: number, user: UserEntity) {
     const writers = await this.novelWriterRepo.findByNovelRoomId(novelRoomId);
     this.logger.log(`Join Writer List ${JSON.stringify(writers)}`);
     return writers.map((writer, index) => new FindByNovelRoomIdResponseDto(writer, index));
   }
+
+  /**
+   * 소설 공방 작가 상태 변경
+   *
+   * @async
+   * @param {string} email 유저 이메일
+   * @returns {Promise<boolean>} 작가 상태 변경 여부
+   */
   async checkRoomStatusAttend(email: string): Promise<boolean> {
     const writers = await this.novelWriterRepo.findByUserEmail(email);
     return writers.length === 0 ? false : true;
   }
 
-  async changeWriterSeq(dto: ChangeWriterSeqRequestDto, user: UserEntity) {
+  /**
+   * 소설 공방 작가 순서 변경
+   *
+   * @async
+   * @param {ChangeWriterSeqRequestDto} dto 작가 순서 변경 DTO
+   * @param {UserEntity} user
+   * @returns {Promise<void>}
+   */
+  async changeWriterSeq(dto: ChangeWriterSeqRequestDto, user: UserEntity): Promise<void> {
     const writers = await this.novelWriterRepo.findByoptions({
       where: {
         id: In(dto.writerIdSeq),
@@ -85,6 +138,7 @@ export class NovelWriterService {
     });
 
     await this.novelWriterRepo.saveRows(updateSeq);
+    this.chatsGateway.sendNovelRoomInMessage(dto.novelRoomId, SOCKET_EVENT.CHANGE_WRITER_SEQUENCE, JSON.stringify({ novelRoomId: dto.novelRoomId }));
   }
 
   /**
@@ -126,15 +180,5 @@ export class NovelWriterService {
   private filterCurrentWriter(writers: NovelWriterEntity[], user: UserEntity): NovelWriterEntity {
     const writer = writers.filter((writer) => writer.user.id === user.id);
     return writer[0];
-  }
-
-  private async changeSendEmail(writer: NovelWriterEntity) {
-    if (writer.status === WriterStatusEnum.ATTENDING || writer.status === WriterStatusEnum.REJECT) {
-      const template = writer.status == WriterStatusEnum.ATTENDING ? EmailTemplate.WRITER_ATTENDING : EmailTemplate.WRITER_REJECT;
-      await this.emailService.sendEmail(writer.user.email, template.title, ' ', template, {
-        username: writer.user.nickname,
-        room: writer.novelRoom.title,
-      });
-    }
   }
 }

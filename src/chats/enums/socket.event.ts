@@ -1,7 +1,7 @@
 const SOCKET_EVENT = {
   ENTER_TEXT: 'enter/text',
   UPDATE_TEXT: 'update/text',
-  UPDATE_WRITER_SEQUENCE: 'update/writer-sequence',
+  CHANGE_WRITER_SEQUENCE: 'change/writer-sequence',
   EXIT_WRITER: 'exit/writer',
 } as const;
 

@@ -8,12 +8,19 @@ import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-wr
 import { FindByNovelWriterDetails } from './dto/response/find-writers-details.dto';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
-import { NovelWriterRepository, NovelWriterRepositoryToken } from './repository/novel-writer.repository';
+import { NovelWriterRepo, NovelWriterRepository, NovelWriterRepositoryToken } from './repository/novel-writer.repository';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { FindNovelWriteManagementDto } from './dto/request/find-novel-writer.dto';
 import { NovelRoomRepo, NovelRoomRepository } from '@app/novel-room/repository/novel-room.repository';
 import { NotAccessWriterManagementExcetpion } from './exceptions/novel-writer.exception';
 
+/**
+ * 작가 관리 서비스
+ *
+ * @export
+ * @class WriterManagementService
+ * @typedef {WriterManagementService}
+ */
 @Injectable()
 export class WriterManagementService {
   private logger = new Logger(WriterManagementService.name);
@@ -21,18 +28,36 @@ export class WriterManagementService {
   constructor(
     @Inject(EmailServiceToken)
     private emailService: EmailService,
-    @Inject(NovelWriterRepositoryToken)
+    @NovelWriterRepo()
     private novelWriterRepo: NovelWriterRepository,
     @NovelRoomRepo()
     private readonly novelRoomrepo: NovelRoomRepository,
   ) {}
 
+  /**
+   * 작가 정보 상세 조회 (페이징)
+   *
+   * @async
+   * @param {UserEntity} user 유저 정보
+   * @param {FindNovelWriteManagementDto} dto 작가 정보 조회 dto
+   * @returns {Promise<PagingationResponse<FindByNovelWriterDetails>>} 작가 정보 상세 조회 (페이징)
+   */
   async findByNovelRoomIdDetails(user: UserEntity, dto: FindNovelWriteManagementDto): Promise<PagingationResponse<FindByNovelWriterDetails>> {
     const [writers, totalCount] = await this.novelWriterRepo.findByNovelRoomIdDetails(dto.novelRoomId, dto);
     this.writerPemissionCheck(writers, user);
     const items = writers.map((writer) => new FindByNovelWriterDetails(writer));
     return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
+
+  /**
+   * 작가 순서 변경
+   *
+   * @async
+   * @param {number} id 작가 정보 id
+   * @param {UpdateNovelWriterStatusRequestDto} dto 작가 정보 변경 dto
+   * @param {UserEntity} user 유저 정보
+   * @returns {Promise<void>}
+   */
   async changeWriterStatus(id: number, dto: UpdateNovelWriterStatusRequestDto, user: UserEntity): Promise<void> {
     const requestWriter = await this.novelWriterRepo.findOneByOptions({
       where: {
@@ -64,9 +89,12 @@ export class WriterManagementService {
   }
 
   /**
-   * 작가 리스트에서 자신이 해당 소설공방에 대한 정보를 가져오기
+   * 작가 관리 접근 권한 체크 (호스트만 가능)
+   *
+   * @private
+   * @param {NovelWriterEntity[]} writers
+   * @param {UserEntity} user
    */
-
   private writerPemissionCheck(writers: NovelWriterEntity[], user: UserEntity) {
     const currentWriter = this.filterCurrentWriter(writers, user);
     this.logger.log(`Current Writer ${JSON.stringify(currentWriter)}`);
