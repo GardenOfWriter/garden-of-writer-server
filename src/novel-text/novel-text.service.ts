@@ -9,6 +9,7 @@ import { NotCurrentlyWriterException, NotFoundTextException } from './exception/
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 import { ChapterRepo, ChapterRepository } from '@app/chapter/repository/chapter.repository';
+import { isEmpty } from '../commons/util/data.helper';
 
 /**
  * 소설 텍스트 서비스
@@ -104,7 +105,7 @@ export class NovelTextService {
    */
   async findById(textId: number): Promise<NovelTextEntity> {
     const text = await this.novelTextRepo.findById(textId);
-    if (!text) {
+    if (isEmpty(text)) {
       throw new NotFoundTextException();
     }
     return text;
@@ -139,7 +140,7 @@ export class NovelTextService {
   private async updateRequestWriter(userId: number): Promise<NovelWriterEntity> {
     const requestWriter = await this.novelWriterRepo.findByUserId(userId);
     this.logger.debug(`현재 글쓰기 : ${JSON.stringify(requestWriter)}`);
-    if (!requestWriter || !requestWriter.isCurrentlyWriter()) {
+    if (!isEmpty(requestWriter) && !requestWriter.isCurrentlyWriter()) {
       throw new NotCurrentlyWriterException();
     }
     requestWriter.setCurrentyWriter(false);

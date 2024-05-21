@@ -28,7 +28,7 @@ import { NovelTagModule } from '@app/novel-tag/novel-tags.module';
   imports: [
     ChapterModule,
     forwardRef(() => NovelWriterModule),
-    // NovelAttendBoardModule,
+    NovelAttendBoardModule,
     NovelTagModule,
     TypeOrmModule.forFeature([
       NovelRoomEntity,
@@ -51,7 +51,7 @@ import { NovelTagModule } from '@app/novel-tag/novel-tags.module';
     NovelRoomRepositoryProvider,
     // ActionsFactory,
   ],
-  // controllers: [NovelRoomController],
+  controllers: [NovelRoomController],
   exports: ['novelRoomTypeEnum', NovelRoomService, NovelRoomRepositoryProvider],
 })
 export class NovelRoomModule {}

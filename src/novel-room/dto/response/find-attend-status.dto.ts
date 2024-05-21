@@ -7,9 +7,10 @@ import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enu
 import { ApiProperty } from '@nestjs/swagger';
 import { RoomCategoryDescription, findCategoryName } from '../../entities/enum/novel-room-category.enum';
 import { RoomTypeDescription } from '../../entities/enum/novel-room-type.enum';
-import { WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
+import { WriterCategoryDescription, WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
 import { NovelRoomStatuDescription } from '../../entities/enum/novel-room-status.enum';
 import { convertDayFormat } from '@app/commons/util/date.util';
+import { WriterStatusDescription } from '@app/novel-writer/entities/enums/writer-status.enum';
 
 export class FindAttendStatusNovelRoomDto {
   private _category: number;
@@ -67,12 +68,18 @@ export class FindAttendStatusNovelRoomDto {
   }
 
   @ApiProperty({
-    example: WriterCategoryEnum.HOST,
-    description: `작가구분 = 대표작가 : ${WriterCategoryEnum.HOST},
-                           참여작가 : ${WriterCategoryEnum.ATTENDEE},`,
+    ...WriterStatusDescription,
   })
   @Expose({ name: 'writerStatus' })
   get writerStatus(): string {
+    return this._requestUser.status;
+  }
+
+  @ApiProperty({
+    ...WriterCategoryDescription,
+  })
+  @Expose({ name: 'writerCategory' })
+  get writerCategory(): string {
     return this._requestUser.category;
   }
 
@@ -119,6 +126,7 @@ export class FindAttendStatusNovelRoomDto {
   get status(): NovelRoomStatusType {
     return this._status;
   }
+
   @ApiProperty({
     example: convertDayFormat(new Date()),
     description: '참여 승인/반려일',
