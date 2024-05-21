@@ -11,6 +11,8 @@ export const WriterCategoryEnum = {
 export type WriterCategoryType = (typeof WriterCategoryEnum)[keyof typeof WriterCategoryEnum];
 
 export const WriterCategoryDescription = {
+  enum: WriterCategoryEnum,
+  example: WriterCategoryEnum.HOST,
   description: `${WriterCategoryEnum.HOST} : 대표 작가, 
                 ${WriterCategoryEnum.ATTENDEE} : 참여 작가`,
 };
