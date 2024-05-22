@@ -53,8 +53,8 @@ export class NovelTextController {
    */
   @UpdateNovelText()
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id, @CurrentUser() user: UserEntity, @Body() dto: UpdateTextNovelRequestDto) {
-    return this.novelTextService.update(dto.toEntity(user));
+  update(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserEntity, @Body() dto: UpdateTextNovelRequestDto) {
+    return this.novelTextService.update(dto.toEntity(id, user));
   }
 
   /**
