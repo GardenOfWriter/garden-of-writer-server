@@ -43,9 +43,6 @@ export class NovelTextService {
    */
   async create(entity: Partial<NovelTextEntity>): Promise<void> {
     const chapter = await this.chapterRepo.findById(entity.chapterId);
-    console.log(chapter.novelRoomId);
-    const writerCount = await this.novelWriterRepo.countByNovelRoomId(+chapter.novelRoomId);
-    await this.nextWriterUpdate(entity.createdBy.id, writerCount, chapter.novelRoomId);
     const textId = await this.novelTextRepo.addRow(entity);
     this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId }));
     return;
@@ -63,6 +60,17 @@ export class NovelTextService {
   async update(entity: Partial<NovelTextEntity>): Promise<void> {
     await this.novelTextRepo.updateRow(entity.id, entity);
     this.chatsGateway.sendNovelRoomInMessage(entity.createdBy.id, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: entity.id }));
+    return;
+  }
+
+  async complatedText(id: number, user: UserEntity): Promise<void> {
+    const text = await this.novelTextRepo.findById(id);
+    text.setComplated();
+    await this.novelTextRepo.addRow(text);
+    const chapter = await this.chapterRepo.findById(text.chapterId);
+    const writerCount = await this.novelWriterRepo.countByNovelRoomId(+chapter.novelRoomId);
+    await this.nextWriterUpdate(user.id, writerCount, chapter.novelRoomId);
+    this.chatsGateway.sendNovelRoomInMessage(text.createdBy.id, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: text.id }));
     return;
   }
 

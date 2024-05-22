@@ -17,6 +17,10 @@ export class NovelTextEntity extends PrimaryAuditiedPK {
   @Column('bigint')
   chapterId: number;
 
+  setComplated() {
+    this.status = NovelTextStatusEnum.COMPLETED;
+  }
+
   static of(chapterId: number, status: NovelTextStatusType, content: string, user: UserEntity) {
     const novelText = new NovelTextEntity();
     novelText.chapterId = chapterId;
