@@ -6,7 +6,7 @@ import { NovelTextDto } from '../novel-text.dto';
 export class UpdateTextNovelRequestDto extends PickType(NovelTextDto, ['status', 'content', 'chapterId']) {
   toEntity(id: number, user: UserEntity): Partial<NovelTextEntity> {
     const entity = NovelTextEntity.of(this.chapterId, this.status, this.content, user);
-    entity.id = this.id;
+    entity.id = id;
     return entity;
   }
 }

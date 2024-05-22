@@ -15,7 +15,7 @@ export function CreateNovelText(): MethodDecorator {
 export function FindNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '소설 글쓰기 조회 하기',
+      summary: '소설 글쓰기 조회 하기 ',
     }),
   );
 }
@@ -23,7 +23,7 @@ export function FindNovelText(): MethodDecorator {
 export function UpdateNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '소설 글쓰기 수정 하기',
+      summary: '소설 글쓰기 수정 하기 ',
     }),
     ApiOkResponse({ type: UpdateTextNovelRequestDto }),
   );
@@ -31,7 +31,7 @@ export function UpdateNovelText(): MethodDecorator {
 export function DeleteNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '소설 글쓰기 삭제 하기',
+      summary: '소설 글쓰기 삭제 하기 ',
     }),
   );
 }

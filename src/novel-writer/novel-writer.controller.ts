@@ -12,7 +12,7 @@ import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterService } from './novel-writer.service';
 import { ApplyNovelRoomWriter, ChangeWriterSeqRequest, ExitWriter, FindWriter } from './decorator/swagger.decorator';
 
-@ApiTags('작가 리스트')
+@ApiTags('작가 리스트 [피그마 5번 작가 관련]')
 @Controller('writer')
 @ApiBearerAuth('Authorization')
 @SerializeOptions({

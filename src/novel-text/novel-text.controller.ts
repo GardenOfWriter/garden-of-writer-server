@@ -10,7 +10,7 @@ import { NovelTextService } from './novel-text.service';
 import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
 import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { QueryRunner as QR } from 'typeorm';
-@ApiTags('소설글쓰기')
+@ApiTags('소설글쓰기[피그마 5번 채팅 관련]')
 @Controller('novel-text')
 @ApiBearerAuth('Authorization')
 @SerializeOptions({

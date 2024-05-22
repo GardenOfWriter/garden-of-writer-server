@@ -11,7 +11,7 @@ import { ChangeTitleDto } from './dto/request/change-title.dto';
 import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
 import { FindByNovelRoomIdDto } from './dto/request/findby-novel-room-id.dto';
 
-@ApiTags('소설 회차')
+@ApiTags('소설 회차 [피그마 5번 회차 관련]')
 @Controller('chapter')
 @ApiBearerAuth('Authorization')
 @SerializeOptions({
