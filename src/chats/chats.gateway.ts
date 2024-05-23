@@ -19,10 +19,8 @@ import {
   WebSocketServer,
   WsException,
 } from '@nestjs/websockets';
-import { instrument } from '@socket.io/admin-ui';
 import { Server, Socket } from 'socket.io';
 import { SOCKET_EVENT_TYPE } from './enums/socket.event';
-import { onlineList } from './onlineList';
 
 //localhost:3000/room-1}
 
@@ -81,7 +79,6 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
 
     try {
       const payload = this.authService.verifyToken(accessToken);
-      //  유저 정보를 찾는다.
       const user = await this.userService.findEmail(payload.email);
       this.logger.log(`Connect user : ${JSON.stringify(user)}`);
       socket.user = user;

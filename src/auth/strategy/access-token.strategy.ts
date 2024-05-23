@@ -13,6 +13,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           let token = null;
+          console.log('cookies ', request.cookies);
           if (request && request.cookies) {
             token = request.cookies['accessToken'];
           }

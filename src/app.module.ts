@@ -1,5 +1,5 @@
 import { NovelRoomModule } from '@app/novel-room/novel-room.module';
-import { Module, ValidationError, ValidationPipe, forwardRef } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, ValidationError, ValidationPipe, forwardRef } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
@@ -25,6 +25,7 @@ import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.
 import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { UserModule } from './user/user.module';
 import { ErrorsInterceptor } from './commons/interceptor/error.interceptor';
+import { AppHeaderProvider } from './commons/provider/app-header.provider';
 
 @Module({
   imports: [
@@ -97,4 +98,8 @@ import { ErrorsInterceptor } from './commons/interceptor/error.interceptor';
   ],
   exports: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AppHeaderProvider).forRoutes('*');
+  }
+}

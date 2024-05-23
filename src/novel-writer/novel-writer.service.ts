@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { In } from 'typeorm';
+
 import { EmailService, EmailServiceToken } from '@app/commons/email/email.service';
 import { UserEntity } from '../user/entities/user.entity';
 import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
@@ -10,6 +11,7 @@ import { NovelWriterRepo, NovelWriterRepository } from './repository/novel-write
 import { AlreadyExistWriterExcetpion, BadChangeWriterIdSeqExcetpion, NotAccessWriterManagementExcetpion } from './exceptions/novel-writer.exception';
 import { ChatsGateway } from '@app/chats/chats.gateway';
 import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
+import { isEmpty } from '../commons/util/data.helper';
 
 /**
  * 소설 공방 작가 서비스
@@ -48,7 +50,7 @@ export class NovelWriterService {
       },
     });
     this.logger.log(`Writer check ${JSON.stringify(writers)}`);
-    if (writers.length > 0) {
+    if (!isEmpty(writers)) {
       throw new AlreadyExistWriterExcetpion();
     }
     await this.novelWriterRepo.saveRow(entity);

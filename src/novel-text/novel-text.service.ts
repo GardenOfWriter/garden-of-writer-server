@@ -63,13 +63,23 @@ export class NovelTextService {
     return;
   }
 
+  /**
+   * 소설 텍스트 작성 완료
+   *
+   * @async
+   * @param {number} id 소설 텍스트 Id
+   * @param {UserEntity} user 유저 정보 엔티티
+   * @returns {Promise<void>}
+   */
   async complatedText(id: number, user: UserEntity): Promise<void> {
     const text = await this.novelTextRepo.findById(id);
     text.setComplated();
     await this.novelTextRepo.addRow(text);
     const chapter = await this.chapterRepo.findById(text.chapterId);
     const writerCount = await this.novelWriterRepo.countByNovelRoomId(+chapter.novelRoomId);
-    await this.nextWriterUpdate(user.id, writerCount, chapter.novelRoomId);
+    const nextWriter = await this.findNextWrite(user.id, writerCount, chapter.novelRoomId);
+    nextWriter.setCurrentyWriter(true);
+    await this.novelWriterRepo.updateRow(nextWriter.id, nextWriter);
     this.chatsGateway.sendNovelRoomInMessage(text.createdBy.id, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: text.id }));
     return;
   }
@@ -111,6 +121,13 @@ export class NovelTextService {
    * @param {number} textId
    * @returns {Promise<NovelTextEntity>} 조회된 소설 텍스트 정보 엔티티
    */
+  /**
+   * Description placeholder
+   *
+   * @async
+   * @param {number} textId
+   * @returns {Promise<NovelTextEntity>}
+   */
   async findById(textId: number): Promise<NovelTextEntity> {
     const text = await this.novelTextRepo.findById(textId);
     if (isEmpty(text)) {
@@ -129,12 +146,10 @@ export class NovelTextService {
    * @param {number} novelRoomId 공방 ID
    * @returns {Promise<void>}
    */
-  private async nextWriterUpdate(userId: number, writerCount: number, novelRoomId: number): Promise<void> {
+  private async findNextWrite(userId: number, writerCount: number, novelRoomId: number): Promise<NovelWriterEntity> {
     const requestWriter = await this.updateRequestWriter(userId);
     const nextSeq = requestWriter.getNextSeq(writerCount);
-    const nextWriter = await this.novelWriterRepo.findByNovelRoomIdAndWriterSeq(novelRoomId, nextSeq);
-    await this.updateNextWriter(nextWriter.user.id);
-    return;
+    return await this.novelWriterRepo.findByNovelRoomIdAndWriterSeq(novelRoomId, nextSeq);
   }
 
   /**
@@ -154,21 +169,5 @@ export class NovelTextService {
     requestWriter.setCurrentyWriter(false);
     await this.novelWriterRepo.updateRow(requestWriter.id, requestWriter);
     return requestWriter;
-  }
-
-  /**
-   * 다음 글쓰기 업데이트
-   *
-   * @private
-   * @async
-   * @param {number} userId 유저 ID
-   * @returns {Promise<NovelWriterEntity>} 다음 글쓰기 엔티티
-   */
-  private async updateNextWriter(userId: number): Promise<NovelWriterEntity> {
-    const writer = await this.novelWriterRepo.findByUserId(userId);
-    writer.setCurrentyWriter(true);
-    this.logger.debug(`Next Writer : ${JSON.stringify(writer)}`);
-    await this.novelWriterRepo.updateRow(writer.id, writer);
-    return writer;
   }
 }
