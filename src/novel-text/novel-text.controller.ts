@@ -69,7 +69,7 @@ export class NovelTextController {
    */
   @UseInterceptors(TransactionInterceptor)
   @CompleteNovelText()
-  @Put(':id')
+  @Put('/complete/:id')
   complete(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserEntity, @QueryRunner() qr: QR) {
     return this.novelTextService.complatedText(id, user);
   }
