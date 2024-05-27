@@ -9,7 +9,8 @@ import { NotCurrentlyWriterException, NotFoundTextException } from './exception/
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 import { ChapterRepo, ChapterRepository } from '@app/chapter/repository/chapter.repository';
-import { isEmpty } from '../commons/util/data.helper';
+import { getSize, isEmpty } from '../commons/util/data.helper';
+import { WriterSeqHelper } from '@app/novel-writer/helper/writer-seq.helper';
 
 /**
  * 소설 텍스트 서비스
@@ -30,6 +31,7 @@ export class NovelTextService {
     @ChapterRepo()
     private chapterRepo: ChapterRepository,
     private chatsGateway: ChatsGateway,
+    private writerSeqHelper: WriterSeqHelper,
   ) {}
 
   /**
@@ -74,11 +76,11 @@ export class NovelTextService {
   async complatedText(id: number, user: UserEntity): Promise<void> {
     const text = await this.novelTextRepo.findById(id);
     text.setComplated();
-    await this.novelTextRepo.addRow(text);
     const chapter = await this.chapterRepo.findById(text.chapterId);
-    const writerCount = await this.novelWriterRepo.countByNovelRoomId(+chapter.novelRoomId);
-    const nextWriter = await this.findNextWrite(user.id, writerCount, chapter.novelRoomId);
+    const writers = await this.novelWriterRepo.findByNovelRoomId(+chapter.novelRoomId);
+    const nextWriter = this.writerSeqHelper.getNextWriter(writers);
     nextWriter.setCurrentyWriter(true);
+    await this.novelTextRepo.addRow(text);
     await this.novelWriterRepo.updateRow(nextWriter.id, nextWriter);
     this.chatsGateway.sendNovelRoomInMessage(text.createdBy.id, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: text.id }));
     return;
@@ -118,15 +120,8 @@ export class NovelTextService {
    * 소설 텍스트 조회 (ID로 조회)
    *
    * @async
-   * @param {number} textId
+   * @param {number} textId 소설 텍스트 ID
    * @returns {Promise<NovelTextEntity>} 조회된 소설 텍스트 정보 엔티티
-   */
-  /**
-   * Description placeholder
-   *
-   * @async
-   * @param {number} textId
-   * @returns {Promise<NovelTextEntity>}
    */
   async findById(textId: number): Promise<NovelTextEntity> {
     const text = await this.novelTextRepo.findById(textId);

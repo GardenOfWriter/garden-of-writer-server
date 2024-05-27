@@ -83,8 +83,7 @@ export class WriterManagementService {
     writer.setSeq(roomWriterCnt + 1);
     await this.novelWriterRepo.saveRow(writer);
     // TODO : 이메일 발송
-    // await this.changeSendEmail(writer);
-
+    await this.changeSendEmail(writer);
     return;
   }
 

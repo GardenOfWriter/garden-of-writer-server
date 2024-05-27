@@ -13,6 +13,7 @@ import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { ChatsModule } from '@app/chats/chats.module';
 import { NovelTagService } from '@app/novel-tag/novel-tag.service';
 import { NovelRoomModule } from '@app/novel-room/novel-room.module';
+import { WriterSeqHelper } from './helper/writer-seq.helper';
 
 @Module({
   imports: [forwardRef(() => NovelRoomModule), ChatsModule, TypeOrmModule.forFeature([NovelWriterEntity, NovelRoomEntity])],
@@ -21,11 +22,12 @@ import { NovelRoomModule } from '@app/novel-room/novel-room.module';
     NovelWriterService,
     WriterManagementService,
     NovelWriterRepositoryProvider,
+    WriterSeqHelper,
     {
       provide: EmailServiceToken,
       useClass: EmailServiceImpl,
     },
   ],
-  exports: [NovelWriterRepositoryProvider, NovelWriterService],
+  exports: [NovelWriterRepositoryProvider, NovelWriterService, WriterSeqHelper],
 })
 export class NovelWriterModule {}

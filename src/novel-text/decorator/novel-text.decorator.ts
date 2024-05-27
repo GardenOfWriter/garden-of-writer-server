@@ -28,6 +28,16 @@ export function UpdateNovelText(): MethodDecorator {
     ApiOkResponse({ type: UpdateTextNovelRequestDto }),
   );
 }
+
+export function CompleteNovelText(): MethodDecorator {
+  return applyDecorators(
+    ApiOperation({
+      summary: '소설 글쓰기 완료 하기',
+    }),
+    ApiOkResponse({ type: UpdateTextNovelRequestDto }),
+  );
+}
+
 export function DeleteNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({

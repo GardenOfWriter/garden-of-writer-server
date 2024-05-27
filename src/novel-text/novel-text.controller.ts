@@ -3,7 +3,14 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, S
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
-import { CreateNovelText, DeleteNovelText, FindByIdNovelText, FindNovelText, UpdateNovelText } from './decorator/novel-text.decorator';
+import {
+  CompleteNovelText,
+  CreateNovelText,
+  DeleteNovelText,
+  FindByIdNovelText,
+  FindNovelText,
+  UpdateNovelText,
+} from './decorator/novel-text.decorator';
 import { CreateNovelTextRequestDto } from './dto/request/create-novel.dto';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
 import { NovelTextService } from './novel-text.service';
@@ -55,6 +62,16 @@ export class NovelTextController {
   @Put(':id')
   update(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserEntity, @Body() dto: UpdateTextNovelRequestDto) {
     return this.novelTextService.update(dto.toEntity(id, user));
+  }
+
+  /**
+   * 소설 글쓰기 완료
+   */
+  @UseInterceptors(TransactionInterceptor)
+  @CompleteNovelText()
+  @Put(':id')
+  complete(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserEntity, @QueryRunner() qr: QR) {
+    return this.novelTextService.complatedText(id, user);
   }
 
   /**

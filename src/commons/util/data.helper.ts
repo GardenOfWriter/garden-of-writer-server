@@ -17,7 +17,6 @@ export const isEmpty = (data: any): boolean => {
 //  * @param {*} data
 //  * @returns {*}
 //  */
-// export const getSize = (data: any) => {
-//   console.log('size:', size);
-//   return size;
-// };
+export const getSize = (data: any) => {
+  return _.size(data);
+};

@@ -13,6 +13,7 @@ import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { ChapterModule } from '@app/chapter/chapter.module';
 import { NovelWriterModule } from '@app/novel-writer/novel-writer.module';
+import { WriterSeqHelper } from '@app/novel-writer/helper/writer-seq.helper';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { NovelWriterModule } from '@app/novel-writer/novel-writer.module';
   controllers: [NovelTextController],
   providers: [
     NovelTextService,
+    WriterSeqHelper,
     {
       provide: NovelTextRepository,
       useClass: NovelTextRepositoryImpl,

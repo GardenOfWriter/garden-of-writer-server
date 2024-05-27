@@ -18,6 +18,7 @@ import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 import { isEmpty } from '../commons/util/data.helper';
 import { FindNovelRoomWritersDto } from './dto/response/find-novel-room-writers.dto';
 import { FindNovelRoomResponseDto } from './dto/response/find-novel-room-response.dto';
+import { WriterSeqHelper } from './helper/writer-seq.helper';
 
 /**
  * 소설 공방 작가 서비스
@@ -36,6 +37,7 @@ export class NovelWriterService {
     @NovelWriterRepo()
     private readonly novelWriterRepo: NovelWriterRepository,
     private readonly chatsGateway: ChatsGateway,
+    private readonly writerSeqHelper: WriterSeqHelper,
   ) {}
 
   /**
@@ -105,9 +107,7 @@ export class NovelWriterService {
     const writers = await this.novelWriterRepo.findByNovelRoomId(novelRoomId);
     this.logger.log(`Join Room : ${novelRoomId} Writer List ${JSON.stringify(writers)}`);
     const result = writers.map((writer, index) => new FindNovelRoomWritersDto(writer, index));
-    const currentWriter = writers.filter((writer) => writer.isCurrentlyWriter())[0];
-    const nextWriterSeq = currentWriter.getNextSeq(writers.length);
-    const nextWriter = writers.filter((writer) => writer.writingSeq === nextWriterSeq)[0];
+    const nextWriter = this.writerSeqHelper.getNextWriter(writers);
     return new FindNovelRoomResponseDto(result, nextWriter.user.nickname);
   }
 
