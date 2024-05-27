@@ -101,6 +101,9 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   isStatusAttending(): boolean {
     return this.status === WriterStatusEnum.ATTENDING;
   }
+  isSelf(user: UserEntity): boolean {
+    return this.user.id === user.id;
+  }
 
   static of(
     novelRoomId: number,

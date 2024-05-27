@@ -19,3 +19,8 @@ export class AlreadyExistWriterExcetpion extends BaseException {
     super(NovelWriterExceptionMsg.ALREADY_EXIST_WRITER, HttpStatus.CONFLICT);
   }
 }
+export class NotExitSelfInNovelRoomExcetpion extends BaseException {
+  constructor() {
+    super(NovelWriterExceptionMsg.NOT_EXIT_ROOM_SELF_REQUEST, HttpStatus.BAD_REQUEST);
+  }
+}

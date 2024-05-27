@@ -4,14 +4,20 @@ import { In } from 'typeorm';
 import { EmailService, EmailServiceToken } from '@app/commons/email/email.service';
 import { UserEntity } from '../user/entities/user.entity';
 import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
-import { FindByNovelRoomIdResponseDto } from './dto/response/find-novel-room-id.dto';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterEntity } from './entities/novel-writer.entity';
 import { NovelWriterRepo, NovelWriterRepository } from './repository/novel-writer.repository';
-import { AlreadyExistWriterExcetpion, BadChangeWriterIdSeqExcetpion, NotAccessWriterManagementExcetpion } from './exceptions/novel-writer.exception';
+import {
+  AlreadyExistWriterExcetpion,
+  BadChangeWriterIdSeqExcetpion,
+  NotAccessWriterManagementExcetpion,
+  NotExitSelfInNovelRoomExcetpion,
+} from './exceptions/novel-writer.exception';
 import { ChatsGateway } from '@app/chats/chats.gateway';
 import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 import { isEmpty } from '../commons/util/data.helper';
+import { FindNovelRoomWritersDto } from './dto/response/find-novel-room-writers.dto';
+import { FindNovelRoomResponseDto } from './dto/response/find-novel-room-response.dto';
 
 /**
  * 소설 공방 작가 서비스
@@ -97,8 +103,12 @@ export class NovelWriterService {
    */
   async findByNoveRoomId(novelRoomId: number, user: UserEntity) {
     const writers = await this.novelWriterRepo.findByNovelRoomId(novelRoomId);
-    this.logger.log(`Join Writer List ${JSON.stringify(writers)}`);
-    return writers.map((writer, index) => new FindByNovelRoomIdResponseDto(writer, index));
+    this.logger.log(`Join Room : ${novelRoomId} Writer List ${JSON.stringify(writers)}`);
+    const result = writers.map((writer, index) => new FindNovelRoomWritersDto(writer, index));
+    const currentWriter = writers.filter((writer) => writer.isCurrentlyWriter())[0];
+    const nextWriterSeq = currentWriter.getNextSeq(writers.length);
+    const nextWriter = writers.filter((writer) => writer.writingSeq === nextWriterSeq)[0];
+    return new FindNovelRoomResponseDto(result, nextWriter.user.nickname);
   }
 
   /**
@@ -150,8 +160,11 @@ export class NovelWriterService {
    * @param {number} writerId 공방 참여 작가
    * @returns {Promise<void>}
    */
-  async exitWriter(writerId: number): Promise<void> {
+  async exitWriter(writerId: number, user: UserEntity): Promise<void> {
     const writer = await this.novelWriterRepo.findById(writerId);
+    if (writer.isSelf(user)) {
+      throw new NotExitSelfInNovelRoomExcetpion();
+    }
     writer.changeStatue(WriterStatusEnum.EXIT);
     await this.novelWriterRepo.saveRow(writer);
     await this.chatsGateway.sendNovelRoomInMessage(writer.novelRoom.id, SOCKET_EVENT.EXIT_WRITER, JSON.stringify({ writerId }));

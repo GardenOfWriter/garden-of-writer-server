@@ -1,18 +1,14 @@
 import { ApiCommonResponse } from '@app/commons/decorator/swagger/common-response.decorator';
 import { applyDecorators } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, getSchemaPath } from '@nestjs/swagger';
-import { FindByNovelRoomIdResponseDto } from '../dto/response/find-novel-room-id.dto';
 import { FindByNovelWriterDetails } from '../dto/response/find-writers-details.dto';
+import { FindNovelRoomResponseDto } from '../dto/response/find-novel-room-response.dto';
 
 export function ChangeWriterSeq(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '소설 공방에 참여한 작가 리스트',
-      description: '소설 공방에 참여중인 상태의 작가 리스트 입니다.',
-    }),
-    ApiExtraModels(FindByNovelRoomIdResponseDto),
-    ApiCommonResponse({
-      $ref: getSchemaPath(FindByNovelRoomIdResponseDto),
+      summary: '작가 순서 변경',
+      description: '작가 순서 변경 API 입니다.',
     }),
   );
 }
@@ -23,9 +19,9 @@ export function FindWriter(): MethodDecorator {
       summary: '소설 공방에 참여한 작가 리스트',
       description: '소설 공방에 참여중인 상태의 작가 리스트 입니다.',
     }),
-    ApiExtraModels(FindByNovelRoomIdResponseDto),
+    ApiExtraModels(FindNovelRoomResponseDto),
     ApiCommonResponse({
-      $ref: getSchemaPath(FindByNovelRoomIdResponseDto),
+      $ref: getSchemaPath(FindNovelRoomResponseDto),
     }),
   );
 }

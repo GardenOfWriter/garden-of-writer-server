@@ -53,7 +53,7 @@ export class NovelWriterController {
    */
   @ExitWriter()
   @Patch('/exit/:id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
-    return await this.novelWriterService.exitWriter(id);
+  async delete(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserEntity) {
+    return await this.novelWriterService.exitWriter(id, user);
   }
 }

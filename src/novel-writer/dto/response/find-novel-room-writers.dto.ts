@@ -7,8 +7,8 @@ import { WriterStatusDescription } from '../../entities/enums/writer-status.enum
 import { NovelWriterEntity } from '../../entities/novel-writer.entity';
 import { WriterCategoryDescription } from '../../entities/enums/writer-category.enum';
 
-export class FindByNovelRoomIdResponseDto {
-  private _no: number;
+export class FindNovelRoomWritersDto {
+  // private _no: number;
   private _id: number;
   private _status: WriterStatusType;
   private _user: UserEntity;
@@ -22,16 +22,16 @@ export class FindByNovelRoomIdResponseDto {
     this._category = entity.category;
     this._writingSeq = entity.writingSeq;
     this._currentlyWriting = entity.currentlyWriting;
-    this._no = no;
+    // this._no = no;
   }
-  @ApiProperty({
-    example: 1,
-    description: '작가 리스트 No',
-  })
-  @Expose()
-  get no(): number {
-    return this._no;
-  }
+  // @ApiProperty({
+  //   example: 1,
+  //   description: '작가 리스트 No',
+  // })
+  // @Expose()
+  // get no(): number {
+  //   return this._no;
+  // }
 
   @ApiProperty({
     example: 1,
