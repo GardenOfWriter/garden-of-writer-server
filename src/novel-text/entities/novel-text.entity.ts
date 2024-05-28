@@ -21,6 +21,10 @@ export class NovelTextEntity extends PrimaryAuditiedPK {
     this.status = NovelTextStatusEnum.COMPLETED;
   }
 
+  updateContent(content: string) {
+    this.content = content;
+  }
+
   static of(chapterId: number, status: NovelTextStatusType, content: string, user: UserEntity) {
     const novelText = new NovelTextEntity();
     novelText.chapterId = chapterId;

@@ -11,6 +11,7 @@ import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 import { ChapterRepo, ChapterRepository } from '@app/chapter/repository/chapter.repository';
 import { getSize, isEmpty } from '../commons/util/data.helper';
 import { WriterSeqHelper } from '@app/novel-writer/helper/writer-seq.helper';
+import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
 
 /**
  * 소설 텍스트 서비스
@@ -45,6 +46,7 @@ export class NovelTextService {
    */
   async create(entity: Partial<NovelTextEntity>): Promise<void> {
     const chapter = await this.chapterRepo.findById(entity.chapterId);
+    // TDOD: 해당 회차자 존재하는지 체크
     const textId = await this.novelTextRepo.addRow(entity);
     this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId }));
     return;
@@ -59,7 +61,9 @@ export class NovelTextService {
    * @param {Partial<NovelTextEntity>} entity 소설 텍스트 정보 엔티티
    * @returns {Promise<void>}
    */
-  async update(entity: Partial<NovelTextEntity>): Promise<void> {
+  async update(id: number, dto: UpdateTextNovelRequestDto): Promise<void> {
+    const entity = await this.novelTextRepo.findById(id);
+    entity.updateContent(dto.content);
     await this.novelTextRepo.updateRow(entity.id, entity);
     this.chatsGateway.sendNovelRoomInMessage(entity.createdBy.id, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: entity.id }));
     return;

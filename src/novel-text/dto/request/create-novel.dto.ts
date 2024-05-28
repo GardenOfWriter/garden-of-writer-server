@@ -3,10 +3,11 @@ import { ApiProperty, PickType } from '@nestjs/swagger';
 import { NovelTextEntity } from '../../entities/novel-text.entity';
 import { NovelTextDto } from '../novel-text.dto';
 import { IsNumber } from 'class-validator';
+import { NovelTextStatusEnum } from '@app/novel-text/entities/enum/novel-text-status.enum';
 
-export class CreateNovelTextRequestDto extends PickType(NovelTextDto, ['status', 'content', 'chapterId']) {
+export class CreateNovelTextRequestDto extends PickType(NovelTextDto, ['content', 'chapterId']) {
   toEntity(user: UserEntity): Partial<NovelTextEntity> {
-    const entity = NovelTextEntity.of(this.chapterId, this.status, this.content, user);
+    const entity = NovelTextEntity.of(this.chapterId, NovelTextStatusEnum.TEMP_SAVE, this.content, user);
     return entity;
   }
 }

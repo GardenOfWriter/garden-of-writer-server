@@ -9,7 +9,7 @@ export class FindByChapterIdResponseDto {
   private _content: string;
   constructor(entity: NovelTextEntity) {
     this._id = entity.id;
-    this._chapterId = entity.chapterId;
+    this._chapterId = +entity.chapterId;
     this._status = entity.status;
     this._content = entity.content;
   }

@@ -6,7 +6,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
 import { FindNovelWriteManagementDto } from './dto/request/find-novel-writer.dto';
 import { WriterManagementService } from './writer-management.service';
-import { FindWriterMangement } from './decorator/swagger.decorator';
+import { ChangeWriterStatus, FindWriterMangement } from './decorator/swagger.decorator';
 
 @ApiTags('참여 작가 관리 (대표작가)')
 @Controller('writer/management')
@@ -18,9 +18,7 @@ import { FindWriterMangement } from './decorator/swagger.decorator';
 export class WriterManagementController {
   constructor(private writerMgrService: WriterManagementService) {}
 
-  @ApiOperation({
-    summary: '참여 작가 상태 번경',
-  })
+  @ChangeWriterStatus()
   @Put('/status/:id')
   async changeWriterStatus(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateNovelWriterStatusRequestDto, @CurrentUser() user: UserEntity) {
     await this.writerMgrService.changeWriterStatus(id, dto, user);

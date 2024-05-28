@@ -1,6 +1,6 @@
 import { ApiCommonResponse } from '@app/commons/decorator/swagger/common-response.decorator';
 import { applyDecorators } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, getSchemaPath } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation, ApiParam, getSchemaPath } from '@nestjs/swagger';
 import { FindByNovelWriterDetails } from '../dto/response/find-writers-details.dto';
 import { FindNovelRoomResponseDto } from '../dto/response/find-novel-room-response.dto';
 
@@ -62,6 +62,29 @@ export function ExitWriter(): MethodDecorator {
     ApiOperation({
       summary: '소설 참여 작가 퇴장 API',
       description: '소설 참여 작가 퇴장 API 입니다.',
+    }),
+    ApiParam({
+      name: 'id',
+      required: true,
+      type: Number,
+      example: 1,
+      description: '작가 ID',
+    }),
+  );
+}
+
+export function ChangeWriterStatus(): MethodDecorator {
+  return applyDecorators(
+    ApiOperation({
+      summary: '참여 작가 상태 번경',
+      description: '참여 작가 상태 번경 API 입니다.',
+    }),
+    ApiParam({
+      name: 'id',
+      required: true,
+      type: Number,
+      example: 1,
+      description: '작가 ID',
     }),
   );
 }
