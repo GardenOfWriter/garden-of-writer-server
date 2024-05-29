@@ -12,6 +12,8 @@ import { ChapterRepo, ChapterRepository } from '@app/chapter/repository/chapter.
 import { getSize, isEmpty } from '../commons/util/data.helper';
 import { WriterSeqHelper } from '@app/novel-writer/helper/writer-seq.helper';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
+import { PagingationResponse } from '@app/commons/pagination/pagination.response';
+import { FindByChapterIdNovelTextDto } from './dto/request/findby-chapterid.dto';
 
 /**
  * 소설 텍스트 서비스
@@ -115,9 +117,10 @@ export class NovelTextService {
    * @param {number} chapterId 회차 ID
    * @returns {Promise<FindByChapterIdResponseDto[]>} 조회된 소설 텍스트 정보 DTO
    */
-  async findByChapterIdNovelText(chapterId: number): Promise<FindByChapterIdResponseDto[]> {
-    const texts = await this.novelTextRepo.findByChapterId(chapterId);
-    return texts.map((text) => new FindByChapterIdResponseDto(text));
+  async findByChapterIdNovelText(dto: FindByChapterIdNovelTextDto): Promise<PagingationResponse<FindByChapterIdResponseDto>> {
+    const [texts, totalCount] = await this.novelTextRepo.findByChapterId(dto.chapterId, dto);
+    const item = texts.map((text) => new FindByChapterIdResponseDto(text));
+    return new PagingationResponse(totalCount, dto.chunkSize, item);
   }
 
   /**

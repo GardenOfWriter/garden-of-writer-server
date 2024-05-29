@@ -17,6 +17,7 @@ import { NovelTextService } from './novel-text.service';
 import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
 import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { QueryRunner as QR } from 'typeorm';
+import { FindByChapterIdNovelTextDto } from './dto/request/findby-chapterid.dto';
 @ApiTags('소설글쓰기[피그마 5번 채팅 관련]')
 @Controller('novel-text')
 @ApiBearerAuth('Authorization')
@@ -32,8 +33,8 @@ export class NovelTextController {
    */
   @FindNovelText()
   @Get('')
-  async findChpater(@Query('chapterId') chapterId: number) {
-    return await this.novelTextService.findByChapterIdNovelText(chapterId);
+  async findChpater(@Query() dto: FindByChapterIdNovelTextDto) {
+    return await this.novelTextService.findByChapterIdNovelText(dto);
   }
 
   /**

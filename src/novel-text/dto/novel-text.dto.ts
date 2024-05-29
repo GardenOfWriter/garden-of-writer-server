@@ -20,7 +20,7 @@ export class NovelTextDto {
 
   @ApiProperty({
     example: 1,
-    description: '회의 고유 ID',
+    description: '회차 고유 ID',
   })
   @IsNumber()
   chapterId: number;

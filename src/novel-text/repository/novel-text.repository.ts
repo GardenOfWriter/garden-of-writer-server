@@ -1,6 +1,7 @@
 import { FindOneOptions } from 'typeorm';
 import { NovelTextEntity } from '../entities/novel-text.entity';
 import { Inject } from '@nestjs/common';
+import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 
 export const NovelTextRepository = 'NovelTextRepository';
 
@@ -45,7 +46,7 @@ export interface NovelTextRepository {
    * @param {FindOneOptions<NovelTextEntity>} options 조회 옵션
    * @returns {Promise<NovelTextEntity[]>}  조회된 소설 텍스트 정보 엔티티
    */
-  findByChapterId(chapterId: number): Promise<NovelTextEntity[]>;
+  findByChapterId(chapterId: number, pagination: BasePaginationRequest): Promise<[NovelTextEntity[], number]>;
 
   /**
    * 소설 텍스트 상세정보 조회

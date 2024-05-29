@@ -26,8 +26,8 @@ export class AuthController {
       // domain: 'port-0-garden-of-writer-server-71t02clq3bpxzf.sel4.cloudtype.app',
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
-      // sameSite: 'none',
-      secure: false,
+      sameSite: 'none',
+      secure: true,
     });
     return { ...jwt, hasRoom };
   }
