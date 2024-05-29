@@ -27,6 +27,7 @@ export class AuthController {
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
       // sameSite: 'none',
+      secure: false,
     });
     return { ...jwt, hasRoom };
   }
