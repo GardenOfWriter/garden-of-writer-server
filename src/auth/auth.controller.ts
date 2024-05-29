@@ -23,9 +23,10 @@ export class AuthController {
     const hasRoom = await this.writerService.checkRoomStatusAttend(dto.email);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
     res.cookie('accessToken', jwt.accessToken, {
+      // domain: 'port-0-garden-of-writer-server-71t02clq3bpxzf.sel4.cloudtype.app',
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
-      secure: true,
+      // sameSite: 'none',
     });
     return { ...jwt, hasRoom };
   }
