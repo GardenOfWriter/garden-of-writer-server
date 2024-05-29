@@ -25,6 +25,7 @@ export class AuthController {
     res.cookie('accessToken', jwt.accessToken, {
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
+      secure: true,
     });
     return { ...jwt, hasRoom };
   }
