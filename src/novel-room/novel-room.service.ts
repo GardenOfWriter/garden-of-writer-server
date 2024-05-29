@@ -84,7 +84,7 @@ export class NovelRoomService {
    */
   async findById(novelRoomId: number, user: UserEntity): Promise<FindByRoomIdDetailDto> {
     const room = await this.novelRoomRepo.getByIdWithTag(novelRoomId);
-    const reqWriter = await this.novelWriterRepo.findByUserId(user.id);
+    // const reqWriter = await this.novelWriterRepo.findByUserId(user.id);
     // if (!reqWriter.isStatusAttending()) {
     //   throw new NovelRoomAccessDeniedException();
     // }

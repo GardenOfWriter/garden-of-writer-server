@@ -37,7 +37,7 @@ export function UpdateNovelText(): MethodDecorator {
       required: true,
       type: Number,
       example: 1,
-      description: '소설 글쓰기 ID',
+      description: '소설 글쓰기 ID (textId) websocket response로 받은 id로 사용',
     }),
     ApiOkResponse({ type: UpdateTextNovelRequestDto }),
   );
@@ -53,7 +53,7 @@ export function CompleteNovelText(): MethodDecorator {
       required: true,
       type: Number,
       example: 1,
-      description: '소설 글쓰기 ID',
+      description: '소설 글쓰기 ID (textId) websocket response로 받은 id로 사용',
     }),
     ApiOkResponse({ type: UpdateTextNovelRequestDto }),
   );
@@ -62,28 +62,28 @@ export function CompleteNovelText(): MethodDecorator {
 export function DeleteNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '소설 글쓰기 삭제 하기 ',
+      summary: '소설 글쓰기 삭제 하기 (textId) websocket response로 받은 id로 사용 ',
     }),
     ApiParam({
       name: 'id',
       required: true,
       type: Number,
       example: 1,
-      description: '소설 글쓰기 ID',
+      description: '소설 글쓰기 ID (textId) websocket response로 받은 id로 사용',
     }),
   );
 }
 export function FindByIdNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '특정 소설 글쓰기 Id로 조회하기',
+      summary: '특정 소설 글쓰기 Id로 조회하기 (textId) websocket response로 받은 id로 사용',
     }),
     ApiParam({
       name: 'id',
       required: true,
       type: Number,
       example: 1,
-      description: '소설 글쓰기 ID',
+      description: '소설 글쓰기 ID (textId) websocket response로 받은 id로 사용',
     }),
     ApiOkResponse({ type: UpdateTextNovelRequestDto }),
   );
