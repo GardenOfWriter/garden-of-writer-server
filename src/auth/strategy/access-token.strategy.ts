@@ -14,11 +14,10 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request) => {
           let token = null;
-          request;
           console.log('request cookies accessToken', request.cookies['accessToken']);
-          // if (request && request.cookies) {
-          //   token = request.cookies['accessToken'];
-          // }
+          if (request && request.cookies) {
+            token = request.cookies['accessToken'];
+          }
           return token;
         },
       ]),
