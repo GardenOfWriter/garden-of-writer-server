@@ -1,14 +1,16 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, getSchemaPath } from '@nestjs/swagger';
 import { CreateNovelTextRequestDto } from '../dto/request/create-novel.dto';
 import { UpdateTextNovelRequestDto } from '../dto/request/update-novel.dto';
+import { FindByChapterIdResponseDto } from '../dto/response/findbychapter-id.dto';
+import { ApiCommonResponse } from '@app/commons/decorator/swagger/common-response.decorator';
+import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 
 export function CreateNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
       summary: '소설 글쓰기 작성 하기',
     }),
-    ApiOkResponse({ type: CreateNovelTextRequestDto }),
   );
 }
 
@@ -23,6 +25,10 @@ export function FindNovelText(): MethodDecorator {
       type: Number,
       example: 1,
       description: '회차 ID',
+    }),
+    ApiExtraModels(FindByChapterIdResponseDto),
+    ApiCommonResponse({
+      $ref: getSchemaPath(FindByChapterIdResponseDto),
     }),
   );
 }
@@ -55,7 +61,6 @@ export function CompleteNovelText(): MethodDecorator {
       example: 1,
       description: '소설 글쓰기 ID (textId) websocket response로 받은 id로 사용',
     }),
-    ApiOkResponse({ type: UpdateTextNovelRequestDto }),
   );
 }
 
