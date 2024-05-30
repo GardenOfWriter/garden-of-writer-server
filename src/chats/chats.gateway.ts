@@ -24,7 +24,17 @@ import { SOCKET_EVENT_TYPE } from './enums/socket.event';
 
 //localhost:3000/room-1}
 
-@WebSocketGateway({ namespace: /\/room-.+/ })
+@WebSocketGateway({
+  namespace: /\/room-.+/,
+  cors: {
+    origin: [
+      'http://localhost:3000',
+      'https://port-0-front-128y2k2llvlon7bn.sel5.cloudtype.app',
+      'https://port-0-garden-of-writer-server-71t02clq3bpxzf.sel4.cloudtype.app',
+    ],
+    methods: ['GET', 'POST'],
+  },
+})
 export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   private logger = new Logger(ChatsGateway.name);
 
