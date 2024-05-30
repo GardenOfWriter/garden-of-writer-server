@@ -10,17 +10,17 @@ import { Request } from 'express';
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private userService: UserService) {
     super({
-      // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => {
-          let token = null;
-          console.log('request cookies accessToken', request.cookies['accessToken']);
-          if (request && request.cookies) {
-            token = request.cookies['accessToken'];
-          }
-          return token;
-        },
-      ]),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      // jwtFromRequest: ExtractJwt.fromExtractors([
+      //   (request: Request) => {
+      //     let token = null;
+      //     console.log('request cookies accessToken', request.cookies['accessToken']);
+      //     if (request && request.cookies) {
+      //       token = request.cookies['accessToken'];
+      //     }
+      //     return token;
+      //   },
+      // ]),
       secretOrKey: process.env.JWT_ACCESS_KEY,
       ignoreExpiration: false,
     });
