@@ -75,7 +75,6 @@ export class NovelRoomController {
     @Query() query: FindAttendQueryDto,
   ): Promise<PagingationResponse<FindAttendStatusNovelRoomDto>> {
     const result = await this.novelRoomService.findAllRooms(user, query);
-    console.log(result);
     return result;
   }
   /**

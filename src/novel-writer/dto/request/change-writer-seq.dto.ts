@@ -22,9 +22,7 @@ export class ChangeWriterSeqRequestDto extends PickType(NovelWirterDto, ['novelR
   novelRoomId: number;
 
   getIndexSeq(writerId: number): number {
-    console.log('writerId=', writerId);
     const seq = this.writerIdSeq.indexOf(writerId);
-    console.log(seq);
     return seq + 1;
   }
   checkRoomAttendWriter(writers: NovelWriterEntity[]) {

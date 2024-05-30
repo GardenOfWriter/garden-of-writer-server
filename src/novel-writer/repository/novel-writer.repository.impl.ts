@@ -32,11 +32,14 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     });
   }
 
-  async findByUserId(userId: number): Promise<NovelWriterEntity> {
+  async findByUserIdAndNovelRoomId(noveRoomId: number, userId: number): Promise<NovelWriterEntity> {
     return await this.dataSource.findOne({
       where: {
         user: {
           id: userId,
+        },
+        novelRoom: {
+          id: noveRoomId,
         },
       },
     });

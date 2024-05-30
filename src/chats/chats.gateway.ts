@@ -81,8 +81,7 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     this.logger.log(`On connect called : ${socket.id}`);
     const roomNamespace = socket.nsp.name.replace('/', '');
     const accessToken = socket.handshake.headers['auth'] as string;
-
-    console.log('accessToken', accessToken);
+    this.logger.log(`Request AccessToken ${accessToken}`);
     // const accessToken = headers.find((header) => header.includes('accessToken')).split('=')[1];
     if (!accessToken) {
       this.logger.error(`Not Found Cookie accessToken : ${accessToken}`);

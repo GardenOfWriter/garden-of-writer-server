@@ -69,7 +69,7 @@ export interface NovelWriterRepository {
    * @param {number} userId user id
    * @returns {Promise<NovelWriterEntity>} 작가 정보
    */
-  findByUserId(userId: number): Promise<NovelWriterEntity>;
+  findByUserIdAndNovelRoomId(novelRoomId: number, userId: number): Promise<NovelWriterEntity>;
 
   /**
    * 작가 정보 조회 (novel room id, writing seq)

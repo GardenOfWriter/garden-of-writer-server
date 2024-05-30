@@ -138,38 +138,38 @@ export class NovelTextService {
     return text;
   }
 
-  /**
-   * 다음 글쓰기 업데이트
-   *
-   * @private
-   * @async
-   * @param {number} userId 유저 ID
-   * @param {number} writerCount 작가 수
-   * @param {number} novelRoomId 공방 ID
-   * @returns {Promise<void>}
-   */
-  private async findNextWrite(userId: number, writerCount: number, novelRoomId: number): Promise<NovelWriterEntity> {
-    const requestWriter = await this.updateRequestWriter(userId);
-    const nextSeq = requestWriter.getNextSeq(writerCount);
-    return await this.novelWriterRepo.findByNovelRoomIdAndWriterSeq(novelRoomId, nextSeq);
-  }
+  // /**
+  //  * 다음 글쓰기 업데이트
+  //  *
+  //  * @private
+  //  * @async
+  //  * @param {number} userId 유저 ID
+  //  * @param {number} writerCount 작가 수
+  //  * @param {number} novelRoomId 공방 ID
+  //  * @returns {Promise<void>}
+  //  */
+  // private async findNextWrite(userId: number, writerCount: number, novelRoomId: number): Promise<NovelWriterEntity> {
+  //   const requestWriter = await this.updateRequestWriter(userId);
+  //   const nextSeq = requestWriter.getNextSeq(writerCount);
+  //   return await this.novelWriterRepo.findByNovelRoomIdAndWriterSeq(novelRoomId, nextSeq);
+  // }
 
-  /**
-   * 현재 글쓰기 요청자 업데이트
-   *
-   * @private
-   * @async
-   * @param {number} userId 유저 ID
-   * @returns {Promise<NovelWriterEntity>} 현재 글쓰기 요청자 엔티티
-   */
-  private async updateRequestWriter(userId: number): Promise<NovelWriterEntity> {
-    const requestWriter = await this.novelWriterRepo.findByUserId(userId);
-    this.logger.debug(`현재 글쓰기 : ${JSON.stringify(requestWriter)}`);
-    if (!isEmpty(requestWriter) && !requestWriter.isCurrentlyWriter()) {
-      throw new NotCurrentlyWriterException();
-    }
-    requestWriter.setCurrentyWriter(false);
-    await this.novelWriterRepo.updateRow(requestWriter.id, requestWriter);
-    return requestWriter;
-  }
+  // /**
+  //  * 현재 글쓰기 요청자 업데이트
+  //  *
+  //  * @private
+  //  * @async
+  //  * @param {number} userId 유저 ID
+  //  * @returns {Promise<NovelWriterEntity>} 현재 글쓰기 요청자 엔티티
+  //  */
+  // private async updateRequestWriter(userId: number): Promise<NovelWriterEntity> {
+  //   const requestWriter = await this.novelWriterRepo.findByUserId(userId);
+  //   this.logger.debug(`현재 글쓰기 : ${JSON.stringify(requestWriter)}`);
+  //   if (!isEmpty(requestWriter) && !requestWriter.isCurrentlyWriter()) {
+  //     throw new NotCurrentlyWriterException();
+  //   }
+  //   requestWriter.setCurrentyWriter(false);
+  //   await this.novelWriterRepo.updateRow(requestWriter.id, requestWriter);
+  //   return requestWriter;
+  // }
 }
