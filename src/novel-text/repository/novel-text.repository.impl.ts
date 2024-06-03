@@ -17,12 +17,24 @@ export class NovelTextRepositoryImpl implements NovelTextRepository {
     return result.id;
   }
   async updateRow(id: number, entity: Partial<NovelTextEntity>): Promise<void> {
-    await this.dataSource.update(id, entity);
+    await this.dataSource.update({ id }, entity);
   }
   async deleteRow(id: number): Promise<void> {
     await this.dataSource.delete({ id });
   }
   async findById(id: number): Promise<NovelTextEntity> {
     return await this.dataSource.findOne({ where: { id } });
+  }
+  async findByIdJoinUser(id: number): Promise<NovelTextEntity> {
+    return await this.dataSource.findOne({ where: { id }, relations: ['createdBy'] });
+  }
+  async findByChapterIdJoinUser(chapterId: number, pagination: BasePaginationRequest): Promise<[NovelTextEntity[], number]> {
+    return await this.dataSource.findAndCount({
+      take: pagination.take,
+      skip: pagination.skip,
+      where: { chapterId },
+      order: { createdAt: 'ASC' },
+      relations: ['createdBy'],
+    });
   }
 }

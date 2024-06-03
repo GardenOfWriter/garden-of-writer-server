@@ -51,7 +51,6 @@ export class NovelRoomService {
    */
   async findAllRooms(user: UserEntity, dto: FindAttendQueryDto): Promise<PagingationResponse<FindAttendStatusNovelRoomDto>> {
     const roomFilter = dto.queryConvertStatus();
-    console.log(roomFilter);
     const [rooms, totalCount] = await this.novelRoomRepo.findAllJoinWriterByStatus(user, roomFilter, dto);
     const items = rooms.map((room: NovelRoomEntity) => new FindAttendStatusNovelRoomDto(user, room));
     return new PagingationResponse(totalCount, dto.chunkSize, items);

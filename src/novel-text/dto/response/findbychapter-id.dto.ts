@@ -2,17 +2,26 @@ import { NovelTextStatusDescription, NovelTextStatusType } from '@app/novel-text
 import { Expose } from 'class-transformer';
 import { NovelTextEntity } from '../../entities/novel-text.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { convertDayFormat } from '../../../commons/util/date.util';
+import { UserEntity } from '@app/user/entities/user.entity';
 
 export class FindByChapterIdResponseDto {
   private _id: number;
   private _chapterId: number;
   private _status: NovelTextStatusType;
   private _content: string;
+  private _createdAt: Date;
+  private _updatedAt: Date;
+  private _user: UserEntity;
+
   constructor(entity: NovelTextEntity) {
     this._id = entity.id;
     this._chapterId = +entity.chapterId;
     this._status = entity.status;
     this._content = entity.content;
+    this._createdAt = entity.createdAt;
+    this._updatedAt = entity.updatedAt;
+    this._user = entity.createdBy;
   }
 
   @ApiProperty({
@@ -45,5 +54,34 @@ export class FindByChapterIdResponseDto {
   @Expose()
   get content(): string {
     return this._content;
+  }
+  @ApiProperty({
+    example: { userId: 1, nickname: 'test@test.com' },
+    description: '작성자',
+  })
+  @Expose()
+  get createdBy(): { userId: number; nickname: string } {
+    return {
+      userId: this._user.id,
+      nickname: this._user.nickname,
+    };
+  }
+
+  @ApiProperty({
+    example: convertDayFormat(new Date()),
+    description: '등록 날짜',
+  })
+  @Expose()
+  get createdAt(): string {
+    return convertDayFormat(this._createdAt);
+  }
+
+  @ApiProperty({
+    example: convertDayFormat(new Date()),
+    description: '수정 날짜',
+  })
+  @Expose()
+  get updatedAt(): string {
+    return convertDayFormat(this._updatedAt);
   }
 }

@@ -64,8 +64,9 @@ export class NovelTextService {
    * @returns {Promise<void>}
    */
   async update(id: number, dto: UpdateTextNovelRequestDto): Promise<void> {
-    const entity = await this.novelTextRepo.findById(id);
+    const entity = await this.novelTextRepo.findByIdJoinUser(id);
     entity.updateContent(dto.content);
+
     await this.novelTextRepo.updateRow(entity.id, entity);
     this.chatsGateway.sendNovelRoomInMessage(entity.createdBy.id, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: entity.id }));
     return;
@@ -118,7 +119,7 @@ export class NovelTextService {
    * @returns {Promise<FindByChapterIdResponseDto[]>} 조회된 소설 텍스트 정보 DTO
    */
   async findByChapterIdNovelText(dto: FindByChapterIdNovelTextDto): Promise<PagingationResponse<FindByChapterIdResponseDto>> {
-    const [texts, totalCount] = await this.novelTextRepo.findByChapterId(dto.chapterId, dto);
+    const [texts, totalCount] = await this.novelTextRepo.findByChapterIdJoinUser(dto.chapterId, dto);
     const item = texts.map((text) => new FindByChapterIdResponseDto(text));
     return new PagingationResponse(totalCount, dto.chunkSize, item);
   }
@@ -130,12 +131,12 @@ export class NovelTextService {
    * @param {number} textId 소설 텍스트 ID
    * @returns {Promise<NovelTextEntity>} 조회된 소설 텍스트 정보 엔티티
    */
-  async findById(textId: number): Promise<NovelTextEntity> {
-    const text = await this.novelTextRepo.findById(textId);
+  async findById(textId: number): Promise<FindByChapterIdResponseDto> {
+    const text = await this.novelTextRepo.findByIdJoinUser(textId);
     if (isEmpty(text)) {
       throw new NotFoundTextException();
     }
-    return text;
+    return new FindByChapterIdResponseDto(text);
   }
 
   // /**

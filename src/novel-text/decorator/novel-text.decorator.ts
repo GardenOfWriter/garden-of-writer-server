@@ -90,6 +90,9 @@ export function FindByIdNovelText(): MethodDecorator {
       example: 1,
       description: '소설 글쓰기 ID (textId) websocket response로 받은 id로 사용',
     }),
-    ApiOkResponse({ type: UpdateTextNovelRequestDto }),
+    ApiExtraModels(FindByChapterIdResponseDto),
+    ApiCommonResponse({
+      $ref: getSchemaPath(FindByChapterIdResponseDto),
+    }),
   );
 }

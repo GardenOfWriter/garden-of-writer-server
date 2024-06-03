@@ -41,12 +41,12 @@ export interface NovelTextRepository {
   deleteRow(id: number): Promise<void>;
 
   /**
-   * 소설 텍스트 조회
+   * 소설 텍스트 조회 (페이징 처리, 회차별 조회)
    *
    * @param {FindOneOptions<NovelTextEntity>} options 조회 옵션
    * @returns {Promise<NovelTextEntity[]>}  조회된 소설 텍스트 정보 엔티티
    */
-  findByChapterId(chapterId: number, pagination: BasePaginationRequest): Promise<[NovelTextEntity[], number]>;
+  findByChapterIdJoinUser(chapterId: number, pagination: BasePaginationRequest): Promise<[NovelTextEntity[], number]>;
 
   /**
    * 소설 텍스트 상세정보 조회
@@ -55,4 +55,12 @@ export interface NovelTextRepository {
    * @returns {Promise<NovelTextEntity>} 조회된 소설 텍스트 정보 엔티티
    */
   findById(id: number): Promise<NovelTextEntity>;
+
+  /**
+   * 소설 텍스트 상세정보 조회 (작성자 정보 join)
+   *
+   * @param {number} id 소설 텍스트 Id
+   * @returns {Promise<NovelTextEntity>} 조회된 소설 텍스트 정보 엔티티
+   */
+  findByIdJoinUser(id: number): Promise<NovelTextEntity>;
 }
