@@ -50,7 +50,7 @@ export class NovelTextService {
     const chapter = await this.chapterRepo.findById(entity.chapterId);
     // TDOD: 해당 회차자 존재하는지 체크
     const textId = await this.novelTextRepo.addRow(entity);
-    this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId }));
+    this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId, chapterId: entity.chapterId }));
     return;
   }
 
@@ -68,7 +68,11 @@ export class NovelTextService {
     entity.updateContent(dto.content);
 
     await this.novelTextRepo.updateRow(entity.id, entity);
-    this.chatsGateway.sendNovelRoomInMessage(entity.createdBy.id, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: entity.id }));
+    this.chatsGateway.sendNovelRoomInMessage(
+      entity.createdBy.id,
+      SOCKET_EVENT.UPDATE_TEXT,
+      JSON.stringify({ textId: entity.id, chapterId: entity.chapterId }),
+    );
     return;
   }
 
@@ -89,7 +93,11 @@ export class NovelTextService {
     nextWriter.setCurrentyWriter(true);
     await this.novelTextRepo.addRow(text);
     await this.novelWriterRepo.updateRow(nextWriter.id, nextWriter);
-    this.chatsGateway.sendNovelRoomInMessage(text.createdBy.id, SOCKET_EVENT.UPDATE_TEXT, JSON.stringify({ textId: text.id }));
+    this.chatsGateway.sendNovelRoomInMessage(
+      text.createdBy.id,
+      SOCKET_EVENT.UPDATE_TEXT,
+      JSON.stringify({ textId: text.id, chapterId: entity.chapterId }),
+    );
     return;
   }
 

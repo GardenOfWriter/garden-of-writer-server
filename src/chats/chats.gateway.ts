@@ -80,7 +80,7 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   async handleConnection(socket: Socket & { user: UserEntity }): Promise<boolean> {
     this.logger.log(`On connect called : ${socket.id}`);
     const roomNamespace = socket.nsp.name.replace('/', '');
-    const accessToken = socket.handshake.headers['auth'] as string;
+    const accessToken = socket.handshake.auth.accessToken as string;
     this.logger.log(`Request AccessToken ${accessToken}`);
     // const accessToken = headers.find((header) => header.includes('accessToken')).split('=')[1];
     if (!accessToken) {
