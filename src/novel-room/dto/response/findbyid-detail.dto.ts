@@ -29,6 +29,7 @@ export class FindByRoomIdDetailDto {
   private _novelTags: NovelTagEntity[];
   private _writers: NovelWriterEntity[];
   private _user: UserEntity;
+  private _bookCover: string;
   constructor(room: NovelRoomEntity, user: UserEntity) {
     this._id = room.id;
     this._title = room.title;
@@ -43,6 +44,7 @@ export class FindByRoomIdDetailDto {
     this._novelTags = room.novelTag;
     this._writers = room.novelWriter;
     this._user = user;
+    this._bookCover = room.bookCover;
   }
 
   @ApiProperty({
@@ -134,6 +136,16 @@ export class FindByRoomIdDetailDto {
   get completedAt() {
     return this._completedAt;
   }
+
+  @ApiProperty({
+    example: 'https://bookcover.com',
+    description: '북커버',
+  })
+  @Expose()
+  get bookCover() {
+    return this._bookCover;
+  }
+
   @ApiProperty({
     example: ['공방 태그'],
     description: '공방 태그',

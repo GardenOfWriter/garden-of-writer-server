@@ -16,6 +16,8 @@ import {
   NovelRoomDuplicationTitleException,
   NovelRoomNotFoundException,
 } from './exceptions/novel-room.exception';
+import { isEmail } from 'class-validator';
+import { isEmpty } from '@app/commons/util/data.helper';
 
 /**
  * 소설 공방 서비스
@@ -84,8 +86,7 @@ export class NovelRoomService {
   async findById(novelRoomId: number, user: UserEntity): Promise<FindByRoomIdDetailDto> {
     const room = await this.novelRoomRepo.getByIdWithTag(novelRoomId);
     const reqWriter = await this.novelWriterRepo.findByUserIdAndNovelRoomId(novelRoomId, user.id);
-    this.logger.debug(`reqWriter isStatusAttending : ${JSON.stringify(reqWriter.isStatusAttending())}`);
-    if (!reqWriter.isStatusAttending()) {
+    if (isEmpty(reqWriter) || !reqWriter.isStatusAttending()) {
       throw new NovelRoomAccessDeniedException();
     }
     if (!room) throw new NovelRoomNotFoundException();

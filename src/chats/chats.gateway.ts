@@ -26,14 +26,14 @@ import { isEmpty } from '@app/commons/util/data.helper';
 
 @WebSocketGateway({
   namespace: /\/room-.+/,
-  cors: {
-    origin: [
-      'http://localhost:3000',
-      'https://port-0-front-128y2k2llvlon7bn.sel5.cloudtype.app',
-      'https://port-0-garden-of-writer-server-71t02clq3bpxzf.sel4.cloudtype.app',
-    ],
-    methods: ['GET', 'POST'],
-  },
+  // cors: {
+  //   origin: [
+  //     'http://localhost:3000',
+  //     'https://port-0-front-128y2k2llvlon7bn.sel5.cloudtype.app',
+  //     'https://port-0-garden-of-writer-server-71t02clq3bpxzf.sel4.cloudtype.app',
+  //   ],
+  //   methods: ['GET', 'POST'],
+  // },
 })
 export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   private logger = new Logger(ChatsGateway.name);
@@ -74,6 +74,7 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     //   return;
     // }
     // onlineList[roomId] = onlineList[roomId].filter((id) => id !== socket.id);
+
     this.logger.log(`on disconnect called : ${socket.id}`);
   }
 
@@ -87,11 +88,12 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   async handleConnection(socket: Socket & { user: UserEntity } & { roomId: number }): Promise<boolean> {
     this.logger.log(`On connect called : ${socket.id}`);
     const roomNameSpace = socket.nsp;
-    if (!this.roomNsp[roomNameSpace.name]) {
+    if (isEmpty(this.roomNsp[roomNameSpace.name])) {
       this.roomNsp[roomNameSpace.name] = roomNameSpace;
     }
     const roomId = roomNameSpace.name.split('-')[1];
     const accessToken = socket.handshake.headers['auth'] as string;
+    // const accessToken = socket.handshake.auth.accessToken as string;
 
     this.logger.log(`Request AccessToken ${accessToken}`);
     // const accessToken = headers.find((header) => header.includes('accessToken')).split('=')[1];
@@ -103,7 +105,7 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     try {
       const payload = this.authService.verifyToken(accessToken);
       const user = await this.userService.findEmail(payload.email);
-      console.log('online ', onlineList);
+
       // if (isEmpty(onlineList[roomId])) {
       //   onlineList[roomId] = [];
       // }
@@ -112,6 +114,8 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
       socket.user = user;
       socket.roomId = Number.parseInt(roomId);
       socket.join(roomNameSpace.name);
+      console.log(this.roomNsp[`/room-${roomId}`]);
+      roomNameSpace.emit('enter/text', 'hello');
       // return true ?? 의미 파악 필요
       return true;
     } catch (error) {
