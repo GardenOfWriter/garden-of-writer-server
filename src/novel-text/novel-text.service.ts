@@ -1,15 +1,14 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UserEntity } from '../user/entities/user.entity';
 import { FindByChapterIdResponseDto } from './dto/response/findbychapter-id.dto';
 import { NovelTextEntity } from './entities/novel-text.entity';
 import { NovelTextRepo, NovelTextRepository } from './repository/novel-text.repository';
 import { ChatsGateway } from '@app/chats/chats.gateway';
 import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
-import { NotCurrentlyWriterException, NotFoundTextException } from './exception/novel-text.exception';
-import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
+import { NotFoundTextException } from './exception/novel-text.exception';
 import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 import { ChapterRepo, ChapterRepository } from '@app/chapter/repository/chapter.repository';
-import { getSize, isEmpty } from '../commons/util/data.helper';
+import { isEmpty } from '../commons/util/data.helper';
 import { WriterSeqHelper } from '@app/novel-writer/helper/writer-seq.helper';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
@@ -49,7 +48,9 @@ export class NovelTextService {
   async create(entity: Partial<NovelTextEntity>): Promise<void> {
     const chapter = await this.chapterRepo.findById(entity.chapterId);
     // TDOD: 해당 회차자 존재하는지 체크
+
     const textId = await this.novelTextRepo.addRow(entity);
+    // console.log(this.chatsGateway.server.sockets);
     this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId, chapterId: entity.chapterId }));
     return;
   }
@@ -96,7 +97,7 @@ export class NovelTextService {
     this.chatsGateway.sendNovelRoomInMessage(
       text.createdBy.id,
       SOCKET_EVENT.UPDATE_TEXT,
-      JSON.stringify({ textId: text.id, chapterId: entity.chapterId }),
+      JSON.stringify({ textId: text.id, chapterId: text.chapterId }),
     );
     return;
   }

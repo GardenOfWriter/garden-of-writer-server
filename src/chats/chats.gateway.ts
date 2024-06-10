@@ -19,10 +19,10 @@ import {
   WebSocketServer,
   WsException,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Namespace, Server, Socket } from 'socket.io';
 import { SOCKET_EVENT_TYPE } from './enums/socket.event';
-
-//localhost:3000/room-1}
+import { onlineList } from './onlineList';
+import { isEmpty } from '@app/commons/util/data.helper';
 
 @WebSocketGateway({
   namespace: /\/room-.+/,
@@ -46,8 +46,9 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   ) {}
 
   @WebSocketServer()
-  private readonly server: Server;
+  server: Server;
 
+  private readonly roomNsp: { [key: string]: Namespace } = {};
   /**
    * 소켓 서버 초기화
    *
@@ -58,6 +59,7 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     //   auth: false,
     //   mode: 'development',
     // });
+    // this.io.to('room-1').emit('message', 'hello');
     this.logger.log('Socket Server Init Success');
   }
 
@@ -66,7 +68,12 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    *
    * @param {Socket} socket
    */
-  handleDisconnect(socket: Socket) {
+  handleDisconnect(socket: Socket & { user: UserEntity } & { roomId: number }) {
+    const roomId = socket.roomId;
+    // if (isEmpty(onlineList[roomId])) {
+    //   return;
+    // }
+    // onlineList[roomId] = onlineList[roomId].filter((id) => id !== socket.id);
     this.logger.log(`on disconnect called : ${socket.id}`);
   }
 
@@ -77,13 +84,18 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    * @param {(Socket & { user: UserEntity })} socket 소켓 정보
    * @returns {Promise<boolean>}
    */
-  async handleConnection(socket: Socket & { user: UserEntity }): Promise<boolean> {
+  async handleConnection(socket: Socket & { user: UserEntity } & { roomId: number }): Promise<boolean> {
     this.logger.log(`On connect called : ${socket.id}`);
-    const roomNamespace = socket.nsp.name.replace('/', '');
-    const accessToken = socket.handshake.auth.accessToken as string;
+    const roomNameSpace = socket.nsp;
+    if (!this.roomNsp[roomNameSpace.name]) {
+      this.roomNsp[roomNameSpace.name] = roomNameSpace;
+    }
+    const roomId = roomNameSpace.name.split('-')[1];
+    const accessToken = socket.handshake.headers['auth'] as string;
+
     this.logger.log(`Request AccessToken ${accessToken}`);
     // const accessToken = headers.find((header) => header.includes('accessToken')).split('=')[1];
-    if (!accessToken) {
+    if (isEmpty(accessToken)) {
       this.logger.error(`Not Found Cookie accessToken : ${accessToken}`);
       socket.disconnect();
     }
@@ -91,9 +103,15 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
     try {
       const payload = this.authService.verifyToken(accessToken);
       const user = await this.userService.findEmail(payload.email);
+      console.log('online ', onlineList);
+      // if (isEmpty(onlineList[roomId])) {
+      //   onlineList[roomId] = [];
+      // }
+      // onlineList[roomId] = [...onlineList[roomId], socket.id];
       this.logger.log(`Connect user : ${JSON.stringify(user)}`);
       socket.user = user;
-      socket.join(roomNamespace);
+      socket.roomId = Number.parseInt(roomId);
+      socket.join(roomNameSpace.name);
       // return true ?? 의미 파악 필요
       return true;
     } catch (error) {
@@ -110,8 +128,9 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    * @param {string} message 메시지
    */
   sendNovelRoomInMessage(novelRoomId: number, socketEvent: SOCKET_EVENT_TYPE, message: string): void {
-    this.logger.debug(`room ${JSON.stringify(novelRoomId)}`);
-    this.server.emit(socketEvent, message);
+    this.logger.debug(`room message ${JSON.stringify(novelRoomId)}`);
+    if (isEmpty(this.roomNsp[`/room-${novelRoomId}`])) return;
+    this.roomNsp[`/room-${novelRoomId}`].emit(socketEvent, message);
   }
 
   @UsePipes(

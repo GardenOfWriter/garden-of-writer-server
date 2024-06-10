@@ -29,7 +29,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.use(cookieParser()); // 쿠키 파서 사용
-  app.useWebSocketAdapter(new SocketIoAdpater(app)); // 웹소켓 어댑터 사용
+  // app.useWebSocketAdapter(new SocketIoAdpater(app)); // 웹소켓 어댑터 사용
   // JSON 직렬화를 위해 필요
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   await app.listen(3000);
