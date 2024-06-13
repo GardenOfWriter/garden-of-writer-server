@@ -16,7 +16,6 @@ import {
   NovelRoomDuplicationTitleException,
   NovelRoomNotFoundException,
 } from './exceptions/novel-room.exception';
-import { isEmail } from 'class-validator';
 import { isEmpty } from '@app/commons/util/data.helper';
 
 /**
@@ -116,6 +115,7 @@ export class NovelRoomService {
     room.updateRoom(updateNovelRoom);
     this.logger.log(`NovelRoom Update : ${JSON.stringify(room)}`);
     await this.novelRoomRepo.saveRow(room);
+
     return room;
   }
 

@@ -41,16 +41,13 @@ export class NovelTextService {
    *
    * @async
    * @param {number} novelRoomId 공방 Id
-   * @param {Partial<NovelTextEntity>} entity  소설 텍스트 정보 엔티티
+   * @param {Partial<NovelTextEntity>} entity 소설 텍스트 정보 엔티티
    * @param {UserEntity} user 유저 정보 엔티티
    * @returns {Promise<void>}
    */
   async create(entity: Partial<NovelTextEntity>): Promise<void> {
     const chapter = await this.chapterRepo.findById(entity.chapterId);
-    // TDOD: 해당 회차자 존재하는지 체크
-
     const textId = await this.novelTextRepo.addRow(entity);
-    // console.log(this.chatsGateway.server.sockets);
     this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId, chapterId: entity.chapterId }));
     return;
   }

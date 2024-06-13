@@ -92,8 +92,8 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
       this.roomNsp[roomNameSpace.name] = roomNameSpace;
     }
     const roomId = roomNameSpace.name.split('-')[1];
-    const accessToken = socket.handshake.headers['auth'] as string;
-    // const accessToken = socket.handshake.auth.accessToken as string;
+    // const accessToken = socket.handshake.headers['auth'] as string;
+    const accessToken = socket.handshake.auth.accessToken as string;
 
     this.logger.log(`Request AccessToken ${accessToken}`);
     // const accessToken = headers.find((header) => header.includes('accessToken')).split('=')[1];
@@ -114,8 +114,6 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
       socket.user = user;
       socket.roomId = Number.parseInt(roomId);
       socket.join(roomNameSpace.name);
-      console.log(this.roomNsp[`/room-${roomId}`]);
-      roomNameSpace.emit('enter/text', 'hello');
       // return true ?? 의미 파악 필요
       return true;
     } catch (error) {
