@@ -7,6 +7,7 @@ export class NovelWriterExceptionMsg extends EnumType<NovelWriterExceptionMsg>()
   static readonly NOT_ACCESS_PARTICIATE_WRITER = new NovelWriterExceptionMsg('4601', '해당 작가는 접근할수 없습니다.');
   static readonly BAD_CHANGE_WRITERID_SEQ = new NovelWriterExceptionMsg('4602', '소설 공방에 참여중이지 않는 writerId 값을 전달받았습니다.');
   static readonly NOT_EXIT_ROOM_SELF_REQUEST = new NovelWriterExceptionMsg('4603', '자기 자신을 퇴장 시킬수 없습니다.');
+  static readonly NOT_FOUND_WRITER_ID = new NovelWriterExceptionMsg('4604', '방에 참여 신청을 하지 않은 writerId 입니다');
 
   private constructor(
     readonly _errorCode: string,

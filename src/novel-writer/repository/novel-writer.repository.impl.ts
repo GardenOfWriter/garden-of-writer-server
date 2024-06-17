@@ -112,6 +112,15 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     });
   }
 
+  async findOneByIdWithNovelRoomAndUser(id: number): Promise<NovelWriterEntity> {
+    return await this.dataSource.findOne({
+      relations: ['user', 'novelRoom'],
+      where: {
+        id,
+      },
+    });
+  }
+
   async saveRow(entity: Partial<NovelWriterEntity>): Promise<void> {
     await this.dataSource.save(entity);
     return;

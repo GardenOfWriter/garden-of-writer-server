@@ -122,6 +122,14 @@ export interface NovelWriterRepository {
   findOneByOptions(options: FindOneOptions<NovelWriterEntity>): Promise<NovelWriterEntity>;
 
   /**
+   * 작가 정보 조회 (options)
+   *
+   * @param {number} id 소설 공방 id
+   * @returns {Promise<NovelWriterEntity>} 작가 정보
+   */
+  findOneByIdWithNovelRoomAndUser(id: number): Promise<NovelWriterEntity>;
+
+  /**
    * 소설 공방 참여중 작가 조회
    *
    * @param {number} novelRoomId

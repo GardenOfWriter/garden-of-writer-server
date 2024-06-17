@@ -8,6 +8,12 @@ export class NotAccessWriterManagementExcetpion extends BaseException {
   }
 }
 
+export class NotFoundWriterIdExcetpion extends BaseException {
+  constructor() {
+    super(NovelWriterExceptionMsg.NOT_FOUND_WRITER_ID, HttpStatus.NOT_FOUND);
+  }
+}
+
 export class BadChangeWriterIdSeqExcetpion extends BaseException {
   constructor() {
     super(NovelWriterExceptionMsg.BAD_CHANGE_WRITERID_SEQ, HttpStatus.BAD_REQUEST);

@@ -1,5 +1,4 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { In } from 'typeorm';
 
 import { EmailService, EmailServiceToken } from '@app/commons/email/email.service';
 import { EmailTemplate } from '@app/commons/email/enums/teamplate.enums';
@@ -12,8 +11,8 @@ import { NovelWriterRepo, NovelWriterRepository, NovelWriterRepositoryToken } fr
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { FindNovelWriteManagementDto } from './dto/request/find-novel-writer.dto';
 import { NovelRoomRepo, NovelRoomRepository } from '@app/novel-room/repository/novel-room.repository';
-import { NotAccessWriterManagementExcetpion } from './exceptions/novel-writer.exception';
-
+import { NotAccessWriterManagementExcetpion, NotFoundWriterIdExcetpion } from './exceptions/novel-writer.exception';
+import { isEmpty } from '@app/commons/util/data.helper';
 /**
  * 작가 관리 서비스
  *
@@ -59,31 +58,24 @@ export class WriterManagementService {
    * @returns {Promise<void>}
    */
   async changeWriterStatus(id: number, dto: UpdateNovelWriterStatusRequestDto, user: UserEntity): Promise<void> {
-    const requestWriter = await this.novelWriterRepo.findOneByOptions({
-      where: {
-        user: { id: user.id },
-      },
-    });
-    this.logger.log(`Request Host ? ${JSON.stringify(requestWriter.isHost())}`);
+    const requestWriter = await this.novelWriterRepo.findOneByIdWithNovelRoomAndUser(id);
+
+    if (isEmpty(requestWriter)) {
+      throw new NotFoundWriterIdExcetpion();
+    }
+
+    this.logger.log(`Request User Room Join ? ${JSON.stringify(requestWriter.isHost())}`);
 
     if (!requestWriter.isHost()) {
       throw new NotAccessWriterManagementExcetpion();
     }
-    const writer = await this.novelWriterRepo.findOneByOptions({
-      relations: ['user', 'novelRoom'],
-      where: {
-        id,
-      },
-    });
 
-    this.logger.log(`Writer ${JSON.stringify(writer)}`);
-
-    const roomWriterCnt = await this.novelWriterRepo.findBynovelRoomIdAttendingCount(writer.novelRoomId);
-    writer.changeStatue(dto.status);
-    writer.setSeq(roomWriterCnt + 1);
-    await this.novelWriterRepo.saveRow(writer);
+    const roomWriterCnt = await this.novelWriterRepo.findBynovelRoomIdAttendingCount(requestWriter.novelRoomId);
+    requestWriter.changeStatue(dto.status);
+    requestWriter.setSeq(roomWriterCnt + 1);
+    await this.novelWriterRepo.saveRow(requestWriter);
     // TODO : 이메일 발송
-    await this.changeSendEmail(writer);
+    // await this.changeSendEmail(writer);
     return;
   }
 
