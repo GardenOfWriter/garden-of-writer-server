@@ -83,7 +83,7 @@ export class NovelTextService {
    * @returns {Promise<void>}
    */
   async complatedText(id: number, user: UserEntity): Promise<void> {
-    const text = await this.novelTextRepo.findById(id);
+    const text = await this.novelTextRepo.findByIdJoinUser(id);
     text.setComplated();
     const chapter = await this.chapterRepo.findById(text.chapterId);
     const writers = await this.novelWriterRepo.findByNovelRoomId(+chapter.novelRoomId);
@@ -91,6 +91,7 @@ export class NovelTextService {
     nextWriter.setCurrentyWriter(true);
     await this.novelTextRepo.addRow(text);
     await this.novelWriterRepo.updateRow(nextWriter.id, nextWriter);
+    console.log(text);
     this.chatsGateway.sendNovelRoomInMessage(
       text.createdBy.id,
       SOCKET_EVENT.UPDATE_TEXT,
