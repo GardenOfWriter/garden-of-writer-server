@@ -6,6 +6,7 @@ import { convertDayFormat } from '../../../commons/util/date.util';
 import { NovelRoomType, RoomTypeDescription } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
+import { isEmpty } from '../../../commons/util/data.helper';
 
 export class FindByIdLikeUserDto {
   @Exclude() private _roomId: number;
@@ -20,8 +21,10 @@ export class FindByIdLikeUserDto {
   @Exclude() private _type: NovelRoomType;
   @Exclude() private _host: UserEntity;
   @Exclude() private _roomTitle: string;
+  @Exclude() private _reqUser: UserEntity;
+  @Exclude() private _writers: NovelWriterEntity[];
 
-  constructor(board: NovelAttendBoardEntity, hasLike: boolean, writers: NovelWriterEntity[]) {
+  constructor(board: NovelAttendBoardEntity, hasLike: boolean, writers: NovelWriterEntity[], user: UserEntity) {
     this._roomId = board.id;
     this._createdAt = board.novelRoom.createdAt;
     this._boardtTitle = board.title;
@@ -34,6 +37,8 @@ export class FindByIdLikeUserDto {
     this._type = board.novelRoom.type;
     this._host = writers.filter((writer) => writer.isHost)[0].user;
     this._roomTitle = board.novelRoom.title;
+    this._reqUser = user;
+    this._writers = writers;
   }
 
   @ApiProperty({
@@ -129,11 +134,20 @@ export class FindByIdLikeUserDto {
   }
 
   @ApiProperty({
-    example: '좋아요 유무',
+    example: true,
     description: '좋아요 유무',
   })
   @Expose({ name: 'hasLike' })
   get hasLike(): boolean {
     return this._hasLike;
+  }
+  @ApiProperty({
+    example: true,
+    description: 'true 참석,false 미참석',
+  })
+  @Expose({ name: 'isAttend' })
+  get isAttend(): boolean {
+    const attendUser = this._writers.filter((writer) => writer.isSelf(this._reqUser))[0];
+    return isEmpty(attendUser) ? false : true;
   }
 }

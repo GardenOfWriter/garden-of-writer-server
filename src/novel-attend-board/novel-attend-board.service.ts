@@ -61,7 +61,7 @@ export class NovelAttendBoardService {
     const board = await this.boardRepo.findByIdWhereLikeUserJoinNovelRoom(novelRoomId);
     const writers = await this.novelWriterRepo.findByNovelRoomId(novelRoomId);
     const hasBoard = await this.boardRepo.hasBoardLike(user.id, novelRoomId);
-    return new FindByIdLikeUserDto(board, hasBoard, writers);
+    return new FindByIdLikeUserDto(board, hasBoard, writers, user);
   }
 
   /**
