@@ -37,6 +37,7 @@ import { FindAttendStatusNovelRoomDto } from './dto/response/find-attend-status.
 import { TransactionInterceptor } from '@app/commons/interceptor/transaction.interceptor';
 import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { QueryRunner as QR } from 'typeorm';
+import { isEmpty } from '../commons/util/data.helper';
 
 @ApiTags('소설 공방')
 @Controller('novel-room')
@@ -60,6 +61,7 @@ export class NovelRoomController {
   async createRoom(@Body() dto: CreateNovelRoomDto, @CurrentUser() user: UserEntity, @QueryRunner() qr: QR): Promise<void> {
     const room = await this.novelRoomService.createRoom(dto, user);
     await this.novelAttendBoardService.create(dto.toAttendBoardEntity(room.id));
+    if (isEmpty(dto.novelTags)) return;
     await this.novelTagService.saveTag(dto.novelTags, room.id);
     return;
   }

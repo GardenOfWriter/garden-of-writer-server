@@ -58,22 +58,23 @@ export class WriterManagementService {
    * @returns {Promise<void>}
    */
   async changeWriterStatus(id: number, dto: UpdateNovelWriterStatusRequestDto, user: UserEntity): Promise<void> {
-    const requestWriter = await this.novelWriterRepo.findOneByIdWithNovelRoomAndUser(id);
+    const reqtWriter = await this.novelWriterRepo.findOneByIdWithNovelRoomAndUser(user.id);
 
-    if (isEmpty(requestWriter)) {
-      throw new NotFoundWriterIdExcetpion();
-    }
-
-    this.logger.log(`Request User Room Join ? ${JSON.stringify(requestWriter.isHost())}`);
-
-    if (!requestWriter.isHost()) {
+    if (!reqtWriter.isHost()) {
       throw new NotAccessWriterManagementExcetpion();
     }
 
-    const roomWriterCnt = await this.novelWriterRepo.findBynovelRoomIdAttendingCount(requestWriter.novelRoomId);
-    requestWriter.changeStatue(dto.status);
-    requestWriter.setSeq(roomWriterCnt + 1);
-    await this.novelWriterRepo.saveRow(requestWriter);
+    const writer = await this.novelWriterRepo.findById(id);
+    console.log(writer);
+    if (isEmpty(writer)) {
+      throw new NotFoundWriterIdExcetpion();
+    }
+
+    const roomWriterCnt = await this.novelWriterRepo.findBynovelRoomIdAttendingCount(reqtWriter.novelRoomId);
+    writer.changeStatue(dto.status);
+    writer.setSeq(roomWriterCnt + 1);
+
+    await this.novelWriterRepo.saveRow(writer);
     // TODO : 이메일 발송
     // await this.changeSendEmail(writer);
     return;

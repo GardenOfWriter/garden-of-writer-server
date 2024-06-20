@@ -7,11 +7,18 @@ import { WriterStatusDescription } from '../../entities/enums/writer-status.enum
 import { NovelWriterEntity } from '../../entities/novel-writer.entity';
 import { WriterCategoryDescription } from '../../entities/enums/writer-category.enum';
 import { FindNovelRoomWritersDto } from './find-novel-room-writers.dto';
+import { isEmpty } from '../../../commons/util/data.helper';
 
+/**
+ * Constructor for FindNovelRoomResponseDto
+ * @param {FindNovelRoomWritersDto[]} dto - Array of FindNovelRoomWritersDto
+ * @param {NovelWriterEntity} nextWriter - Next writer entity
+ */
 export class FindNovelRoomResponseDto {
   private _writers: FindNovelRoomWritersDto[];
-  private _nextWriter: string;
-  constructor(dto: FindNovelRoomWritersDto[], nextWriter: string) {
+  private _nextWriter: NovelWriterEntity;
+
+  constructor(dto: FindNovelRoomWritersDto[], nextWriter: NovelWriterEntity) {
     this._writers = dto;
     this._nextWriter = nextWriter;
   }
@@ -31,6 +38,7 @@ export class FindNovelRoomResponseDto {
   })
   @Expose()
   get nextWriter(): string {
-    return this._nextWriter;
+    if (isEmpty(this._nextWriter.user)) return '작자 미상';
+    return this._nextWriter.user.nickname;
   }
 }

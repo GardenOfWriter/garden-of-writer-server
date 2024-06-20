@@ -19,6 +19,8 @@ import { isEmpty } from '../commons/util/data.helper';
 import { FindNovelRoomWritersDto } from './dto/response/find-novel-room-writers.dto';
 import { FindNovelRoomResponseDto } from './dto/response/find-novel-room-response.dto';
 import { WriterSeqHelper } from './helper/writer-seq.helper';
+import { CreateNovelWriterDto } from './dto/request/create-novel-writer.dto';
+import { WriterCategoryEnum } from './entities/enums/writer-category.enum';
 
 /**
  * 소설 공방 작가 서비스
@@ -47,21 +49,16 @@ export class NovelWriterService {
    * @param {Partial<NovelWriterEntity>} entity 작가 정보
    * @returns {Promise<void>}
    */
-  async create(entity: Partial<NovelWriterEntity>): Promise<void> {
+  async create(dto: CreateNovelWriterDto, user: UserEntity): Promise<void> {
     /**
      *  TODO: 참여 작가로 참여하는건 2개를 초과해서는 안됨
      */
-    const writers = await this.novelWriterRepo.findByoptions({
-      where: {
-        novelRoom: { id: entity.novelRoom.id },
-        user: { id: entity.user.id },
-      },
-    });
+    const writers = await this.novelWriterRepo.findByNovelRoomIdJoinUser(dto.novelRoomId);
     this.logger.log(`Writer check ${JSON.stringify(writers)}`);
     if (!isEmpty(writers)) {
       throw new AlreadyExistWriterExcetpion();
     }
-    await this.novelWriterRepo.saveRow(entity);
+    await this.novelWriterRepo.saveRow(dto.toEntity(user, WriterCategoryEnum.ATTENDEE, WriterStatusEnum.REVIEW));
     return;
   }
 
@@ -104,11 +101,15 @@ export class NovelWriterService {
    * @returns {unknown}
    */
   async findByNoveRoomId(novelRoomId: number, user: UserEntity) {
-    const writers = await this.novelWriterRepo.findByNovelRoomId(novelRoomId);
+    const writers = await this.novelWriterRepo.findByNovelRoomIdWhereAttending(novelRoomId);
+
     this.logger.log(`Join Room : ${novelRoomId} Writer List ${JSON.stringify(writers)}`);
+
     const result = writers.map((writer, index) => new FindNovelRoomWritersDto(writer, index));
+
     const nextWriter = this.writerSeqHelper.getNextWriter(writers);
-    return new FindNovelRoomResponseDto(result, nextWriter.user.nickname);
+    // TODO : if(nextWriter)
+    return new FindNovelRoomResponseDto(result, nextWriter);
   }
 
   /**

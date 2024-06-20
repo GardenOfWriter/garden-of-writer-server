@@ -10,7 +10,7 @@ import { NovelWirterDto } from '../novel-writer.dto';
  */
 export class CreateNovelWriterDto extends PickType(NovelWirterDto, ['novelRoomId']) {
   toEntity(user: UserEntity, category: WriterCategoryType, status: WriterStatusType): Partial<NovelWriterEntity> {
-    const entity = NovelWriterEntity.of(this.novelRoomId, category, status, user, false);
+    const entity = NovelWriterEntity.of(this.novelRoomId, category, status, user, false, null);
     return entity;
   }
 }

@@ -102,7 +102,7 @@ export interface NovelWriterRepository {
    * @param {number} novelRoomId 소설 공방 id
    * @returns {Promise<NovelWriterEntity[]>} 작가 정보 리스트
    */
-  findByNovelRoomId(novelRoomId: number): Promise<NovelWriterEntity[]>;
+  findByNovelRoomIdWhereAttending(novelRoomId: number): Promise<NovelWriterEntity[]>;
 
   /**
    * 작가 정보 조회 (user id, novel room id)
@@ -145,4 +145,12 @@ export interface NovelWriterRepository {
    * @returns {Promise<[NovelWriterEntity[], number]>} 작가 정보 리스트
    */
   findByNovelRoomIdDetails(novelRoomId: number, pagination: BasePaginationRequest): Promise<[NovelWriterEntity[], number]>;
+
+  /**
+   * 소설 공방 작가 정보 조회
+   *
+   * @param {number} novelRoomId 소설 공방 id
+   * @returns {Promise<NovelWriterEntity[]>} 작가 정보 리스트
+   */
+  findByNovelRoomIdJoinUser(novelRoomId: number): Promise<NovelWriterEntity[]>;
 }

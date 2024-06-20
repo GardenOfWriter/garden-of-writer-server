@@ -81,12 +81,27 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     });
   }
 
-  async findByNovelRoomId(novelRoomId: number): Promise<NovelWriterEntity[]> {
+  async findByNovelRoomIdWhereAttending(novelRoomId: number): Promise<NovelWriterEntity[]> {
     return await this.dataSource.find({
       select: ['id', 'status', 'category', 'writingSeq', 'currentlyWriting', 'user'],
       relations: ['user'],
       where: {
         status: WriterStatusEnum.ATTENDING,
+        novelRoom: {
+          id: novelRoomId,
+        },
+      },
+      order: {
+        writingSeq: 'ASC',
+      },
+    });
+  }
+
+  async findByNovelRoomIdJoinUser(novelRoomId: number): Promise<NovelWriterEntity[]> {
+    return await this.dataSource.find({
+      select: ['id', 'status', 'category', 'writingSeq', 'currentlyWriting', 'user'],
+      relations: ['user'],
+      where: {
         novelRoom: {
           id: novelRoomId,
         },
@@ -116,7 +131,9 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     return await this.dataSource.findOne({
       relations: ['user', 'novelRoom'],
       where: {
-        id,
+        user: {
+          id,
+        },
       },
     });
   }

@@ -86,7 +86,7 @@ export class NovelTextService {
     const text = await this.novelTextRepo.findByIdJoinUser(id);
     text.setComplated();
     const chapter = await this.chapterRepo.findById(text.chapterId);
-    const writers = await this.novelWriterRepo.findByNovelRoomId(+chapter.novelRoomId);
+    const writers = await this.novelWriterRepo.findByNovelRoomIdWhereAttending(+chapter.novelRoomId);
     const nextWriter = this.writerSeqHelper.getNextWriter(writers);
     nextWriter.setCurrentyWriter(true);
     await this.novelTextRepo.addRow(text);

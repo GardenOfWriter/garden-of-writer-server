@@ -22,6 +22,7 @@ export class FindNovelRoomWritersDto {
     this._category = entity.category;
     this._writingSeq = entity.writingSeq;
     this._currentlyWriting = entity.currentlyWriting;
+
     // this._no = no;
   }
   // @ApiProperty({

@@ -11,6 +11,8 @@ import { WriterCategoryEnum } from './entities/enums/writer-category.enum';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterService } from './novel-writer.service';
 import { ApplyNovelRoomWriter, ChangeWriterSeqRequest, ExitWriter, FindWriter } from './decorator/swagger.decorator';
+import { FindNovelWriteManagementDto } from './dto/request/find-novel-writer.dto';
+import { FindAttendingNovelWrite } from './dto/request/find-attending-novel-writer.dto';
 
 @ApiTags('작가 리스트 [피그마 5번 작가 관련]')
 @Controller('writer')
@@ -27,8 +29,8 @@ export class NovelWriterController {
    */
   @FindWriter()
   @Get('')
-  async findNovelWirters(@Query('novelRoomId') novelRoomId: number, @CurrentUser() user: UserEntity) {
-    return await this.novelWriterService.findByNoveRoomId(novelRoomId, user);
+  async findNovelWirters(@Query() dto: FindAttendingNovelWrite, @CurrentUser() user: UserEntity) {
+    return await this.novelWriterService.findByNoveRoomId(dto.novelRoomId, user);
   }
   /**
    * 소설 공방에 참여 신청
@@ -37,7 +39,7 @@ export class NovelWriterController {
   @Post('/novel-room/approval')
   create(@CurrentUser() user: UserEntity, @Body() dto: CreateNovelWriterDto) {
     const writer = dto.toEntity(user, WriterCategoryEnum.ATTENDEE, WriterStatusEnum.REVIEW);
-    return this.novelWriterService.create(writer);
+    return this.novelWriterService.create(dto, user);
   }
 
   /**

@@ -19,7 +19,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       validate: exception?.validate,
       message,
     };
-    this.logger.error(`HTTP Error: ${statusCode} - Message: ${message}`);
+    this.logger.error(`HTTP Error: ${statusCode} - Message: ${message} Path ${request.path}`);
     this.logger.error(`exception ${JSON.stringify(exception)}`);
     response.json(responseBody);
   }
