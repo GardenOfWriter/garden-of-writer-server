@@ -7,6 +7,6 @@ export class FindAttendingNovelWrite {
     example: 1,
     description: '공방 룸 ID',
   })
-  @IsNumberString()
+  @IsNumber()
   novelRoomId: number;
 }
