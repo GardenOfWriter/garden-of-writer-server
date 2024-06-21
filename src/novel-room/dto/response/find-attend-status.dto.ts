@@ -1,5 +1,5 @@
 import { NovelRoomStatusType } from '@app/novel-room/entities/enum/novel-room-status.enum';
-import { Expose } from 'class-transformer';
+import { Expose, Exclude } from 'class-transformer';
 import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
 import { NovelRoomEntity } from '../../entities/novel-room.entity';
@@ -11,20 +11,22 @@ import { WriterCategoryDescription, WriterCategoryEnum } from '@app/novel-writer
 import { NovelRoomStatuDescription } from '../../entities/enum/novel-room-status.enum';
 import { convertDayFormat } from '@app/commons/util/date.util';
 import { WriterStatusDescription } from '@app/novel-writer/entities/enums/writer-status.enum';
+import { getSize } from '../../../commons/util/data.helper';
 
 export class FindAttendStatusNovelRoomDto {
-  private _category: number;
-  private _title: string;
-  private _createdAt: Date;
-  private _completedAt: string; // 완결일
-  private _writers: NovelWriterEntity[];
-  private _type: NovelRoomType;
-  private _id: number;
-  private _bookCover: string;
-  private _status: NovelRoomStatusType;
-  private _requestUser: NovelWriterEntity;
+  @Exclude() private _category: number;
+  @Exclude() private _title: string;
+  @Exclude() private _createdAt: Date;
+  @Exclude() private _completedAt: string; // 완결일
+  @Exclude() private _writers: NovelWriterEntity[];
+  @Exclude() private _type: NovelRoomType;
+  @Exclude() private _id: number;
+  @Exclude() private _bookCover: string;
+  @Exclude() private _status: NovelRoomStatusType;
+  @Exclude() private _requestUser: NovelWriterEntity;
+  @Exclude() private _attendWriters: NovelWriterEntity[];
 
-  constructor(user: UserEntity, room: NovelRoomEntity) {
+  constructor(user: UserEntity, room: NovelRoomEntity, attendWriters?: NovelWriterEntity[]) {
     this._id = room.id;
     this._category = room.category;
     this._title = room.title;
@@ -34,6 +36,7 @@ export class FindAttendStatusNovelRoomDto {
     this._requestUser = room.novelWriter.filter((writer) => writer.user.id === user.id)[0];
     this._status = room.status;
     this._completedAt = room.completedAt;
+    this._attendWriters = attendWriters;
   }
   @ApiProperty({
     example: 1,
@@ -95,7 +98,7 @@ export class FindAttendStatusNovelRoomDto {
   })
   @Expose({ name: 'currentAttendCnt' })
   get currentAttendCnt(): number {
-    return this._writers.length;
+    return getSize(this._attendWriters);
   }
 
   @ApiProperty({
