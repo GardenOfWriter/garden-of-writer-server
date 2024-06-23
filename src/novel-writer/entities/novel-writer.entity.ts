@@ -28,7 +28,7 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @Column('boolean', { comment: '현재 작성 여부', nullable: true })
   currentlyWriting: boolean;
 
-  @Column('int', { comment: '현재 작성 여부', nullable: true })
+  @Column('int', { comment: '현재 작성 여부' })
   writingSeq: number;
 
   @Column('timestamp', {

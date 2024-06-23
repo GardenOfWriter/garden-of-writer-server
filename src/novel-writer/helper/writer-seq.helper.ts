@@ -14,7 +14,6 @@ export class WriterSeqHelper {
   getNextWriter(writers: NovelWriterEntity[]): NovelWriterEntity {
     const currentWriter = writers.filter((writer) => writer.isCurrentlyWriter())[0];
     const nextWriterSeq = currentWriter.getNextSeq(getSize(writers));
-
     const result = writers.filter((writer) => writer.writingSeq === nextWriterSeq)[0];
     return result;
   }

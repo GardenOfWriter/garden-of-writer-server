@@ -93,7 +93,7 @@ export class NovelTextService {
     nextWriter.setCurrentyWriter(true);
     await this.novelTextRepo.addRow(text);
     await this.novelWriterRepo.updateRow(nextWriter.id, nextWriter);
-    console.log(text);
+
     this.chatsGateway.sendNovelRoomInMessage(
       text.createdBy.id,
       SOCKET_EVENT.UPDATE_TEXT,

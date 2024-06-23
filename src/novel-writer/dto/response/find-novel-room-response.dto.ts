@@ -17,10 +17,11 @@ import { isEmpty } from '../../../commons/util/data.helper';
 export class FindNovelRoomResponseDto {
   private _writers: FindNovelRoomWritersDto[];
   private _nextWriter: NovelWriterEntity;
-
-  constructor(dto: FindNovelRoomWritersDto[], nextWriter: NovelWriterEntity) {
+  private _reqWriter: NovelWriterEntity;
+  constructor(dto: FindNovelRoomWritersDto[], nextWriter: NovelWriterEntity, reqWriter: NovelWriterEntity) {
     this._writers = dto;
     this._nextWriter = nextWriter;
+    this._reqWriter = reqWriter;
   }
 
   @ApiProperty({
@@ -40,5 +41,16 @@ export class FindNovelRoomResponseDto {
   get nextWriter(): string {
     if (isEmpty(this._nextWriter.user)) return '작자 미상';
     return this._nextWriter.user.nickname;
+  }
+
+  @ApiProperty({
+    example: true,
+    description: '대표작가 확인, true: 대표작가,false : 참역작가',
+  })
+  @Expose()
+  get isHost(): boolean {
+    if (isEmpty(this._reqWriter)) return false;
+
+    return this._reqWriter.isHost();
   }
 }

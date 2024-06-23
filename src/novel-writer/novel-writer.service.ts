@@ -108,8 +108,10 @@ export class NovelWriterService {
     const result = writers.map((writer, index) => new FindNovelRoomWritersDto(writer, index));
 
     const nextWriter = this.writerSeqHelper.getNextWriter(writers);
-    // TODO : if(nextWriter)
-    return new FindNovelRoomResponseDto(result, nextWriter);
+
+    const reqWriter = writers.filter((writer) => writer.user.id === user.id)[0];
+
+    return new FindNovelRoomResponseDto(result, nextWriter, reqWriter);
   }
 
   /**
