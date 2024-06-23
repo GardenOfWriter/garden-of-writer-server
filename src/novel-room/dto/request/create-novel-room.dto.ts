@@ -113,6 +113,6 @@ export class CreateNovelRoomDto {
   toWriterEntity(roomId: number, user: UserEntity) {
     const host = WriterCategoryEnum.HOST;
     // Room 생성할때 host는 자동으로 현재 작성 유저로 설정
-    return NovelWriterEntity.of(roomId, host, WriterStatusEnum.ATTENDING, user, true);
+    return NovelWriterEntity.of(roomId, host, WriterStatusEnum.ATTENDING, user, true, 1);
   }
 }
