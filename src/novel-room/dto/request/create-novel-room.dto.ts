@@ -105,9 +105,9 @@ export class CreateNovelRoomDto {
     return NovelAttendBoardEntity.of(roomId, this.attendTitle, this.attendContent, this.attendOpenKakaoLink);
   }
 
-  toChapterEntity(roomId: number, user: UserEntity): ChapterEntity {
+  toChapterEntity(roomId: number, user: UserEntity, no: number): ChapterEntity {
     const chapterStatus = ChapterStatusEnum.WRITING;
-    return ChapterEntity.of(roomId, chapterStatus, user);
+    return ChapterEntity.of(roomId, chapterStatus, user, '프롤로그', no);
   }
 
   toWriterEntity(roomId: number, user: UserEntity) {

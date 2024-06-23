@@ -12,8 +12,8 @@ export class UpdateChapterRequestDto extends PickType(ChapterDto, ['status', 'ti
   @IsNumber()
   id: number;
 
-  toEntity(user: UserEntity): Partial<ChapterEntity> {
-    const entity = ChapterEntity.of(this.novelRoomId, this.status, user, this.title);
+  toEntity(user: UserEntity, no: number): Partial<ChapterEntity> {
+    const entity = ChapterEntity.of(this.novelRoomId, this.status, user, this.title, no);
     return entity;
   }
 }

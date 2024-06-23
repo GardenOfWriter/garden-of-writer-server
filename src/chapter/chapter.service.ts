@@ -2,13 +2,14 @@ import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { FindChapterRoomIdResDto } from './dto/response/findbychapter-id.dto';
 import { ChapterEntity } from './entities/chapter.entity';
 import { FindByNovelRoomIdDto } from './dto/request/findby-novel-room-id.dto';
-import { ChapterRepo, ChapterRepository, ChapterRepositoryToken } from './repository/chapter.repository';
+import { ChapterRepo, ChapterRepository } from './repository/chapter.repository';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
-import { ChapterStatusEnum } from './entities/enums/chapter-status.enum';
 import { ChangeTitleDto } from './dto/request/change-title.dto';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { isEmpty } from '../commons/util/data.helper';
 import { NotFoundChapterException, NotWritingChapterException } from './exception/chpater.exception';
+import { ChapterStatusEnum } from './entities/enums/chapter-status.enum';
+import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
 
 /**
  * 회차 서비스 클래스
@@ -26,19 +27,19 @@ export class ChapterService {
     private readonly chapterRepository: ChapterRepository,
   ) {}
 
-  /**
-   * 회차 생성
-   *
-   * @async
-   * @param {Partial<ChapterEntity>} entity 생성할 회차 정보
-   * @returns {Promise<void>}
-   */
-  async save(entity: Partial<ChapterEntity>): Promise<void> {
-    const count = await this.nextChapterNo(entity.novelRoomId);
-    entity.setNo(count);
-    await this.chapterRepository.saveRow(entity);
-    return;
-  }
+  // /**
+  //  * 회차 생성
+  //  *
+  //  * @async
+  //  * @param {Partial<ChapterEntity>} entity 생성할 회차 정보
+  //  * @returns {Promise<void>}
+  //  */
+  // async saveNextChapter(entity: Partial<ChapterEntity>): Promise<void> {
+  //   const count = await this.nextChapterNo(entity.novelRoomId);
+  //   entity.setNo(count);
+  //   await this.chapterRepository.saveRow(entity);
+  //   return;
+  // }
 
   /**
    * 회차 수정
@@ -65,7 +66,7 @@ export class ChapterService {
     if (!chapter.isWritingStatus()) throw new NotWritingChapterException();
     chapter.setReviewStatus();
     this.logger.log(`Chapter Apply ${JSON.stringify(chapter)}`);
-    await this.save(chapter);
+    await this.chapterRepository.saveRow(chapter);
     return;
   }
 
@@ -81,7 +82,24 @@ export class ChapterService {
     const chapter = await this.findByChapterId(id);
     if (!isEmpty(chapter)) throw new NotFoundChapterException();
     chapter.changeTitle(dto.title);
-    await this.save(chapter);
+    await this.chapterRepository.saveRow(chapter);
+    return;
+  }
+
+  /**
+   * 다음 회차 생성
+   *
+   * @async
+   * @param {number} id 회차 Id
+   * @returns {Promise<void>} 다음 회차 생성
+   *
+   */
+  async saveNextChpater(dto: CreateChapterRequestDto, user: UserEntity): Promise<void> {
+    const chapter = await this.findByChapterId(dto.id);
+    const countChapter = await this.chapterRepository.countByNovelRoomId(+chapter.novelRoomId);
+    if (isEmpty(chapter)) throw new NotFoundChapterException();
+    const nextChapter = ChapterEntity.of(+chapter.novelRoomId, ChapterStatusEnum.WRITING, user, '임시 회차', countChapter + 1);
+    await this.chapterRepository.saveRow(nextChapter);
     return;
   }
 

@@ -74,7 +74,7 @@ export class NovelRoomService {
     const room = dto.toRoomEntity(user);
     await this.novelRoomRepo.saveRow(room);
     const writer = dto.toWriterEntity(room.id, user);
-    const chapter = dto.toChapterEntity(room.id, user);
+    const chapter = dto.toChapterEntity(room.id, user, 1);
     await Promise.all([await this.novelWriterRepo.saveRow(writer), await this.chapterRepo.saveRow(chapter)]);
     return room;
   }

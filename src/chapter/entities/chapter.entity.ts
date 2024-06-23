@@ -58,9 +58,9 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   @OneToMany((_type) => ChapterLikeEntity, (like) => like.chapter)
   chapterLike: ChapterLikeEntity[];
 
-  static of(novelRoomId: number, status: ChapterStatusType, user: UserEntity, title: string = '프롤로그') {
+  static of(novelRoomId: number, status: ChapterStatusType, user: UserEntity, title: string = '프롤로그', no: number) {
     const chapter = new ChapterEntity();
-    chapter.no = 1;
+    chapter.no = no;
     chapter.novelRoomId = novelRoomId;
     chapter.status = status;
     chapter.title = title;

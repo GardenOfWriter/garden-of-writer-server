@@ -30,7 +30,7 @@ export class ChapterController {
   @CreateChapter()
   @Post('')
   create(@CurrentUser() user: UserEntity, @Body() dto: CreateChapterRequestDto) {
-    return this.chapterService.save(dto.toEntity(user));
+    return this.chapterService.saveNextChpater(dto, user);
   }
 
   @ApplyChapter()

@@ -49,6 +49,14 @@ export interface NovelTextRepository {
   findByChapterIdJoinUser(chapterId: number, pagination: BasePaginationRequest): Promise<[NovelTextEntity[], number]>;
 
   /**
+   * 회차별 글쓰기 상태 작성 완료 아닌 텍스트 찾기
+   *
+   * @param {number} chapterId
+   * @returns {*}
+   */
+  findByChpaterIdNotCompleted(chapterId: number);
+
+  /**
    * 소설 텍스트 상세정보 조회
    *
    * @param {number} id 소설 텍스트 Id

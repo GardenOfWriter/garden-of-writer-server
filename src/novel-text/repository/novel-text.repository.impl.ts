@@ -1,8 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, In, Repository } from 'typeorm';
 import { NovelTextEntity } from '../entities/novel-text.entity';
 import { NovelTextRepository } from './novel-text.repository';
 import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
+import {} from 'typeorm';
+import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.enum';
+import { NovelTextStatusEnum } from '../entities/enum/novel-text-status.enum';
 
 export class NovelTextRepositoryImpl implements NovelTextRepository {
   constructor(
@@ -36,5 +39,8 @@ export class NovelTextRepositoryImpl implements NovelTextRepository {
       order: { createdAt: 'ASC' },
       relations: ['createdBy'],
     });
+  }
+  async findByChpaterIdNotCompleted(chapterId: number): Promise<NovelTextEntity[]> {
+    return await this.dataSource.find({ where: { chapterId, status: NovelTextStatusEnum.TEMP_SAVE } });
   }
 }

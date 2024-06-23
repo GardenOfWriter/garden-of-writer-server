@@ -48,6 +48,8 @@ export class NovelTextService {
   async create(entity: Partial<NovelTextEntity>): Promise<void> {
     const chapter = await this.chapterRepo.findById(entity.chapterId);
     const textId = await this.novelTextRepo.addRow(entity);
+    chapter.chapterFinalWriterd();
+    await this.chapterRepo.saveRow(chapter);
     this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId, chapterId: entity.chapterId }));
     return;
   }
