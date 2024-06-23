@@ -116,7 +116,7 @@ export class FindAttendStatusNovelRoomDto {
   })
   @Expose({ name: 'currentWriter' })
   get currentWriter(): string {
-    const currentWriter = this._writers.filter((writer) => writer.currentlyWriting)[0];
+    const currentWriter = this._attendWriters.filter((attendWriter) => attendWriter.isCurrentlyWriter())[0];
     return currentWriter?.user.nickname;
   }
 

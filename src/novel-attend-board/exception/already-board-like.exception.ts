@@ -7,3 +7,9 @@ export class AlreadBoardLikeException extends BaseException {
     super(BoardErrorMessage.ALREAD_BOARD_LIKE, HttpStatus.CONFLICT);
   }
 }
+
+export class NotFoundNovelAttendBoardException extends BaseException {
+  constructor() {
+    super(BoardErrorMessage.NOT_FOUND_NOVEL_ATTEND_BOARD, HttpStatus.NOT_FOUND);
+  }
+}

@@ -87,6 +87,7 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     this.currentlyWriting = currentlyWriter;
   }
   isCurrentlyWriter() {
+    console.log('current ', this.currentlyWriting);
     return this.currentlyWriting;
   }
 

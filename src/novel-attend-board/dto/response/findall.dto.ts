@@ -7,6 +7,8 @@ import { UserEntity } from '@app/user/entities/user.entity';
 import { convertDayFormat } from '@app/commons/util/date.util';
 import { RoomCategoryDescription, findCategoryName } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { NovelAttendBoardEntity } from '@app/novel-attend-board/entities/novel-attend-board.entity';
+import { isEmail } from 'class-validator';
+import { isEmpty } from 'lodash';
 
 export class FindAllNovelAttendBoardDto {
   private _roomId: number;
@@ -78,7 +80,10 @@ export class FindAllNovelAttendBoardDto {
   })
   @Expose()
   get host(): string {
-    const hostWriter = this._writers.filter((writer) => writer.isHost())[0];
+    const hostWriter = this._writers.filter((writer) => {
+      return writer.isHost();
+    })[0];
+    if (isEmpty(hostWriter)) return 'test';
     return hostWriter.user.nickname;
   }
   @ApiProperty({

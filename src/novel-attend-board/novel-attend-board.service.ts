@@ -8,9 +8,10 @@ import { FindAttendBoardDto } from './dto/request/find-attend-board.dto';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { FindByIdLikeUserDto } from './dto/response/findby-id-like-user.dto';
 import { CreateBoardLikeDto } from './dto/request/create-board-like.dto';
-import { AlreadBoardLikeException } from './exception/already-board-like.exception';
 import { UpdateNovelRoomDto } from '@app/novel-room/dto/request/update-novel-room.dto';
 import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
+import { isEmpty } from 'lodash';
+import { AlreadBoardLikeException, NotFoundNovelAttendBoardException } from './exception/already-board-like.exception';
 
 @Injectable()
 export class NovelAttendBoardService {
@@ -59,7 +60,10 @@ export class NovelAttendBoardService {
    */
   async findById(novelRoomId: number, user: UserEntity): Promise<FindByIdLikeUserDto> {
     const board = await this.boardRepo.findByIdWhereLikeUserJoinNovelRoom(novelRoomId);
+    console.log('board ', board);
+    if (isEmpty(board)) throw new NotFoundNovelAttendBoardException();
     const writers = await this.novelWriterRepo.findByNovelRoomIdWhereAttending(novelRoomId);
+    console.log(writers);
     const hasBoard = await this.boardRepo.hasBoardLike(user.id, novelRoomId);
     return new FindByIdLikeUserDto(board, hasBoard, writers, user);
   }
