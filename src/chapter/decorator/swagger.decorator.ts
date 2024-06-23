@@ -8,7 +8,7 @@ import { SwaggerExceptionDto } from '@app/commons/decorator/swagger/swagger.exce
 export function CreateChapter(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '회차 연재 신청',
+      summary: '다음 회차 생성',
     }),
   );
 }
