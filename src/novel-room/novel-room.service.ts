@@ -1,6 +1,6 @@
 import { ChapterRepo } from '@app/chapter/repository/chapter.repository';
 import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
-import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateNovelRoomDto } from '@app/novel-room/dto/request/create-novel-room.dto';
 import { NovelRoomEntity } from 'src/novel-room/entities/novel-room.entity';
 import { ChapterRepository } from '../chapter/repository/chapter.repository';

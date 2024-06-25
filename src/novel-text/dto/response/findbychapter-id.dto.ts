@@ -4,8 +4,45 @@ import { NovelTextEntity } from '../../entities/novel-text.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { convertDayFormat } from '../../../commons/util/date.util';
 import { UserEntity } from '@app/user/entities/user.entity';
+import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
+import { isEmpty } from '../../../commons/util/data.helper';
 
 export class FindByChapterIdResponseDto {
+  private _chapterItems: ChapterItemsDto[];
+  private _latestChapter: ChapterEntity;
+
+  constructor(entity: NovelTextEntity[], latestChapter: ChapterEntity) {
+    this._chapterItems = entity.map((e) => new ChapterItemsDto(e));
+    this._latestChapter = latestChapter;
+  }
+
+  @ApiProperty({
+    example: true,
+    description: '다음 회차 생성 가능 여부',
+  })
+  @Expose()
+  get isNextEnable(): boolean {
+    return isEmpty(this._latestChapter) ? false : true;
+  }
+
+  @ApiProperty({
+    example: {
+      id: 1,
+      chapterId: 1,
+      status: 1,
+      content: 'this is content',
+      createdAt: '2021-01-01 00:00:00',
+      updatedAt: '2021-01-01 00:00:00',
+    },
+    description: '소설 글쓰기 상세',
+  })
+  @Expose()
+  get texts(): ChapterItemsDto[] {
+    return this._chapterItems;
+  }
+}
+
+export class ChapterItemsDto {
   private _id: number;
   private _chapterId: number;
   private _status: NovelTextStatusType;

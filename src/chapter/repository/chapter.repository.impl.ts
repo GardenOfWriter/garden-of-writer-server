@@ -19,6 +19,18 @@ export class ChapterRepositoryImpl implements ChapterRepository {
   async findOneByOptions(options: FindOneOptions<ChapterEntity>): Promise<ChapterEntity> {
     return await this.dataSource.findOne(options);
   }
+
+  async findOneLatestByIdJoinNovelRoom(id: number): Promise<ChapterEntity> {
+    return await this.dataSource.findOne({
+      relations: ['novelRoom'],
+      where: {
+        id,
+      },
+      order: {
+        no: 'DESC',
+      },
+    });
+  }
   async countByNovelRoomId(noveRoomId: number): Promise<number> {
     return await this.dataSource.count({
       where: {
@@ -26,8 +38,8 @@ export class ChapterRepositoryImpl implements ChapterRepository {
       },
     });
   }
-  findChpaterByRoomIdAndCount(novelRoomId: number, pagination: BasePaginationRequest): Promise<[ChapterEntity[], number]> {
-    return this.dataSource.findAndCount({
+  async findChpaterByRoomIdAndCount(novelRoomId: number, pagination: BasePaginationRequest): Promise<[ChapterEntity[], number]> {
+    return await this.dataSource.findAndCount({
       take: pagination.take,
       skip: pagination.skip,
       where: {

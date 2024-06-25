@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { UserEntity } from '../user/entities/user.entity';
-import { FindByChapterIdResponseDto } from './dto/response/findbychapter-id.dto';
+import { ChapterItemsDto, FindByChapterIdResponseDto } from './dto/response/findbychapter-id.dto';
 import { NovelTextEntity } from './entities/novel-text.entity';
 import { NovelTextRepo, NovelTextRepository } from './repository/novel-text.repository';
 import { ChatsGateway } from '@app/chats/chats.gateway';
@@ -129,8 +129,9 @@ export class NovelTextService {
    */
   async findByChapterIdNovelText(dto: FindByChapterIdNovelTextDto): Promise<PagingationResponse<FindByChapterIdResponseDto>> {
     const [texts, totalCount] = await this.novelTextRepo.findByChapterIdJoinUser(dto.chapterId, dto);
-    const item = texts.map((text) => new FindByChapterIdResponseDto(text));
-    return new PagingationResponse(totalCount, dto.chunkSize, item);
+    const chapter = await this.chapterRepo.findOneLatestByIdJoinNovelRoom(dto.chapterId, { orderBy: 'DESC' });
+    const items = new FindByChapterIdResponseDto(texts, chapter);
+    return new PagingationResponse<FindByChapterIdResponseDto>(totalCount, dto.chunkSize, items);
   }
 
   /**
@@ -139,13 +140,14 @@ export class NovelTextService {
    * @async
    * @param {number} textId 소설 텍스트 ID
    * @returns {Promise<NovelTextEntity>} 조회된 소설 텍스트 정보 엔티티
-   */
-  async findById(textId: number): Promise<FindByChapterIdResponseDto> {
+  //  */
+  async findById(textId: number): Promise<ChapterItemsDto> {
     const text = await this.novelTextRepo.findByIdJoinUser(textId);
+    const chapter = await this.chapterRepo.findById(text.chapterId);
     if (isEmpty(text)) {
       throw new NotFoundTextException();
     }
-    return new FindByChapterIdResponseDto(text);
+    return new ChapterItemsDto(text);
   }
 
   // /**

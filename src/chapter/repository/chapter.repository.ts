@@ -55,6 +55,14 @@ export interface ChapterRepository {
   findByoptions(options: FindOneOptions<ChapterEntity>): Promise<ChapterEntity[]>;
 
   /**
+   * 회차 정보 검색
+   *
+   * @param {number} id 회차 Id
+   * @returns {Promise<ChapterEntity>} 검색된 회차 정보
+   */
+  findOneLatestByIdJoinNovelRoom(id: number, options: { orderBy: 'ASC' | 'DESC' }): Promise<ChapterEntity>;
+
+  /**
    * 회차 정보 조회 및 개수 조회 (페이징 처리)
    *
    * @param {number} novelRoomId 소설 공방 id
