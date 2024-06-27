@@ -36,7 +36,7 @@ export class NovelTextRepositoryImpl implements NovelTextRepository {
       take: pagination.take,
       skip: pagination.skip,
       where: { chapterId },
-      order: { createdAt: 'ASC' },
+      order: { createdAt: 'DESC' },
       relations: ['createdBy'],
     });
   }

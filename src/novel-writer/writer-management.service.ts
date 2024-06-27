@@ -65,7 +65,6 @@ export class WriterManagementService {
     }
 
     const writer = await this.novelWriterRepo.findById(id);
-    console.log(writer);
     if (isEmpty(writer)) {
       throw new NotFoundWriterIdExcetpion();
     }

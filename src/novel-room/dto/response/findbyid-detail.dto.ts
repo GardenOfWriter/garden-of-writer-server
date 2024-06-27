@@ -24,12 +24,12 @@ export class FindByRoomIdDetailDto {
   private _category: NovelRoomCategoryType;
   private _character: string;
   private _summary: string;
+  private _bookCover: string;
   private _completedAt: string;
   private _status: NovelRoomStatusType;
   private _novelTags: NovelTagEntity[];
   private _writers: NovelWriterEntity[];
   private _user: UserEntity;
-  private _bookCover: string;
   constructor(room: NovelRoomEntity, user: UserEntity) {
     this._id = room.id;
     this._title = room.title;
@@ -37,6 +37,7 @@ export class FindByRoomIdDetailDto {
     this._category = room.category;
     this._character = room.character;
     this._summary = room.summary;
+    this._bookCover = room.bookCover;
     this._status = room.status;
     this._completedAt = room.completedAt;
     this._createdAt = room.createdAt;

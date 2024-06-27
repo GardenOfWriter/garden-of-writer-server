@@ -27,6 +27,7 @@ async function bootstrap() {
     // origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
+    // allowedHeaders: ['auth', 'authorization'],
   });
   app.use(cookieParser()); // 쿠키 파서 사용
   // app.useWebSocketAdapter(new SocketIoAdpater(app)); // 웹소켓 어댑터 사용

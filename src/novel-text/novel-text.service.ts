@@ -34,7 +34,7 @@ export class NovelTextService {
     private chapterRepo: ChapterRepository,
     private chatsGateway: ChatsGateway,
     private writerSeqHelper: WriterSeqHelper,
-  ) {}
+  ) { }
 
   /**
    * 소설 텍스트 생성
@@ -46,12 +46,21 @@ export class NovelTextService {
    * @returns {Promise<void>}
    */
   async create(entity: Partial<NovelTextEntity>): Promise<void> {
-    const chapter = await this.chapterRepo.findById(entity.chapterId);
-    const textId = await this.novelTextRepo.addRow(entity);
-    chapter.chapterFinalWriterd();
-    await this.chapterRepo.saveRow(chapter);
-    this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId, chapterId: entity.chapterId }));
-    return;
+    try {
+      const chapter = await this.chapterRepo.findById(entity.chapterId);
+      const textId = await this.novelTextRepo.addRow(entity);
+      console.log('chapter =======');
+      console.log(chapter);
+      console.log('textId=========');
+      console.log(textId);
+      chapter.chapterFinalWriterd();
+      await this.chapterRepo.saveRow(chapter);
+      this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId, chapterId: entity.chapterId }));
+      return;
+    } catch (err) {
+      console.log(err)
+    }
+
   }
 
   /**

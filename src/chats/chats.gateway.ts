@@ -92,8 +92,8 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
       this.roomNsp[roomNameSpace.name] = roomNameSpace;
     }
     const roomId = roomNameSpace.name.split('-')[1];
-    // const accessToken = socket.handshake.headers['auth'] as string;
     const accessToken = socket.handshake.auth.accessToken as string;
+    // const accessToken = socket.handshake.auth.accessToken as string;
 
     this.logger.log(`Request AccessToken ${accessToken}`);
     // const accessToken = headers.find((header) => header.includes('accessToken')).split('=')[1];
