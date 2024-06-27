@@ -3,9 +3,9 @@ import { FindOneOptions, In, Repository } from 'typeorm';
 import { NovelTextEntity } from '../entities/novel-text.entity';
 import { NovelTextRepository } from './novel-text.repository';
 import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
-import {} from 'typeorm';
-import { ChapterStatusEnum } from '@app/chapter/entities/enums/chapter-status.enum';
+
 import { NovelTextStatusEnum } from '../entities/enum/novel-text-status.enum';
+import _, { sortBy } from 'lodash';
 
 export class NovelTextRepositoryImpl implements NovelTextRepository {
   constructor(
@@ -32,13 +32,15 @@ export class NovelTextRepositoryImpl implements NovelTextRepository {
     return await this.dataSource.findOne({ where: { id }, relations: ['createdBy'] });
   }
   async findByChapterIdJoinUser(chapterId: number, pagination: BasePaginationRequest): Promise<[NovelTextEntity[], number]> {
-    return await this.dataSource.findAndCount({
+    const [datas, count] = await this.dataSource.findAndCount({
       take: pagination.take,
       skip: pagination.skip,
       where: { chapterId },
       order: { createdAt: 'DESC' },
       relations: ['createdBy'],
     });
+    const sortData = sortBy(datas, 'id');
+    return [sortData, count];
   }
   async findByChpaterIdNotCompleted(chapterId: number): Promise<NovelTextEntity[]> {
     return await this.dataSource.find({ where: { chapterId, status: NovelTextStatusEnum.TEMP_SAVE } });

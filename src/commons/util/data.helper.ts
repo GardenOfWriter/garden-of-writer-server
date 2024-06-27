@@ -20,3 +20,7 @@ export const isEmpty = (data: any): boolean => {
 export const getSize = (data: any) => {
   return _.size(data);
 };
+
+export const sortBy = (data: any, key: string) => {
+  return _.sortBy(data, key);
+};
