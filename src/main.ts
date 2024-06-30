@@ -19,12 +19,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'https://port-0-front-128y2k2llvlon7bn.sel5.cloudtype.app',
-      'https://port-0-garden-of-writer-server-71t02clq3bpxzf.sel4.cloudtype.app/',
-      'https://garden-writer-front.vercel.app/',
-    ],
+    origin: true,
     // origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
@@ -34,7 +29,7 @@ async function bootstrap() {
   // app.useWebSocketAdapter(new SocketIoAdpater(app)); // 웹소켓 어댑터 사용
   // JSON 직렬화를 위해 필요
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  await app.listen(3000);
+  await app.listen(process.env.PORT);
   process.on('SIGINT', async () => {
     logger.log('Received SIGINT. Shutting down gracefully...');
     await app.close();
