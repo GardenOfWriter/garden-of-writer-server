@@ -34,7 +34,7 @@ async function bootstrap() {
   // app.useWebSocketAdapter(new SocketIoAdpater(app)); // 웹소켓 어댑터 사용
   // JSON 직렬화를 위해 필요
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  await app.listen(3001);
+  await app.listen(3000);
   process.on('SIGINT', async () => {
     logger.log('Received SIGINT. Shutting down gracefully...');
     await app.close();
