@@ -23,6 +23,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'https://port-0-front-128y2k2llvlon7bn.sel5.cloudtype.app',
       'https://port-0-garden-of-writer-server-71t02clq3bpxzf.sel4.cloudtype.app/',
+      'https://garden-writer-front.vercel.app/',
     ],
     // origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
