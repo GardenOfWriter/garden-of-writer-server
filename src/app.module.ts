@@ -100,6 +100,6 @@ import { AppHeaderProvider } from './commons/provider/app-header.provider';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AppHeaderProvider).forRoutes('*');
+    // consumer.apply(AppHeaderProvider).forRoutes('*');
   }
 }
