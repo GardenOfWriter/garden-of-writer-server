@@ -19,7 +19,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: 'https://port-next-garden-writer-front-71t02clq3bpxzf.sel4.cloudtype.app', // Next.js 프론트엔드 URL
+    origin: ['http://localhost:3000', 'https://port-next-garden-writer-front-71t02clq3bpxzf.sel4.cloudtype.app'], // Next.js 프론트엔드 URL
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
