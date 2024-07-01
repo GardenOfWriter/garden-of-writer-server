@@ -19,7 +19,7 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://garden-writer-front-j5jw11b0p-jundevs-projects.vercel.app/'],
+    origin: ['http://localhost:3000', 'https://garden-writer-front-j5jw11b0p-jundevs-projects.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['auth', 'authorization'],
