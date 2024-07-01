@@ -20,7 +20,6 @@ async function bootstrap() {
   );
   app.enableCors({
     origin: ['http://localhost:3000', 'https://port-next-garden-writer-front-71t02clq3bpxzf.sel4.cloudtype.app'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     credentials: true,
   });
   app.use(cookieParser()); // 쿠키 파서 사용
