@@ -9,7 +9,6 @@ export class AppHeaderProvider implements NestMiddleware {
     const accessMethods = 'Access-Control-Allow-Methods';
     const accessHeaders = 'Access-Control-Allow-Headers';
     res.setHeader(accessCrendentials, 'true');
-
     res.setHeader(accessOrigin, req.headers.origin || '*');
     res.setHeader(accessMethods, 'GET, POST, PUT, DELETE, OPTIONS');
     next();

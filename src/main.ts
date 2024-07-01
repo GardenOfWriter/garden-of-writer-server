@@ -20,9 +20,9 @@ async function bootstrap() {
   );
   app.enableCors({
     origin: ['http://localhost:3000', 'https://garden-writer-front-git-main-jundevs-projects.vercel.app'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
-    // allowedHeaders: ['auth', 'authorization'],
+    allowedHeaders: ['auth', 'authorization'],
   });
   app.use(cookieParser()); // 쿠키 파서 사용
   // app.useWebSocketAdapter(new SocketIoAdpater(app)); // 웹소켓 어댑터 사용
