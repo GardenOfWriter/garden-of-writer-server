@@ -15,6 +15,7 @@ export interface UserRepository {
   existNickname(nickname: string): Promise<boolean>;
   findByUserId(userId: number): Promise<UserEntity>;
   findByEmail(email: string): Promise<UserEntity>;
+  findByNickname(nickname: string): Promise<UserEntity>;
   findByNicknameEmail(email: string, nickname: string): Promise<UserEntity>;
   findAll(): Promise<UserEntity[]>;
 }

@@ -2,6 +2,7 @@ import { UserEntity } from '@app/user/entities/user.entity';
 import { UserRepository } from '@app/user/repository/user.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { isEmpty } from '../../commons/util/data.helper';
 
 export class UserRepositoryImpl implements UserRepository {
   constructor(
@@ -27,13 +28,19 @@ export class UserRepositoryImpl implements UserRepository {
       },
     });
   }
-  async findByEmail(email: string): Promise<UserEntity> {
-    const result = await this.dataSource.findOne({
+
+  async findByNickname(nickname: string): Promise<UserEntity> {
+    return await this.dataSource.findOne({
       where: {
-        email,
+        nickname,
       },
     });
-    return result;
+  }
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    if (isEmpty(email)) return null;
+    return await this.dataSource.findOneBy({
+      email,
+    });
   }
   async findByNicknameEmail(email: string, nickname: string): Promise<UserEntity> {
     const result = await this.dataSource.findOne({

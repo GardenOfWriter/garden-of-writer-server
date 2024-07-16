@@ -11,13 +11,7 @@ async function bootstrap() {
   const documentOptions = new BaseAPIDocumentBuilder().initializeOptions();
   const document = SwaggerModule.createDocument(app, documentOptions);
   SwaggerModule.setup('docs/api', app, document);
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+
   app.enableCors({
     origin: ['http://localhost:3000', 'https://port-next-garden-writer-front-71t02clq3bpxzf.sel4.cloudtype.app'], // Next.js 프론트엔드 URL
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

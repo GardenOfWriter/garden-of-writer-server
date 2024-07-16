@@ -43,7 +43,7 @@ import { AppHeaderProvider } from './commons/provider/app-header.provider';
       database: process.env.DB_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
-      logging: false,
+      logging: true,
       namingStrategy: new SnakeNamingStrategy(),
       autoLoadEntities: true,
     }),
@@ -77,6 +77,7 @@ import { AppHeaderProvider } from './commons/provider/app-header.provider';
           whitelist: true,
           forbidNonWhitelisted: true,
           transform: true,
+
           exceptionFactory: (errors: ValidationError[]) => {
             const constraints = errors.map((_error) => Object.values(_error.constraints))[0];
             throw new ArgumentInvalidException(constraints);
