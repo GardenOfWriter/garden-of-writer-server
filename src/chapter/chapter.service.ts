@@ -80,7 +80,7 @@ export class ChapterService {
    */
   async changeTitle(id: number, dto: ChangeTitleDto): Promise<void> {
     const chapter = await this.findByChapterId(id);
-    if (!isEmpty(chapter)) throw new NotFoundChapterException();
+    if (isEmpty(chapter)) throw new NotFoundChapterException();
     chapter.changeTitle(dto.title);
     await this.chapterRepository.saveRow(chapter);
     return;
