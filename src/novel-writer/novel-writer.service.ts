@@ -54,8 +54,9 @@ export class NovelWriterService {
      *  TODO: 참여 작가로 참여하는건 2개를 초과해서는 안됨
      */
     const writers = await this.novelWriterRepo.findByNovelRoomIdJoinUser(dto.novelRoomId);
+    const isExistWriter = writers.filter((writer) => writer.user.id === user.id)[0];
     this.logger.log(`Writer check ${JSON.stringify(writers)}`);
-    if (!isEmpty(writers)) {
+    if (!isEmpty(isExistWriter)) {
       throw new AlreadyExistWriterExcetpion();
     }
     await this.novelWriterRepo.saveRow(dto.toEntity(user, WriterCategoryEnum.ATTENDEE, WriterStatusEnum.REVIEW));
