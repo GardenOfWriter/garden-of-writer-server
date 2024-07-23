@@ -12,6 +12,7 @@ import { UpdateNovelRoomDto } from '@app/novel-room/dto/request/update-novel-roo
 import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
 import { isEmpty } from 'lodash';
 import { AlreadBoardLikeException, NotFoundNovelAttendBoardException } from './exception/already-board-like.exception';
+import { isNotEmpty } from '@app/commons/util/data.helper';
 
 @Injectable()
 export class NovelAttendBoardService {
@@ -62,8 +63,10 @@ export class NovelAttendBoardService {
     const board = await this.boardRepo.findByIdWhereLikeUserJoinNovelRoom(novelRoomId);
     if (isEmpty(board)) throw new NotFoundNovelAttendBoardException();
     const writers = await this.novelWriterRepo.findByNovelRoomIdWhereAttending(novelRoomId);
+    const isAttendUser = await this.novelWriterRepo.findByUserIdAndNovelRoomId(novelRoomId, user.id);
+    console.log('isAttendUser', isNotEmpty(isAttendUser));
     const hasBoard = await this.boardRepo.hasBoardLike(user.id, novelRoomId);
-    return new FindByIdLikeUserDto(board, hasBoard, writers, user);
+    return new FindByIdLikeUserDto(board, hasBoard, writers, isNotEmpty(isAttendUser));
   }
 
   /**

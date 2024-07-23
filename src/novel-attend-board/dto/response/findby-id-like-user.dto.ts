@@ -21,10 +21,10 @@ export class FindByIdLikeUserDto {
   @Exclude() private _type: NovelRoomType;
   @Exclude() private _host: UserEntity;
   @Exclude() private _roomTitle: string;
-  @Exclude() private _reqUser: UserEntity;
+  @Exclude() private _isAttend: boolean;
   @Exclude() private _writers: NovelWriterEntity[];
 
-  constructor(board: NovelAttendBoardEntity, hasLike: boolean, writers: NovelWriterEntity[], user: UserEntity) {
+  constructor(board: NovelAttendBoardEntity, hasLike: boolean, writers: NovelWriterEntity[], isAttend: boolean) {
     this._roomId = board.id;
     this._createdAt = board.novelRoom.createdAt;
     this._boardtTitle = board.title;
@@ -35,9 +35,9 @@ export class FindByIdLikeUserDto {
     this._hasLike = hasLike;
     this._currentAttendCnt = writers.length;
     this._type = board.novelRoom.type;
-    this._host = writers.filter((writer) => writer.isHost)[0].user;
+    this._host = writers.filter((writer) => writer.isHost())[0].user;
     this._roomTitle = board.novelRoom.title;
-    this._reqUser = user;
+    this._isAttend = isAttend;
     this._writers = writers;
   }
 
@@ -90,8 +90,8 @@ export class FindByIdLikeUserDto {
     description: '대표작가',
   })
   @Expose({ name: 'host' })
-  get host(): string {
-    return this._host.nickname;
+  get host(): { id: number; nickname: string } {
+    return { id: this._host.id, nickname: this._host.nickname };
   }
   @ApiProperty({
     example: 3,
@@ -147,7 +147,6 @@ export class FindByIdLikeUserDto {
   })
   @Expose({ name: 'isAttend' })
   get isAttend(): boolean {
-    const attendUser = this._writers.filter((writer) => writer.isSelf(this._reqUser))[0];
-    return isEmpty(attendUser) ? false : true;
+    return this._isAttend;
   }
 }
