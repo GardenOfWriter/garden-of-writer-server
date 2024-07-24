@@ -60,13 +60,14 @@ export class NovelAttendBoardService {
    * @returns {Promise<FindByIdLikeUserDto>} 조회된 게시글 DTO
    */
   async findById(novelRoomId: number, user: UserEntity): Promise<FindByIdLikeUserDto> {
-    const board = await this.boardRepo.findByIdWhereLikeUserJoinNovelRoom(novelRoomId);
-    if (isEmpty(board)) throw new NotFoundNovelAttendBoardException();
+    const attendBoard = await this.boardRepo.findByIdWhereLikeUserJoinNovelRoom(novelRoomId);
+    if (isEmpty(attendBoard)) throw new NotFoundNovelAttendBoardException();
     const writers = await this.novelWriterRepo.findByNovelRoomIdWhereAttending(novelRoomId);
     const isAttendUser = await this.novelWriterRepo.findByUserIdAndNovelRoomId(novelRoomId, user.id);
-    console.log('isAttendUser', isNotEmpty(isAttendUser));
     const hasBoard = await this.boardRepo.hasBoardLike(user.id, novelRoomId);
-    return new FindByIdLikeUserDto(board, hasBoard, writers, isNotEmpty(isAttendUser));
+    await this.boardRepo.updateViewCounting(attendBoard.id);
+    attendBoard.updateViewCounting();
+    return new FindByIdLikeUserDto(attendBoard, hasBoard, writers, isNotEmpty(isAttendUser));
   }
 
   /**

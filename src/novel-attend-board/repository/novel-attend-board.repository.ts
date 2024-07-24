@@ -38,6 +38,14 @@ export interface NovelAttendBoardRepository {
   updateRow(id: number, entity: Partial<NovelAttendBoardEntity>): Promise<void>;
 
   /**
+   * view 카운팅
+   *
+   * @param {number} id
+   * @returns {Promise<void>}
+   */
+  updateViewCounting(id: number): Promise<void>;
+
+  /**
    *  공방 모집 게시글 삭제
    *
    * @param {number} id 게시글 번호

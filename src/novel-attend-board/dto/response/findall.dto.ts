@@ -30,6 +30,7 @@ export class FindAllNovelAttendBoardDto {
     this._type = room.type;
     this._attendBoard = room?.novelAttendBoard;
     this._writers = room.novelWriter;
+    this._viewCount = room.novelAttendBoard.viewCount;
   }
 
   @ApiProperty({

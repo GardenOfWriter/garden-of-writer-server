@@ -42,4 +42,8 @@ export class NovelAttendBoardEntity {
     this.content = content;
     this.openKakaoLink = openKakaoLink;
   }
+
+  updateViewCounting(): void {
+    this.viewCount += 1;
+  }
 }

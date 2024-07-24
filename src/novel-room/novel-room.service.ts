@@ -86,7 +86,7 @@ export class NovelRoomService {
    * @param {UserEntity} user 사용자 정보
    * @returns {Promise<FindByRoomIdDetailDto>} 소설 공방 상세 정보
    */
-  async xfindById(novelRoomId: number, user: UserEntity): Promise<FindByRoomIdDetailDto> {
+  async findById(novelRoomId: number, user: UserEntity): Promise<FindByRoomIdDetailDto> {
     const room = await this.novelRoomRepo.getByIdWithTag(novelRoomId);
     const reqWriter = await this.novelWriterRepo.findByUserIdAndNovelRoomId(novelRoomId, user.id);
     if (isEmpty(reqWriter) || !reqWriter.isStatusAttending()) {

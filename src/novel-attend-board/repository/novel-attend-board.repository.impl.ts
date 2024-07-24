@@ -17,6 +17,15 @@ export class NovelAttendBoardRepositoryImpl implements NovelAttendBoardRepositor
   async updateRow(id: number, entity: NovelAttendBoardEntity): Promise<void> {
     await this.dataSource.update({ id }, entity);
   }
+
+  async updateViewCounting(id: number): Promise<void> {
+    await this.dataSource.update(
+      { id },
+      {
+        viewCount: () => 'view_count + 1',
+      },
+    );
+  }
   async findWithNovelRoom(): Promise<[NovelAttendBoardEntity[], number]> {
     return await this.dataSource
       .createQueryBuilder('nad')
