@@ -108,8 +108,9 @@ export class FindAllNovelAttendBoardDto {
     description: '참여 작가 수',
   })
   @Expose()
-  get currentWriterCnt() {
-    return this._writers.length;
+  get currentAttendCnt() {
+    const attendWriters = this._writers.filter((writer) => writer.isStatusAttending());
+    return attendWriters.length;
   }
   @ApiProperty({
     enum: NovelRoomTypeEnum,
