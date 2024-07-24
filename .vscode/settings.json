@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["Orkey"]
+  "cSpell.words": ["Orkey"],
+  "prisma.fileWatcher": true
 }

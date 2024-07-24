@@ -51,6 +51,8 @@ jobs:
                   value: ${{ secrets.MAIL_CLIENT_SECRET }}
                 - name: MAIL_REFRESH_TOKEN
                   value: ${{ secrets.MAIL_REFRESH_TOKEN }}
+                - name: PORT
+                  value: ${{ secrets.PORT }}
               ports: 3000
               install: npm install
               build: npm run build
