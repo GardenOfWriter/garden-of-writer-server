@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=gow-server
+      - POSTGRES_PASSWORD=LmFJ2U4aoQGkg
+    container_name: garden-db-server
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '5432:5432'
+
+  app:
+    image: tb2527/garden-of-writer-server:0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: garden-of-writer-server
+    env_file:
+      - .env
+    environment:
+      - PORT=${PORT}
+      - DB_TYPE=${DB_TYPE}
+      - DB_SCHEMA=${DB_SCHEMA}
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DATABASE=postgres
+      - JWT_ACCESS_KEY=${JWT_ACCESS_KEY}
+      - JWT_REFERSH_KEY=${JWT_REFERSH_KEY}
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_CLIENT_ID=${MAIL_CLIENT_ID}
+      - MAIL_CLIENT_SECRET=${MAIL_CLIENT_SECRET}
+      - MAIL_REFRESH_TOKEN=${MAIL_REFRESH_TOKEN}
+    ports:
+      - '3001:3001'
+    depends_on:
+      - db
+    volumes:
+      - ../src:/app/src
+
+volumes:
+  pgdata:
