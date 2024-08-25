@@ -1,10 +1,8 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiExtraModels, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, getSchemaPath } from '@nestjs/swagger';
-import { CreateNovelTextRequestDto } from '../dto/request/create-novel.dto';
 import { UpdateTextNovelRequestDto } from '../dto/request/update-novel.dto';
 import { FindByChapterIdResponseDto } from '../dto/response/findbychapter-id.dto';
 import { ApiCommonResponse } from '@app/commons/decorator/swagger/common-response.decorator';
-import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 
 export function CreateNovelText(): MethodDecorator {
   return applyDecorators(

@@ -12,6 +12,8 @@ import { JwtGuard } from './guard/jwt.guard';
 import { AccessTokenStrategy } from './strategy/access-token.strategy';
 import { NovelWriterRepositoryProvider } from '@app/novel-writer/repository/novel-writer.repository';
 import { UserModule } from '@app/user/user.module';
+import { EmailServiceToken } from '@app/commons/email/email.service';
+import { EmailServiceImpl } from '@app/commons/email/email.service.impl';
 
 @Module({
   imports: [
@@ -25,7 +27,15 @@ import { UserModule } from '@app/user/user.module';
     }),
   ],
 
-  providers: [AuthService, JwtGuard, AccessTokenStrategy],
+  providers: [
+    AuthService,
+    JwtGuard,
+    AccessTokenStrategy,
+    {
+      provide: EmailServiceToken,
+      useClass: EmailServiceImpl,
+    },
+  ],
   exports: [JwtGuard, AuthService, AccessTokenStrategy],
   controllers: [AuthController],
 })

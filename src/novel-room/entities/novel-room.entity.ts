@@ -9,7 +9,7 @@ import { NovelRoomStatusEnum, NovelRoomStatusType } from './enum/novel-room-stat
 import { convertDayFormat, getToDayISO8601 } from '@app/commons/util/date.util';
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 
-@Entity({ name: 'novel-room', schema: 'gow-server' })
+@Entity({ name: 'novel-room' })
 export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   //작가정원
   @Column({

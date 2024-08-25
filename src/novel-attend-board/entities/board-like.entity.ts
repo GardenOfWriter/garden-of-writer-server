@@ -4,7 +4,7 @@ import { UserEntity } from '@app/user/entities/user.entity';
 import { NovelAttendBoardEntity } from './novel-attend-board.entity';
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '@app/commons/entities/primary-generated-pk-with-meta-time.entity';
 
-@Entity({ name: 'board-like', schema: 'gow-server' })
+@Entity({ name: 'board-like' })
 export class BoardLikeEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @ManyToOne((_type) => UserEntity, (user) => user.boardLike)
   user: UserEntity;

@@ -32,7 +32,6 @@ export class UserService {
     return checkEmail;
   }
   async checkUserEmail(email: string) {
-    console.log(email);
     const checkEmail = await this.userRepository.findByEmail(email);
     if (isEmpty(checkEmail)) return true;
     return false;

@@ -7,7 +7,7 @@ import { ChapterCommentEntity } from './chapter-comment.entity';
 import { ChapterStatusEnum, ChapterStatusType } from './enums/chapter-status.enum';
 import { convertDayFormat, getToDay, getToDayISO8601 } from '@app/commons/util/date.util';
 import { ChapterLikeEntity } from './chapter-like.entity';
-@Entity({ name: 'chapter', schema: 'gow-server' })
+@Entity({ name: 'chapter' })
 export class ChapterEntity extends PrimaryAuditiedPK {
   @Column('int', { comment: '소설공방의 회차 번호' })
   no: number;

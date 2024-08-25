@@ -31,7 +31,7 @@ services:
       - DB_PORT=${DB_PORT}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
-      - DB_DATABASE=postgres
+      - DB_DATABASE=${DB_DATABASE}
       - JWT_ACCESS_KEY=${JWT_ACCESS_KEY}
       - JWT_REFERSH_KEY=${JWT_REFERSH_KEY}
       - MAIL_USER=${MAIL_USER}

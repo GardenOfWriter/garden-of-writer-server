@@ -5,6 +5,7 @@ import { compile } from 'handlebars';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import { EmailTemplate } from './enums/teamplate.enums';
+import { Worker } from 'worker_threads';
 @Injectable()
 export class EmailServiceImpl implements EmailService {
   constructor(private readonly mailService: MailerService) {}
@@ -30,5 +31,20 @@ export class EmailServiceImpl implements EmailService {
     const template = compile(emailTemplateSource);
     const htmlSendMessage = template({ ...teamplateArgs });
     return htmlSendMessage;
+  }
+  async sendEmails(payload: { to: string; subject: string; text: string; template?: EmailTemplate; templateArgs?: any }): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const worker = new Worker(join(__dirname, 'email.worker-thread.js'), {
+        workerData: { to: payload.to, subject: payload.subject, text: payload.text },
+      });
+
+      worker.on('message', resolve); // 메인 스레드로부터 성공 메시지 수신
+      worker.on('error', reject); // 워커 스레드에서 발생한 오류 수신
+      worker.on('exit', (code) => {
+        if (code !== 0) {
+          reject(new Error(`Worker stopped with exit code ${code}`));
+        }
+      });
+    });
   }
 }

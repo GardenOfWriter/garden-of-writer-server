@@ -8,7 +8,7 @@ import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity({ name: 'user', schema: 'gow-server' })
+@Entity({ name: 'user' })
 export class UserEntity {
   @PrimaryGeneratedColumn({
     name: 'user_id',

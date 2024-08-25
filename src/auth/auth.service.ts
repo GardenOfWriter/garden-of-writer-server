@@ -2,10 +2,12 @@ import { LoginUserDto } from '@app/auth/dto/login-user.dto';
 import { TokenPayload, TokenResult } from '@app/auth/interface/auth.interface';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { UserService } from '@app/user/user.service';
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserIncorrectEmailException, UserIncorrectPasswordException } from './exceptions/auth.exception';
+import { EmailService, EmailServiceToken } from '@app/commons/email/email.service';
+import { EmailTemplate } from '@app/commons/email/enums/teamplate.enums';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +15,8 @@ export class AuthService {
   constructor(
     private readonly userService: UserService, //
     private readonly jwtService: JwtService,
+    @Inject(EmailServiceToken)
+    private readonly emailService: EmailService,
   ) {}
 
   async validateUser(dto: LoginUserDto): Promise<TokenResult> {
@@ -28,6 +32,16 @@ export class AuthService {
   public logoutUser() {
     const cookieExpire = `Authentication=; HttpOnly; Path=/; Max=Age=0`;
     return cookieExpire;
+  }
+
+  async generateTempPassword({ email }: { email: string }): Promise<void> {
+    const user = await this.userService.findEmail(email);
+    if (!user) throw new NotFoundException('User Not Found');
+    const tempPassword = Math.random().toString(36).substring(2, 11);
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+    user.password = hashedPassword;
+    await this.userService.create(user);
+    await this.emailService.sendEmail(user.email, EmailTemplate.TEMP_PASSWORD.title, tempPassword, EmailTemplate.TEMP_PASSWORD);
   }
 
   /*

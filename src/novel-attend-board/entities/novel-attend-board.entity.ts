@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from '
 import { NovelRoomEntity } from '../../novel-room/entities/novel-room.entity';
 import { BoardLikeEntity } from './board-like.entity';
 
-@Entity({ name: 'novel-attend-board', schema: 'gow-server' })
+@Entity({ name: 'novel-attend-board' })
 export class NovelAttendBoardEntity {
   @PrimaryColumn()
   id: number;

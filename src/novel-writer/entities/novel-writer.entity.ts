@@ -6,7 +6,7 @@ import { PrimaryGeneratedPkWithMetaTimeEntity } from '../../commons/entities/pri
 import { WriterCategoryType, WriterCategoryEnum } from './enums/writer-category.enum';
 import { WriterStatusEnum, WriterStatusType } from './enums/writer-status.enum';
 
-@Entity({ name: 'novel-writer', schema: 'gow-server' })
+@Entity({ name: 'novel-writer' })
 export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @Column({
     type: 'enum',

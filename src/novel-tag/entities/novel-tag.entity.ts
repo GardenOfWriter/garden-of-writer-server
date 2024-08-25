@@ -3,7 +3,7 @@ import { Column, Entity, ManyToMany, ManyToOne } from 'typeorm';
 import { TagEntity } from './tag.entity';
 import { PrimaryGeneratedPkEntity } from '@app/commons/entities/primary-generated-pk.entity';
 
-@Entity({ name: 'novel-tag', schema: 'gow-server' })
+@Entity({ name: 'novel-tag' })
 export class NovelTagEntity extends PrimaryGeneratedPkEntity {
   @Column('bigint')
   novelRoomId: number;
