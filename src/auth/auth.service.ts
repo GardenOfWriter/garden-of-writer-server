@@ -35,13 +35,18 @@ export class AuthService {
   }
 
   async generateTempPassword({ email }: { email: string }): Promise<void> {
-    const user = await this.userService.findEmail(email);
-    if (!user) throw new NotFoundException('User Not Found');
-    const tempPassword = Math.random().toString(36).substring(2, 11);
-    const hashedPassword = await bcrypt.hash(tempPassword, 10);
-    user.password = hashedPassword;
-    await this.userService.create(user);
-    await this.emailService.sendEmail(user.email, EmailTemplate.TEMP_PASSWORD.title, tempPassword, EmailTemplate.TEMP_PASSWORD);
+    // const user = await this.userService.findEmail(email);
+    // if (!user) throw new NotFoundException('User Not Found');
+    // const tempPassword = Math.random().toString(36).substring(2, 11);
+    // const hashedPassword = await bcrypt.hash(tempPassword, 10);
+    // user.password = hashedPassword;
+    // await this.userService.create(user);
+    await this.emailService.sendEmail({
+      to: 'cafejun17@gmail.com',
+      subject: EmailTemplate.TEMP_PASSWORD.title,
+      text: 'Test',
+      template: EmailTemplate.TEMP_PASSWORD,
+    });
   }
 
   /*

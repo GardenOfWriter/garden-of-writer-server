@@ -1,7 +1,6 @@
 import { EmailModule } from '@app/commons/email/emai.module';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { NovelWriterModule } from '@app/novel-writer/novel-writer.module';
-import { NovelWriterService } from '@app/novel-writer/novel-writer.service';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
@@ -10,10 +9,9 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtGuard } from './guard/jwt.guard';
 import { AccessTokenStrategy } from './strategy/access-token.strategy';
-import { NovelWriterRepositoryProvider } from '@app/novel-writer/repository/novel-writer.repository';
 import { UserModule } from '@app/user/user.module';
 import { EmailServiceToken } from '@app/commons/email/email.service';
-import { EmailServiceImpl } from '@app/commons/email/email.service.impl';
+import { GmailWatcherService } from '@app/commons/email/email.warcher';
 
 @Module({
   imports: [
@@ -33,7 +31,7 @@ import { EmailServiceImpl } from '@app/commons/email/email.service.impl';
     AccessTokenStrategy,
     {
       provide: EmailServiceToken,
-      useClass: EmailServiceImpl,
+      useClass: GmailWatcherService,
     },
   ],
   exports: [JwtGuard, AuthService, AccessTokenStrategy],

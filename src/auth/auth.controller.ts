@@ -44,10 +44,4 @@ export class AuthController {
   async generateTempPassword(@Body('email') email: string): Promise<void> {
     await this.authService.generateTempPassword({ email });
   }
-  // @ApiBearerAuth('Authorization')
-  // @UseGuards(JwtGuard)
-  // @Get('guard')
-  // async guardTest(@CurrentUser() user) {
-  //   return 'test';
-  // }
 }
