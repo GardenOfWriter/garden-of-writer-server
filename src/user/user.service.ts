@@ -17,7 +17,6 @@ export class UserService {
   }
 
   async create(joinUser: Partial<UserEntity>): Promise<void> {
-    this.logger.log(`Join User ${JSON.stringify(joinUser)}`);
     const checkEmail = await this.userRepository.existEmail(joinUser.email);
     if (checkEmail) throw new UserEmailAlreadyExistsException();
     const checkNickname = await this.userRepository.existNickname(joinUser.nickname);
@@ -43,6 +42,9 @@ export class UserService {
     return false;
   }
 
+  async updateUser(id: number, updateUser: Partial<UserEntity>): Promise<void> {
+    await this.userRepository.updateRow(id, updateUser);
+  }
   async findById(id: number): Promise<UserEntity> {
     return await this.userRepository.findByUserId(id);
   }

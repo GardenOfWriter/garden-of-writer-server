@@ -1,12 +1,13 @@
 import { Provider } from '@nestjs/common';
 import { EmailTemplate } from './enums/teamplate.enums';
 import { EmailServiceImpl } from './email.service.impl';
+import { GmailWatcherService } from './email.warcher';
 
 export const EmailServiceToken = 'EmailService';
 
 export const EmailServiceProvider: Provider = {
   provide: EmailServiceToken,
-  useClass: EmailServiceImpl,
+  useClass: GmailWatcherService,
 };
 export interface EmailService {
   sendEmail({
@@ -14,12 +15,12 @@ export interface EmailService {
     subject,
     text,
     template,
-    teamplateArg,
+    context,
   }: {
     to: string;
     subject: string;
     text: string;
-    template?: EmailTemplate;
-    teamplateArg?: any;
+    template: EmailTemplate;
+    context: any;
   }): Promise<void>;
 }

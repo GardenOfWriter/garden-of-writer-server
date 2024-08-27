@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
 import { JwtGuard } from './guard/jwt.guard';
 import { AccessTokenStrategy } from './strategy/access-token.strategy';
 import { UserModule } from '@app/user/user.module';
-import { EmailServiceToken } from '@app/commons/email/email.service';
+import { EmailServiceProvider, EmailServiceToken } from '@app/commons/email/email.service';
 import { GmailWatcherService } from '@app/commons/email/email.warcher';
 
 @Module({
@@ -25,15 +25,7 @@ import { GmailWatcherService } from '@app/commons/email/email.warcher';
     }),
   ],
 
-  providers: [
-    AuthService,
-    JwtGuard,
-    AccessTokenStrategy,
-    {
-      provide: EmailServiceToken,
-      useClass: GmailWatcherService,
-    },
-  ],
+  providers: [AuthService, JwtGuard, AccessTokenStrategy, EmailServiceProvider],
   exports: [JwtGuard, AuthService, AccessTokenStrategy],
   controllers: [AuthController],
 })

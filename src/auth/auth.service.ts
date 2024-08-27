@@ -5,9 +5,10 @@ import { UserService } from '@app/user/user.service';
 import { Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UserIncorrectEmailException, UserIncorrectPasswordException } from './exceptions/auth.exception';
+import { UserIncorrectEmailException, UserIncorrectPasswordException, UserNotExistsException } from './exceptions/auth.exception';
 import { EmailService, EmailServiceToken } from '@app/commons/email/email.service';
 import { EmailTemplate } from '@app/commons/email/enums/teamplate.enums';
+import { isEmpty } from '../commons/util/data.helper';
 
 @Injectable()
 export class AuthService {
@@ -34,18 +35,25 @@ export class AuthService {
     return cookieExpire;
   }
 
-  async generateTempPassword({ email }: { email: string }): Promise<void> {
-    // const user = await this.userService.findEmail(email);
-    // if (!user) throw new NotFoundException('User Not Found');
-    // const tempPassword = Math.random().toString(36).substring(2, 11);
-    // const hashedPassword = await bcrypt.hash(tempPassword, 10);
-    // user.password = hashedPassword;
-    // await this.userService.create(user);
+  async createTempPassword({ email }: { email: string }): Promise<void> {
+    const user = await this.userService.findEmail(email);
+    if (isEmpty(user)) throw new UserNotExistsException();
+    const tempPassword = Math.random().toString(36).substring(2, 11);
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+    user.password = hashedPassword;
+    await this.userService.updateUser(user.id, user);
+
+    const context = {
+      username: user.nickname,
+      password: tempPassword,
+    };
+    console.log('context ', context);
     await this.emailService.sendEmail({
       to: 'cafejun17@gmail.com',
       subject: EmailTemplate.TEMP_PASSWORD.title,
-      text: 'Test',
+      text: EmailTemplate.TEMP_PASSWORD.title,
       template: EmailTemplate.TEMP_PASSWORD,
+      context,
     });
   }
 

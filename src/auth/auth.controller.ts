@@ -42,6 +42,6 @@ export class AuthController {
 
   @Post('/temp-password')
   async generateTempPassword(@Body('email') email: string): Promise<void> {
-    await this.authService.generateTempPassword({ email });
+    await this.authService.createTempPassword({ email });
   }
 }
