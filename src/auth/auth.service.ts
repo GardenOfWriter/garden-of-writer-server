@@ -47,9 +47,8 @@ export class AuthService {
       username: user.nickname,
       password: tempPassword,
     };
-    console.log('context ', context);
     await this.emailService.sendEmail({
-      to: 'cafejun17@gmail.com',
+      to: email,
       subject: EmailTemplate.TEMP_PASSWORD.title,
       text: EmailTemplate.TEMP_PASSWORD.title,
       template: EmailTemplate.TEMP_PASSWORD,

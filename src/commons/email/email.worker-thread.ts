@@ -42,10 +42,9 @@ async function sendEmail({
       extName: '.hbs',
     }),
   );
-  const html = readFileSync(`${process.cwd()}/templates/${template.path}`, 'utf8');
   // Handlebars 템플릿 엔진 설정
   console.log('templateArgs: ', context);
-  const mailOptions = { to: 'cafejun17@gmail.com', from: 'tb25271@gmail.com', subject, text, html: getTemplate(template, context), context };
+  const mailOptions = { to, from: 'tb25271@gmail.com', subject, text, html: getTemplate(template, context), context };
 
   return await transporter.sendMail(mailOptions);
 }

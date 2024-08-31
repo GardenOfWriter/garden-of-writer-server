@@ -1,7 +1,7 @@
 import { Provider } from '@nestjs/common';
 import { EmailTemplate } from './enums/teamplate.enums';
 import { EmailServiceImpl } from './email.service.impl';
-import { GmailWatcherService } from './email.warcher';
+import { GmailWatcherService } from './email.watcher';
 
 export const EmailServiceToken = 'EmailService';
 

@@ -11,7 +11,7 @@ import { JwtGuard } from './guard/jwt.guard';
 import { AccessTokenStrategy } from './strategy/access-token.strategy';
 import { UserModule } from '@app/user/user.module';
 import { EmailServiceProvider, EmailServiceToken } from '@app/commons/email/email.service';
-import { GmailWatcherService } from '@app/commons/email/email.warcher';
+import { GmailWatcherService } from '@app/commons/email/email.watcher';
 
 @Module({
   imports: [
