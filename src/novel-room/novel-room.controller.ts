@@ -60,7 +60,10 @@ export class NovelRoomController {
   @Post('')
   async createRoom(@Body() dto: CreateNovelRoomDto, @CurrentUser() user: UserEntity, @QueryRunner() qr: QR): Promise<void> {
     const room = await this.novelRoomService.createRoom(dto, user);
-    await this.novelAttendBoardService.create(dto.toAttendBoardEntity(room.id));
+    const novelAttendBoard = dto.toAttendBoardEntity(room.id);
+    if (!isEmpty(novelAttendBoard)) {
+      await this.novelAttendBoardService.create(novelAttendBoard);
+    }
     if (isEmpty(dto.novelTags)) return;
     await this.novelTagService.saveTag(dto.novelTags, room.id);
     return;

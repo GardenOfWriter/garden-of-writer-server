@@ -55,7 +55,7 @@ export class NovelTextService {
       this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId, chapterId: entity.chapterId }));
       return;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 

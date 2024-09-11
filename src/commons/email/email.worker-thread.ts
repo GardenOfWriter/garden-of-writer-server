@@ -43,7 +43,6 @@ async function sendEmail({
     }),
   );
   // Handlebars 템플릿 엔진 설정
-  console.log('templateArgs: ', context);
   const mailOptions = { to, from: 'tb25271@gmail.com', subject, text, html: getTemplate(template, context), context };
 
   return await transporter.sendMail(mailOptions);
@@ -64,7 +63,7 @@ function getTemplate(emailTemplate: EmailTemplate, context: any) {
     const result = await sendEmail({ to, subject, text, template, context });
     parentPort.postMessage(result); // 메인 스레드로 결과 전송
   } catch (error) {
-    console.log('error ', error);
+    console.error('error ', error);
     parentPort.postMessage({ error: error.message });
   }
 })();

@@ -46,8 +46,8 @@ export class NovelAttendBoardService {
    * @return {Promise<PagingationResponse<FindAllNovelAttendBoardDto>>} 조회된 게시글 DTO (페이지 처리)
    */
   async findAll(dto: FindAttendBoardDto, user: UserEntity): Promise<PagingationResponse<FindAllNovelAttendBoardDto>> {
-    const [rooms, totalCount] = await this.novelRoomRepo.findAllJoinBoardWithBoardLikeAndCount(user, dto);
-    const items = rooms.map((room) => new FindAllNovelAttendBoardDto(user, room));
+    const [boards, totalCount] = await this.boardRepo.findAllJoinRoomWIthBoardLikeAndCount(user, dto);
+    const items = boards.map((board) => new FindAllNovelAttendBoardDto(user, board));
     return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
 

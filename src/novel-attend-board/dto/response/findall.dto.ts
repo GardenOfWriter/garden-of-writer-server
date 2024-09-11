@@ -21,16 +21,16 @@ export class FindAllNovelAttendBoardDto {
   private _type: NovelRoomType;
   private _attendBoard: NovelAttendBoardEntity;
 
-  constructor(user: UserEntity, room: NovelRoomEntity) {
-    this._roomId = room.id;
-    this._roomTitle = room.title;
-    this._boardTitle = room.novelAttendBoard?.title;
-    this._roomCreatedAt = room.createdAt;
-    this._category = room.category;
-    this._type = room.type;
-    this._attendBoard = room?.novelAttendBoard;
-    this._writers = room.novelWriter;
-    this._viewCount = room.novelAttendBoard.viewCount;
+  constructor(user: UserEntity, board: NovelAttendBoardEntity) {
+    this._roomId = board.id;
+    this._roomTitle = board.title;
+    this._boardTitle = board?.title;
+    this._roomCreatedAt = board.novelRoom.createdAt;
+    this._category = board.novelRoom.category;
+    this._type = board.novelRoom.type;
+    this._attendBoard = board;
+    this._writers = board.novelRoom.novelWriter;
+    this._viewCount = board.viewCount;
   }
 
   @ApiProperty({

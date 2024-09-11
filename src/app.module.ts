@@ -32,6 +32,7 @@ import { AppHeaderProvider } from './commons/provider/app-header.provider';
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
+      envFilePath: '.env',
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

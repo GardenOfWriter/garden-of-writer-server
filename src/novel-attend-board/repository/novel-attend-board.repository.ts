@@ -2,6 +2,8 @@ import { Inject, Provider } from '@nestjs/common';
 import { NovelAttendBoardEntity } from '../entities/novel-attend-board.entity';
 import { NovelAttendBoardRepositoryImpl } from './novel-attend-board.repository.impl';
 import { BoardLikeEntity } from '../entities/board-like.entity';
+import { UserEntity } from '@app/user/entities/user.entity';
+import { FindAttendBoardDto } from '../dto/request/find-attend-board.dto';
 
 export const NovelAttendBoardRepositryToken = 'NovelAttendBoardRepository';
 
@@ -75,6 +77,13 @@ export interface NovelAttendBoardRepository {
    * @returns {Promise<NovelAttendBoardEntity>} 조회된 게시글 정보 엔티티
    */
   findByIdWhereLikeUserJoinNovelRoom(novelRoomId: number): Promise<NovelAttendBoardEntity>;
+
+  /**
+   *  작가 참여 게시글 조회 (유저 좋아요 여부 및 공방 정보 포함))
+   * @param {UserEntity} user
+   * @param {FindAttendBoardDto} dto
+   */
+  findAllJoinRoomWIthBoardLikeAndCount(user: UserEntity, dto: FindAttendBoardDto): Promise<[NovelAttendBoardEntity[], number]>;
 
   /**
    * 게시글 좋아요 여부 확인

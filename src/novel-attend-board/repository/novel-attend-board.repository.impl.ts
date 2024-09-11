@@ -3,7 +3,9 @@ import { Repository } from 'typeorm';
 import { NovelAttendBoardEntity } from '../entities/novel-attend-board.entity';
 import { NovelAttendBoardRepository } from './novel-attend-board.repository';
 import { BoardLikeEntity } from '../entities/board-like.entity';
-
+import { UserEntity } from '@app/user/entities/user.entity';
+import { FindAttendBoardDto } from '../dto/request/find-attend-board.dto';
+import { BasePaginationRequest as Pagination } from '@app/commons/pagination/base-paginiation.request';
 export class NovelAttendBoardRepositoryImpl implements NovelAttendBoardRepository {
   constructor(
     @InjectRepository(NovelAttendBoardEntity)
@@ -75,5 +77,16 @@ export class NovelAttendBoardRepositoryImpl implements NovelAttendBoardRepositor
   }
   async findById(id: number): Promise<NovelAttendBoardEntity> {
     return await this.dataSource.findOne({ where: { id } });
+  }
+
+  async findAllJoinRoomWIthBoardLikeAndCount(user: UserEntity, pagination: Pagination): Promise<[NovelAttendBoardEntity[], number]> {
+    return await this.dataSource.findAndCount({
+      relations: ['novelRoom', 'boardLike', 'novelRoom.novelWriter'],
+      take: pagination.take,
+      skip: pagination.skip,
+      order: {
+        id: 'DESC',
+      },
+    });
   }
 }

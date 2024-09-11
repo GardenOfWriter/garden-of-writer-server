@@ -37,7 +37,6 @@ export class UserService {
   }
   async checkUserNickname(nickname: string) {
     const checkNickname = await this.userRepository.findByNickname(nickname);
-    console.log(checkNickname);
     if (isEmpty(checkNickname)) return true;
     return false;
   }
