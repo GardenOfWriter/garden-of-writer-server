@@ -81,10 +81,8 @@ export class FindAllNovelAttendBoardDto {
   })
   @Expose()
   get host(): string {
-    const hostWriter = this._writers.filter((writer) => {
-      return writer.isHost();
-    })[0];
-    if (isEmpty(hostWriter)) return 'test';
+    const hostWriter = this._writers.find((writer) => writer.isHost())[0];
+    if (isEmpty(hostWriter)) return '대표작가 없음';
     return hostWriter.user.nickname;
   }
   @ApiProperty({
@@ -93,9 +91,7 @@ export class FindAllNovelAttendBoardDto {
   })
   @Expose()
   get likeCount() {
-    if (!this._attendBoard) {
-      return 0;
-    }
+    if (!this._attendBoard) return 0;
     return this._attendBoard.boardLike.length || 0;
   }
   @ApiProperty({ ...RoomCategoryDescription })

@@ -137,4 +137,6 @@ export class NovelRoomService {
     novelRoom.setCompletedAt();
     await this.novelRoomRepo.saveRow(novelRoom);
   }
+
+  async getNovelRoomByCompleteAt() {}
 }

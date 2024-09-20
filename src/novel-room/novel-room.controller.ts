@@ -39,7 +39,7 @@ import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { QueryRunner as QR } from 'typeorm';
 import { isEmpty } from '../commons/util/data.helper';
 
-@ApiTags('소설 공방')
+@ApiTags('소설 공방 (작가의 정원)')
 @Controller('novel-room')
 @ApiBearerAuth('Authorization')
 @SerializeOptions({

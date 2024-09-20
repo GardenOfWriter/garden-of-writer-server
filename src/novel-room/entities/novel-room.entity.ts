@@ -98,6 +98,9 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     return room;
   }
 
+  /**
+   * 연재 완료일 세팅
+   */
   setCompletedAt(): void {
     this.completedAt = getToDayISO8601();
     this.status = NovelRoomStatusEnum.COMPLETE;
