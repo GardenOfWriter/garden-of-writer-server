@@ -50,7 +50,6 @@ export class FindNovelRoomResponseDto {
   @Expose()
   get isHost(): boolean {
     if (isEmpty(this._reqWriter)) return false;
-
     return this._reqWriter.isHost();
   }
 }

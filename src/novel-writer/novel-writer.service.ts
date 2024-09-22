@@ -109,9 +109,13 @@ export class NovelWriterService {
     const result = writers.map((writer, index) => new FindNovelRoomWritersDto(writer, index));
 
     const nextWriter = this.writerSeqHelper.getNextWriter(writers);
+    console.log('nextWriter', nextWriter);
 
-    const reqWriter = writers.filter((writer) => writer.user.id === user.id)[0];
-
+    const reqWriter = writers.find((writer) => {
+      console.log('writer ', writer);
+      return writer.user.id === user.id;
+    });
+    console.log('reqWriter ', reqWriter);
     return new FindNovelRoomResponseDto(result, nextWriter, reqWriter);
   }
 
