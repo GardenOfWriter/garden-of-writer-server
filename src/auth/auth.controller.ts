@@ -1,6 +1,6 @@
 import { AuthService } from '@app/auth/auth.service';
 import { LoginUserDto } from '@app/auth/dto/login-user.dto';
-import { RequestUser } from '@app/auth/interface/auth.interface';
+import { RequestUser, TokenResult } from '@app/auth/interface/auth.interface';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -8,11 +8,14 @@ import { Response } from 'express';
 import { NovelWriterService } from '../novel-writer/novel-writer.service';
 import { JwtGuard } from './guard/jwt.guard';
 import { Login, Logout } from './decorator/swagger.decorator';
+import { UserService } from '@app/user/user.service';
+import { JoinUserDto } from '@app/user/dto/join-user.dto';
 
 @ApiTags('인증')
 @Controller('auth')
 export class AuthController {
   constructor(
+    private readonly userService: UserService,
     private readonly authService: AuthService,
     private readonly writerService: NovelWriterService,
   ) {}
@@ -30,6 +33,17 @@ export class AuthController {
       secure: true,
     });
     return { ...jwt, hasRoom };
+  }
+
+  @ApiOperation({
+    summary: '회원가입',
+  })
+  @Post('/joinUser')
+  async create(@Body() userData: JoinUserDto): Promise<TokenResult> {
+    const joinUser = userData.toEntity();
+    await this.userService.create(joinUser);
+    const accessToken = await this.authService.generateAccessToken(joinUser.id, joinUser.email);
+    return accessToken;
   }
 
   @Logout()

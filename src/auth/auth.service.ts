@@ -59,7 +59,7 @@ export class AuthService {
   /*
    * 토큰 생성 함수
    */
-  private async generateAccessToken(id: number, email: string): Promise<TokenResult> {
+  async generateAccessToken(id: number, email: string): Promise<TokenResult> {
     const payload: TokenPayload = { id, email };
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_KEY,

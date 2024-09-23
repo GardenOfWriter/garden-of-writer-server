@@ -6,21 +6,24 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CheckNicknameDto } from './dto/check-nickname.dto';
 import { CheckEmailDto } from './dto/check-email.dto';
+import { AuthService } from '@app/auth/auth.service';
+import { TokenResult } from '@app/auth/interface/auth.interface';
 
 @ApiTags('유저')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiOperation({
-    summary: '회원가입',
-  })
-  @Post('/join')
-  async create(@Body() userData: JoinUserDto): Promise<void> {
-    const joinUser = userData.toEntity();
-    await this.userService.create(joinUser);
-    return;
-  }
+  // @ApiOperation({
+  //   summary: '회원가입',
+  // })
+  // @Post('/join')
+  // async create(@Body() userData: JoinUserDto): Promise<TokenResult> {
+  //   const joinUser = userData.toEntity();
+  //   await this.userService.create(joinUser);
+  //   const accessToken = await this.authService.generateAccessToken(joinUser.id, joinUser.email);
+  //   return accessToken;
+  // }
 
   @ApiOperation({
     summary: '회원 이메일 중복 체크',
