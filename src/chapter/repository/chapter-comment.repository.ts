@@ -1,6 +1,7 @@
 import { Inject, Provider } from '@nestjs/common';
 import { ChapterCommentEntity } from '../entities/chapter-comment.entity';
 import { ChapterCommentRepositoryImpl } from './chapter-comment.repository.impl';
+import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 
 export const ChapterCommentRepositoryToken = 'ChapterCommentRepositoryToken';
 
@@ -29,6 +30,15 @@ export interface ChapterCommentRepository {
    */
 
   findByChapterId(chapterId: number): Promise<ChapterCommentEntity[]>;
+
+  /**
+   *  회차 뎃글 조회
+   *
+   * @param {number} chapterId
+   * @returns {Promise<ChapterCommentEntity[]>}
+   */
+
+  findByChapterIdPaging(chapterId: number, dto: BasePaginationRequest): Promise<[ChapterCommentEntity[], number]>;
 
   /**
    * 좋아요 해제

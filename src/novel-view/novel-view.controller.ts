@@ -49,8 +49,8 @@ export class NovelViewController {
   }
 
   @Get('/comment/:chapterId')
-  async findByChapterId(@Param('chapterId') chapterId: number) {
-    return await this.chapterCommentService.findByChapterId(chapterId);
+  async findByChapterId(@Param('chapterId') chapterId: number, @Query() dto: BasePaginationRequest) {
+    return await this.chapterCommentService.findByChapterId(chapterId, dto);
   }
   @UseGuards(JwtGuard)
   @Post('/comment/:chapterId')

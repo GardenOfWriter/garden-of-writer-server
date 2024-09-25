@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChapterCommentRepository } from './chapter-comment.repository';
 import { ChapterCommentEntity } from '../entities/chapter-comment.entity';
+import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 
 @Injectable()
 export class ChapterCommentRepositoryImpl implements ChapterCommentRepository {
@@ -17,6 +18,9 @@ export class ChapterCommentRepositoryImpl implements ChapterCommentRepository {
     return await this.dataSource.find({ where: { _chapter: { id: chapterId } } });
   }
 
+  async findByChapterIdPaging(chapterId: number, dto: BasePaginationRequest): Promise<[ChapterCommentEntity[], number]> {
+    return await this.dataSource.findAndCount({ where: { _chapter: { id: chapterId } }, skip: dto.skip, take: dto.take });
+  }
   async deleteComment(commentId: number): Promise<void> {
     await this.dataSource.delete({ id: commentId });
   }

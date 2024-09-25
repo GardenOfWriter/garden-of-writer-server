@@ -16,6 +16,7 @@ import { ChapterLikeRepo, ChapterLikeRepository } from './repository/chapter-lik
 import { ChapterLikeEntity } from './entities/chapter-like.entity';
 import { ChapterCommentRepository } from './repository/chapter-comment.repository';
 import { ChapterCommentEntity } from './entities/chapter-comment.entity';
+import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 
 /**
  * 회차 댓글 서비스 클래스
@@ -35,9 +36,9 @@ export class ChapterCommentService {
     private readonly chapterRepository: ChapterRepository,
   ) {}
 
-  async findByChapterId(chapterId: number): Promise<ChapterCommentEntity[]> {
-    const comments = await this.chapterCommentRepository.findByChapterId(chapterId);
-    return comments;
+  async findByChapterId(chapterId: number, dto: BasePaginationRequest): Promise<PagingationResponse<ChapterCommentEntity>> {
+    const [comments, totalCount] = await this.chapterCommentRepository.findByChapterIdPaging(chapterId, dto);
+    return new PagingationResponse(totalCount, dto.chunkSize, comments);
   }
 
   async saveComment(comment: ChapterCommentEntity): Promise<void> {
