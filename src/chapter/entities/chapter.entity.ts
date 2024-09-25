@@ -73,6 +73,10 @@ export class ChapterEntity extends PrimaryAuditiedPK {
     this.no = no;
   }
 
+  isFirstChapter(): boolean {
+    return this.no === 1;
+  }
+
   changeStatus(status: ChapterStatusType) {
     this.status = status;
   }

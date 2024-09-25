@@ -67,6 +67,7 @@ ALTER TYPE "public"."novel-room_category_enum" OWNER TO gowdb;
 --
 
 CREATE TYPE "public"."novel-room_status_enum" AS ENUM (
+    'prepare',  
     'series',
     'complete',
     'remove'
@@ -503,7 +504,7 @@ CREATE TABLE "public"."novel-room" (
     "character" character varying(255),
     summary character varying(255),
     completed_at timestamp without time zone,
-    status "public"."novel-room_status_enum" DEFAULT 'series'::"public"."novel-room_status_enum" NOT NULL,
+    status "public"."novel-room_status_enum" DEFAULT 'prepare'::"public"."novel-room_status_enum" NOT NULL,
     user_id integer,
     book_cover character varying(1000)
 );

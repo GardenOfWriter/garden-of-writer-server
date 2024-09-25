@@ -7,7 +7,7 @@ import { IsNumber } from 'class-validator';
 export class CreateBoardLikeDto {
   @ApiProperty({
     example: 1,
-    description: '공방 ID',
+    description: '소설 공방 ID',
   })
   @IsNumber()
   novelRoomId: number;

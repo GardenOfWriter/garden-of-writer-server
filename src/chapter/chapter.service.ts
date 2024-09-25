@@ -10,6 +10,8 @@ import { isEmpty } from '../commons/util/data.helper';
 import { NotFoundChapterException, NotWritingChapterException } from './exception/chpater.exception';
 import { ChapterStatusEnum } from './entities/enums/chapter-status.enum';
 import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
+import { NovelRoomRepo, NovelRoomRepository } from '@app/novel-room/repository/novel-room.repository';
+import { NovelRoomStatusEnum } from '@app/novel-room/entities/enum/novel-room-status.enum';
 
 /**
  * 회차 서비스 클래스
@@ -23,6 +25,8 @@ export class ChapterService {
   private logger = new Logger(ChapterService.name);
 
   constructor(
+    @NovelRoomRepo()
+    private readonly novelRoomRepository: NovelRoomRepository,
     @ChapterRepo()
     private readonly chapterRepository: ChapterRepository,
   ) {}
@@ -67,6 +71,12 @@ export class ChapterService {
     chapter.setReviewStatus();
     this.logger.log(`Chapter Apply ${JSON.stringify(chapter)}`);
     await this.chapterRepository.saveRow(chapter);
+    if (chapter.isFirstChapter()) {
+      this.logger.log(`Chapter Status Series ${JSON.stringify(chapter)}`);
+      const novelRoom = await this.novelRoomRepository.getById(chapter.novelRoomId);
+      novelRoom.changeStatus(NovelRoomStatusEnum.SERIES);
+      await this.novelRoomRepository.saveRow(novelRoom);
+    }
     return;
   }
 

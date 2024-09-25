@@ -44,7 +44,7 @@ import { AppHeaderProvider } from './commons/provider/app-header.provider';
       database: process.env.DB_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
-      // logging: true,
+      logging: true,
       namingStrategy: new SnakeNamingStrategy(),
       autoLoadEntities: true,
     }),

@@ -57,7 +57,7 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   @Column({
     type: 'enum', //
     enum: NovelRoomStatusEnum,
-    default: NovelRoomStatusEnum.SERIES,
+    default: NovelRoomStatusEnum.PREPARE,
   })
   status: NovelRoomStatusType;
 
@@ -107,6 +107,9 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   }
   checkCompleted(): boolean {
     return this.status === NovelRoomStatusEnum.COMPLETE;
+  }
+  changeStatus(status: NovelRoomStatusType): void {
+    this.status = status;
   }
 
   updateRoom(updateEntity: Partial<NovelRoomEntity>): void {
