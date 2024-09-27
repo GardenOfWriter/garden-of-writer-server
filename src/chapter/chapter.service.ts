@@ -153,17 +153,4 @@ export class ChapterService {
       },
     });
   }
-
-  /**
-   * 다음 회차 번호 조회
-   *
-   * @private
-   * @async
-   * @param {number} novelRoomId 소설 공방 Id
-   * @returns {Promise<number>} 다음 회차 번호
-   */
-  private async nextChapterNo(novelRoomId: number): Promise<number> {
-    const chpaterNo = await this.chapterRepository.countByNovelRoomId(novelRoomId);
-    return chpaterNo + 1;
-  }
 }

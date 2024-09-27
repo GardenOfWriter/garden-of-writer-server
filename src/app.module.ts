@@ -24,8 +24,6 @@ import { EmailServiceImpl } from './commons/email/email.service.impl';
 import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.module';
 import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { UserModule } from './user/user.module';
-import { ErrorsInterceptor } from './commons/interceptor/error.interceptor';
-import { AppHeaderProvider } from './commons/provider/app-header.provider';
 
 @Module({
   imports: [
