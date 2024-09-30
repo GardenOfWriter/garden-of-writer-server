@@ -17,7 +17,8 @@ import {
   NovelRoomNotFoundException,
 } from './exceptions/novel-room.exception';
 import { isEmpty } from '@app/commons/util/data.helper';
-
+import { FindAllNovelViewResponseDto } from '@app/novel-view/dto/response/find-all-novel-response.dto';
+import { FindAllNovelViewRequestDto } from '@app/novel-view/dto/request/find-all-novel-request.dto';
 /**
  * 소설 공방 서비스
  *
@@ -138,5 +139,11 @@ export class NovelRoomService {
     await this.novelRoomRepo.saveRow(novelRoom);
   }
 
-  async getNovelRoomByCompleteAt() {}
+  async getNovelRoomByCompleteAt(dto: FindAllNovelViewRequestDto): Promise<PagingationResponse<FindAllNovelViewResponseDto>> {
+    const [rooms, totalCount] = await this.novelRoomRepo.findAllByStatusAndCategory({ status: dto.status, category: dto.category, paging: dto });
+
+    const items = rooms.map((room) => new FindAllNovelViewResponseDto(room));
+
+    return new PagingationResponse(totalCount, dto.chunkSize, items);
+  }
 }

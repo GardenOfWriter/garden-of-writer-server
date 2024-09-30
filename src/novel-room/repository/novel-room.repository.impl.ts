@@ -5,6 +5,9 @@ import { NovelRoomRepository } from './novel-room.repository';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { BasePaginationRequest as Pagination } from '@app/commons/pagination/base-paginiation.request';
 import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
+import { NovelRoomStatusReqEnum } from '@app/novel-view/dto/request/find-all-novel-request.dto';
+import { NovelRoomCategoryType } from '../entities/enum/novel-room-category.enum';
+import { NovelRoomStatusEnum, NovelRoomStatusType } from '../entities/enum/novel-room-status.enum';
 
 export class NovelRoomRepositoryImpl implements NovelRoomRepository {
   constructor(
@@ -74,5 +77,35 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
 
   async deleteRow(id: number): Promise<void> {
     await this.dataSource.delete(id);
+  }
+  async findAllByStatusAndCategory({
+    category,
+    status,
+    paging,
+  }: {
+    category: NovelRoomCategoryType;
+    status: NovelRoomStatusReqEnum;
+    paging: Pagination;
+  }): Promise<[NovelRoomEntity[], number]> {
+    let noveRoomStatus: NovelRoomStatusType[] | null = [];
+    if (status === NovelRoomStatusReqEnum.SERIES) {
+      noveRoomStatus = [NovelRoomStatusEnum.SERIES];
+    } else if (status === NovelRoomStatusReqEnum.COMPLETE) {
+      noveRoomStatus = [NovelRoomStatusEnum.COMPLETE];
+    } else if (status === NovelRoomStatusReqEnum.ALL) {
+      noveRoomStatus = [NovelRoomStatusEnum.SERIES, NovelRoomStatusEnum.COMPLETE];
+    }
+
+    return await this.dataSource.findAndCount({
+      where: {
+        category,
+        status: In(noveRoomStatus),
+      },
+      take: paging.take,
+      skip: paging.skip,
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 }

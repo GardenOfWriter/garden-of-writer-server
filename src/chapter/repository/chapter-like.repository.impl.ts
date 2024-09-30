@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ChapterLikeEntity } from '../entities/chapter-like.entity';
 import { ChapterLikeRepository } from './chapter-like.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 
 @Injectable()
@@ -28,5 +28,15 @@ export class ChapterLikeRepositoryImpl implements ChapterLikeRepository {
 
   async findByChapterIdAndUser({ chapterId, user }: { chapterId: number; user: UserEntity }): Promise<ChapterLikeEntity> {
     return await this.dataSource.findOne({ where: { chapter: { id: chapterId }, user: { id: user.id } } });
+  }
+
+  async countInChapterIds(chapterIds: number[]): Promise<{ count: number; chapterId: number }[]> {
+    const queryBuilder = await this.dataSource.createQueryBuilder('chapterLike');
+    queryBuilder.select(['COUNT(*) as count', 'chapterLike.chapter_id as chapterId']);
+    queryBuilder.groupBy('chapterLike.chapter_id');
+    queryBuilder.where('chapterLike.chapter_id IN (:...chapterIds)', { chapterIds });
+    const result = await queryBuilder.getRawMany();
+    console.log('first ', result);
+    return result.map(({ count, chapterid }) => ({ count: +count, chapterId: +chapterid }));
   }
 }

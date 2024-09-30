@@ -56,6 +56,8 @@ export interface NovelTextRepository {
    */
   findByChpaterIdNotCompleted(chapterId: number);
 
+  findByChapterIdAndCompleted(chapterId: number): Promise<NovelTextEntity[]>;
+
   /**
    * 소설 텍스트 상세정보 조회
    *

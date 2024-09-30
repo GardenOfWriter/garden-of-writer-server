@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { ChapterEntity } from '../../entities/chapter.entity';
 
-export class FindChapterRoomIdResDto {
+export class FindChapterLikeResponseDto {
   private _id: number;
   private _no: number;
   private _status: ChapterStatusType;
@@ -11,16 +11,14 @@ export class FindChapterRoomIdResDto {
   private _approvalAt: Date;
   private _finalAt: Date;
   private _viewCount: number;
-  private _likeCount: number;
 
-  constructor({ entity, likeCount }: { entity: ChapterEntity; likeCount: number }) {
+  constructor(entity: ChapterEntity) {
     this._id = entity.id;
     this._status = entity.status;
     this._title = entity.title;
     this._approvalAt = entity.approvalAt;
     this._finalAt = entity.finalAt;
     this._viewCount = entity.viewCount;
-    this._likeCount = likeCount;
     this._no = entity.no;
   }
 
@@ -99,6 +97,6 @@ export class FindChapterRoomIdResDto {
   })
   @Expose()
   get likeCount(): number {
-    return this._likeCount;
+    return 0;
   }
 }

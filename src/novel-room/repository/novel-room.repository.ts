@@ -1,9 +1,11 @@
 import { Inject, Provider } from '@nestjs/common';
 import { NovelRoomRepositoryImpl } from './novel-room.repository.impl';
 import { UserEntity } from '@app/user/entities/user.entity';
-import { BasePaginationRequest as Pagination } from '@app/commons/pagination/base-paginiation.request';
+import { BasePaginationRequest, BasePaginationRequest as Pagination } from '@app/commons/pagination/base-paginiation.request';
 import { NovelRoomEntity } from '../entities/novel-room.entity';
 import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
+import { NovelRoomCategoryType } from '../entities/enum/novel-room-category.enum';
+import { NovelRoomStatusReqEnum } from '@app/novel-view/dto/request/find-all-novel-request.dto';
 
 export const NovelRoomRepositoryToken = 'NovelRoomRepository';
 
@@ -49,6 +51,16 @@ export interface NovelRoomRepository {
    * @returns {Promise<[NovelRoomEntity[], number]>}  조회된 소설 공방 목록 (페이징 처리)
    */
   findAllJoinWriterByStatus(user: UserEntity, writerStatus: WriterStatusType[], pagination: Pagination): Promise<[NovelRoomEntity[], number]>;
+
+  findAllByStatusAndCategory({
+    category,
+    status,
+    paging,
+  }: {
+    category: NovelRoomCategoryType;
+    status: NovelRoomStatusReqEnum;
+    paging: BasePaginationRequest;
+  }): Promise<[NovelRoomEntity[], number]>;
 
   /**
    * 소설 공방 조회

@@ -47,6 +47,14 @@ export interface ChapterLikeRepository {
   countByChapterId(chapterId: number): Promise<number>;
 
   /**
+   * 회차 좋아요 개수
+   *
+   * @param {number} chapterId
+   * @returns {Promise<number>}
+   */
+  countInChapterIds(chapterIds: number[]): Promise<{ count: number; chapterId: number }[]>;
+
+  /**
    * 좋아요 해제
    *
    * @param {number} chapterLikeId

@@ -12,6 +12,9 @@ import { ChapterStatusEnum } from './entities/enums/chapter-status.enum';
 import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
 import { NovelRoomRepo, NovelRoomRepository } from '@app/novel-room/repository/novel-room.repository';
 import { NovelRoomStatusEnum } from '@app/novel-room/entities/enum/novel-room-status.enum';
+import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
+import { ChapterLikeRepo, ChapterLikeRepository } from './repository/chapter-like.repository';
+import { ChapterCommentRepo, ChapterCommentRepository } from './repository/chapter-comment.repository';
 
 /**
  * 회차 서비스 클래스
@@ -29,6 +32,12 @@ export class ChapterService {
     private readonly novelRoomRepository: NovelRoomRepository,
     @ChapterRepo()
     private readonly chapterRepository: ChapterRepository,
+
+    @ChapterLikeRepo()
+    private readonly chapterLikeRepository: ChapterLikeRepository,
+
+    @ChapterCommentRepo()
+    private readonly chapterCommoentRepository: ChapterCommentRepository,
   ) {}
 
   // /**
@@ -135,10 +144,26 @@ export class ChapterService {
    */
   async findChapterText(dto: FindByNovelRoomIdDto): Promise<PagingationResponse<FindChapterRoomIdResDto>> {
     const [chapters, totalCount] = await this.chapterRepository.findChpaterByRoomIdAndCount(dto.novelRoomId, dto);
-    const items = chapters.map((chapter) => new FindChapterRoomIdResDto(chapter));
+
+    if (isEmpty(chapters)) throw new NotFoundChapterException();
+
+    const chapterIds = chapters.map((chapter) => chapter.id);
+
+    const items = await this.getLikeCount(chapters, chapterIds);
+
     return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
 
+  private async getLikeCount(chapterEntitys: ChapterEntity[], chapterIds: number[]): Promise<FindChapterRoomIdResDto[]> {
+    const likes = await this.chapterLikeRepository.countInChapterIds(chapterIds);
+    const results = await Promise.all(
+      chapterEntitys.map(async (chapter) => {
+        const like = likes.find((like) => like.chapterId === chapter.id);
+        return new FindChapterRoomIdResDto({ entity: chapter, likeCount: like ? like.count : 0 });
+      }),
+    );
+    return results;
+  }
   /**
    * 소설 공방에 해당하는 회차 목록 조회
    *
@@ -146,7 +171,7 @@ export class ChapterService {
    * @param {number} id 조회할 소설 공방 Id
    * @returns {Promise<ChapterEntity>} 조회된 회차 목록
    */
-  private findByChapterId(id: number): Promise<ChapterEntity> {
+  async findByChapterId(id: number): Promise<ChapterEntity> {
     return this.chapterRepository.findOneByOptions({
       where: {
         id,

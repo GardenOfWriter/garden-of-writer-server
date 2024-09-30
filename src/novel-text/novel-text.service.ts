@@ -155,6 +155,11 @@ export class NovelTextService {
     return new ChapterItemsDto(text);
   }
 
+  async findByChapterId(chapterId: number): Promise<string[]> {
+    const texts = await this.novelTextRepo.findByChapterIdAndCompleted(chapterId);
+    return texts.map((text) => text.content);
+  }
+
   // /**
   //  * 다음 글쓰기 업데이트
   //  *

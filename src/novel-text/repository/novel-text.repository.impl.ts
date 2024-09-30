@@ -45,4 +45,8 @@ export class NovelTextRepositoryImpl implements NovelTextRepository {
   async findByChpaterIdNotCompleted(chapterId: number): Promise<NovelTextEntity[]> {
     return await this.dataSource.find({ where: { chapterId, status: NovelTextStatusEnum.TEMP_SAVE } });
   }
+
+  async findByChapterIdAndCompleted(chapterId: number): Promise<NovelTextEntity[]> {
+    return await this.dataSource.find({ where: { chapterId, status: NovelTextStatusEnum.COMPLETED } });
+  }
 }

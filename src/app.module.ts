@@ -24,7 +24,7 @@ import { EmailServiceImpl } from './commons/email/email.service.impl';
 import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.module';
 import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { UserModule } from './user/user.module';
-
+import { NovelViewController } from './novel-view/novel-view.controller';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -59,7 +59,7 @@ import { UserModule } from './user/user.module';
     NovelTagModule,
     ChatsModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, NovelViewController],
   providers: [
     AppService,
     {

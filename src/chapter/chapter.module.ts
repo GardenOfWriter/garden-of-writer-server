@@ -21,6 +21,6 @@ import { ChapterCommentEntity } from './entities/chapter-comment.entity';
     ChapterLikeRepositoryProvider,
     ChapterCommentRepositoryProvider,
   ],
-  exports: [ChapterService, ChapterRepositoryProvider],
+  exports: [ChapterService, ChapterRepositoryProvider, ChapterLikeRepositoryProvider, ChapterCommentRepositoryProvider],
 })
 export class ChapterModule {}
