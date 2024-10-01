@@ -52,7 +52,7 @@ export interface NovelRoomRepository {
    */
   findAllJoinWriterByStatus(user: UserEntity, writerStatus: WriterStatusType[], pagination: Pagination): Promise<[NovelRoomEntity[], number]>;
 
-  findAllByStatusAndCategory({
+  findAllByStatusAndCategoryJoinWriter({
     category,
     status,
     paging,

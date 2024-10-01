@@ -11,6 +11,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private userService: UserService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      // cookies
       // jwtFromRequest: ExtractJwt.fromExtractors([
       //   (request: Request) => {
       //     let token = null;
@@ -21,7 +22,6 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
       //     return token;
       //   },
       // ]),
-
       secretOrKey: process.env.JWT_ACCESS_KEY,
       ignoreExpiration: false,
     });

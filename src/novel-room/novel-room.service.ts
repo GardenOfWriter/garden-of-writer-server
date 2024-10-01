@@ -139,8 +139,12 @@ export class NovelRoomService {
     await this.novelRoomRepo.saveRow(novelRoom);
   }
 
-  async getNovelRoomByCompleteAt(dto: FindAllNovelViewRequestDto): Promise<PagingationResponse<FindAllNovelViewResponseDto>> {
-    const [rooms, totalCount] = await this.novelRoomRepo.findAllByStatusAndCategory({ status: dto.status, category: dto.category, paging: dto });
+  async findByStatusJoinWriters(dto: FindAllNovelViewRequestDto): Promise<PagingationResponse<FindAllNovelViewResponseDto>> {
+    const [rooms, totalCount] = await this.novelRoomRepo.findAllByStatusAndCategoryJoinWriter({
+      status: dto.status,
+      category: dto.category,
+      paging: dto,
+    });
 
     const items = rooms.map((room) => new FindAllNovelViewResponseDto(room));
 

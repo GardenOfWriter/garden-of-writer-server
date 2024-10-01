@@ -78,7 +78,7 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
   async deleteRow(id: number): Promise<void> {
     await this.dataSource.delete(id);
   }
-  async findAllByStatusAndCategory({
+  async findAllByStatusAndCategoryJoinWriter({
     category,
     status,
     paging,
@@ -97,6 +97,7 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
     }
 
     return await this.dataSource.findAndCount({
+      relations: ['novelWriter', 'user'],
       where: {
         category,
         status: In(noveRoomStatus),

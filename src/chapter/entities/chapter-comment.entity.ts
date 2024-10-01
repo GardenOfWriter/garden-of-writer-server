@@ -1,6 +1,7 @@
 import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { PrimaryAuditiedPK } from '@app/commons/entities/primary-auditied-pk.entity';
+import { UserEntity } from '@app/user/entities/user.entity';
 
 @Entity({ name: 'chapter-comment' })
 export class ChapterCommentEntity extends PrimaryAuditiedPK {

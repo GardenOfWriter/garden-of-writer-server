@@ -10,17 +10,28 @@ import { ChapterLikeRepositoryProvider } from './repository/chapter-like.reposit
 import { ChapterCommentRepositoryProvider } from './repository/chapter-comment.repository';
 import { ChapterLikeEntity } from './entities/chapter-like.entity';
 import { ChapterCommentEntity } from './entities/chapter-comment.entity';
+import { ChapterCommentService } from './chapter-comment.service';
+import { ChapterLikeService } from './chapter-like.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ChapterEntity, ChapterLikeEntity, ChapterCommentEntity, NovelRoomEntity])],
   controllers: [ChapterController],
   providers: [
     ChapterService,
+    ChapterCommentService,
+    ChapterLikeService,
     ChapterRepositoryProvider,
     NovelRoomRepositoryProvider,
     ChapterLikeRepositoryProvider,
     ChapterCommentRepositoryProvider,
   ],
-  exports: [ChapterService, ChapterRepositoryProvider, ChapterLikeRepositoryProvider, ChapterCommentRepositoryProvider],
+  exports: [
+    ChapterService,
+    ChapterCommentService,
+    ChapterLikeService,
+    ChapterRepositoryProvider,
+    ChapterLikeRepositoryProvider,
+    ChapterCommentRepositoryProvider,
+  ],
 })
 export class ChapterModule {}

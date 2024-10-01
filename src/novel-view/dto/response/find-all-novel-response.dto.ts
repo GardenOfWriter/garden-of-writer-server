@@ -17,6 +17,9 @@ export class FindAllNovelViewResponseDto {
     this.roomTitle = novelRoom.title;
     this.roomCreatedAt = novelRoom.createdAt;
     this.bookCover = novelRoom.bookCover;
+    const novelWriters = novelRoom.novelWriter;
+    const host = novelWriters.find((writer) => writer.isHost());
+    this.writerName = `${host.user.nickname} 외 ${novelWriters.length - 1}명`;
   }
   @Expose()
   @ApiProperty({})
@@ -45,4 +48,8 @@ export class FindAllNovelViewResponseDto {
   @Expose()
   @ApiProperty({})
   readonly bookCover: string;
+
+  @Expose()
+  @ApiProperty({})
+  readonly writerName: string;
 }
