@@ -1,7 +1,7 @@
 import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
+import { ApiProperty } from '@nestjs/swagger';
 import { NovelRoomCategoryEnum, NovelRoomCategoryType } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { NovelRoomStatusEnum, NovelRoomStatusType } from '@app/novel-room/entities/enum/novel-room-status.enum';
-import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
 
 export enum NovelRoomStatusReqEnum {
@@ -10,7 +10,9 @@ export enum NovelRoomStatusReqEnum {
   ALL = 'all',
 }
 
-export class FindAllNovelViewRequestDto extends BasePaginationRequest {
+export class FindByChapterIdCommentReqDto extends BasePaginationRequest {}
+
+export class FindAllNovelViewReqDto extends BasePaginationRequest {
   @ApiProperty({
     example: `${NovelRoomCategoryEnum.ACTION_MARTIAL_ARTS}`,
     description: '일반소설 | 코믹',

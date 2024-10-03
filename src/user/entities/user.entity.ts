@@ -4,24 +4,28 @@ import { PASSWORD_REG_EXP, PASSWORD_REG_EXP_ERROR_MESSAGE } from '@app/commons/r
 import { MessageEntity } from '@app/message/message.entity';
 import { BoardLikeEntity } from '@app/novel-attend-board/entities/board-like.entity';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
+import { AutoMap } from '@automapper/classes';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'user' })
 export class UserEntity {
+  @AutoMap()
   @PrimaryGeneratedColumn({
     name: 'user_id',
   })
   id: number;
 
+  @AutoMap()
   @Column({ length: 255, unique: true })
   email: string;
 
+  @AutoMap()
   @Column({ length: 255, unique: true })
   nickname: string;
 
-  @Column({ length: 255 })
+  @Column({ length: 255, select: false })
   password: string;
 
   @CreateDateColumn()

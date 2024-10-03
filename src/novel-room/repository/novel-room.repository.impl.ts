@@ -5,9 +5,9 @@ import { NovelRoomRepository } from './novel-room.repository';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { BasePaginationRequest as Pagination } from '@app/commons/pagination/base-paginiation.request';
 import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
-import { NovelRoomStatusReqEnum } from '@app/novel-view/dto/request/find-all-novel-request.dto';
 import { NovelRoomCategoryType } from '../entities/enum/novel-room-category.enum';
 import { NovelRoomStatusEnum, NovelRoomStatusType } from '../entities/enum/novel-room-status.enum';
+import { NovelRoomStatusReqEnum } from '@app/novel-view/dto/response/find-all-novel-response.dto';
 
 export class NovelRoomRepositoryImpl implements NovelRoomRepository {
   constructor(

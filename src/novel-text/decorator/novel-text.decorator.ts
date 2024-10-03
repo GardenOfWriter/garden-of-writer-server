@@ -15,7 +15,7 @@ export function CreateNovelText(): MethodDecorator {
 export function FindNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
-      summary: '소설 글쓰기 조회 하기 ',
+      summary: '소설 회차 글쓰기 조회 하기 ',
     }),
     ApiQuery({
       name: 'chapterId',
@@ -25,9 +25,12 @@ export function FindNovelText(): MethodDecorator {
       description: '회차 ID',
     }),
     ApiExtraModels(FindByChapterIdResponseDto),
-    ApiCommonResponse({
-      $ref: getSchemaPath(FindByChapterIdResponseDto),
-    }),
+    ApiCommonResponse(
+      {
+        $ref: getSchemaPath(FindByChapterIdResponseDto),
+      },
+      { isArray: true },
+    ),
   );
 }
 
@@ -89,8 +92,11 @@ export function FindByIdNovelText(): MethodDecorator {
       description: '소설 글쓰기 ID (textId) websocket response로 받은 id로 사용',
     }),
     ApiExtraModels(FindByChapterIdResponseDto),
-    ApiCommonResponse({
-      $ref: getSchemaPath(FindByChapterIdResponseDto),
-    }),
+    ApiCommonResponse(
+      {
+        $ref: getSchemaPath(FindByChapterIdResponseDto),
+      },
+      { isArray: true },
+    ),
   );
 }

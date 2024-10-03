@@ -25,12 +25,19 @@ import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.
 import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { UserModule } from './user/user.module';
 import { NovelViewController } from './novel-view/novel-view.controller';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { ChapterCommentEntity } from './chapter/entities/chapter-comment.entity';
+import { ChpaterCommentProfile } from './novel-view/mapper/chapter-comment.profile';
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
       envFilePath: '.env',
+    }),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -66,6 +73,7 @@ import { NovelViewController } from './novel-view/novel-view.controller';
       provide: EmailServiceToken,
       useClass: EmailServiceImpl,
     },
+    ChpaterCommentProfile,
     {
       provide: APP_PIPE,
       useFactory: () =>

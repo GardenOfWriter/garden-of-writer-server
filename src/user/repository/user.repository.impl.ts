@@ -38,8 +38,11 @@ export class UserRepositoryImpl implements UserRepository {
   }
   async findByEmail(email: string): Promise<UserEntity | null> {
     if (isEmpty(email)) return null;
-    return await this.dataSource.findOneBy({
-      email,
+    return await this.dataSource.findOne({
+      select: ['email', 'nickname', 'password'],
+      where: {
+        email,
+      },
     });
   }
   async findByNicknameEmail(email: string, nickname: string): Promise<UserEntity> {

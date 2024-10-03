@@ -147,22 +147,20 @@ export class ChapterService {
 
     if (isEmpty(chapters)) throw new NotFoundChapterException();
 
-    const chapterIds = chapters.map((chapter) => chapter.id);
-
-    const items = await this.getLikeCount(chapters, chapterIds);
+    const items = await this.getLikeCount(chapters);
 
     return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
 
-  private async getLikeCount(chapterEntitys: ChapterEntity[], chapterIds: number[]): Promise<FindChapterRoomIdResDto[]> {
+  private async getLikeCount(chapters: ChapterEntity[]): Promise<FindChapterRoomIdResDto[]> {
+    const chapterIds = chapters.map((chapter) => chapter.id);
     const likes = await this.chapterLikeRepository.countInChapterIds(chapterIds);
-    const results = await Promise.all(
-      chapterEntitys.map(async (chapter) => {
+    return await Promise.all(
+      chapters.map(async (chapter) => {
         const like = likes.find((like) => like.chapterId === chapter.id);
         return new FindChapterRoomIdResDto({ entity: chapter, likeCount: like ? like.count : 0 });
       }),
     );
-    return results;
   }
   /**
    * 소설 공방에 해당하는 회차 목록 조회
