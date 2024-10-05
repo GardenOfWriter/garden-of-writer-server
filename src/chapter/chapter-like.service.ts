@@ -41,8 +41,8 @@ export class ChapterLikeService {
     return likes;
   }
 
-  async saveLike({ chaterId, user }: { chaterId: number; user: UserEntity }): Promise<void> {
-    const like = this.classMapper.map({ chaterId, user }, Object, ChapterLikeEntity);
+  async saveLike({ chapterId, user }: { chapterId: number; user: UserEntity }): Promise<void> {
+    const like = this.classMapper.map({ chapterId, user }, Object, ChapterLikeEntity);
     await this.chapterLikeRepository.saveRow(like);
   }
 

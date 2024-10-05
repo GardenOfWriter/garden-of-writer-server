@@ -14,10 +14,8 @@ import { GlobalExceptionFilter } from './commons/filter/global-exception.filter'
 import { ResponseInterceptor } from './commons/interceptor/response.interceptor';
 import { NovelTextModule } from './novel-text/novel-text.module';
 
-import { MessageEntity } from './message/message.entity';
 import { NovelTagModule } from './novel-tag/novel-tags.module';
 import { ChapterModule } from './chapter/chapter.module';
-import { ChatsModule } from './chats/chats.module';
 import { EmailModule } from './commons/email/emai.module';
 import { EmailServiceToken } from './commons/email/email.service';
 import { EmailServiceImpl } from './commons/email/email.service.impl';
@@ -63,7 +61,6 @@ import { ChpaterProfile } from './novel-view/mapper/chapter.profile';
     ChapterModule,
     NovelAttendBoardModule,
     NovelTagModule,
-    ChatsModule,
   ],
   controllers: [AppController, NovelViewController],
   providers: [
@@ -94,10 +91,6 @@ import { ChpaterProfile } from './novel-view/mapper/chapter.profile';
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
     },
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: ErrorsInterceptor,
-    // },
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,

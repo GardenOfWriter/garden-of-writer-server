@@ -65,7 +65,7 @@ export class NovelViewController {
   @SaveLike()
   @Post('/like/:chapterId')
   async saveLike(@Param('chapterId', ParseIntPipe) chapterId: number, @CurrentUser() user: UserEntity) {
-    return await this.chapterLikeService.saveLike({ chapter: { id: chapterId } as ChapterEntity, user } as ChapterLikeEntity);
+    return await this.chapterLikeService.saveLike({ chapterId, user });
   }
 
   @ApiBearerAuth('Authorization')
