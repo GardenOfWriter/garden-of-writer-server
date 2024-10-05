@@ -14,6 +14,8 @@ import { NovelRoomRepo, NovelRoomRepository } from '@app/novel-room/repository/n
 import { NovelRoomStatusEnum } from '@app/novel-room/entities/enum/novel-room-status.enum';
 import { ChapterLikeRepo, ChapterLikeRepository } from './repository/chapter-like.repository';
 import { ChapterLikeEntity } from './entities/chapter-like.entity';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 /**
  * 회차 서비스 클래스
@@ -31,6 +33,7 @@ export class ChapterLikeService {
     private readonly chapterLikeRepository: ChapterLikeRepository,
     @ChapterRepo()
     private readonly chapterRepository: ChapterRepository,
+    @InjectMapper() private readonly classMapper: Mapper,
   ) {}
 
   async findByChapterId(chapterId: number): Promise<ChapterLikeEntity[]> {
@@ -38,7 +41,8 @@ export class ChapterLikeService {
     return likes;
   }
 
-  async saveLike(like: ChapterLikeEntity): Promise<void> {
+  async saveLike({ chaterId, user }: { chaterId: number; user: UserEntity }): Promise<void> {
+    const like = this.classMapper.map({ chaterId, user }, Object, ChapterLikeEntity);
     await this.chapterLikeRepository.saveRow(like);
   }
 

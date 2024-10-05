@@ -147,12 +147,12 @@ export class ChapterService {
 
     if (isEmpty(chapters)) throw new NotFoundChapterException();
 
-    const items = await this.getLikeCount(chapters);
+    const items = await this.findLikeCount(chapters);
 
     return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
 
-  private async getLikeCount(chapters: ChapterEntity[]): Promise<FindChapterRoomIdResDto[]> {
+  private async findLikeCount(chapters: ChapterEntity[]): Promise<FindChapterRoomIdResDto[]> {
     const chapterIds = chapters.map((chapter) => chapter.id);
     const likes = await this.chapterLikeRepository.countInChapterIds(chapterIds);
     return await Promise.all(

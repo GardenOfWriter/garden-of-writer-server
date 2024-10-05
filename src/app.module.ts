@@ -27,8 +27,7 @@ import { UserModule } from './user/user.module';
 import { NovelViewController } from './novel-view/novel-view.controller';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
-import { ChapterCommentEntity } from './chapter/entities/chapter-comment.entity';
-import { ChpaterCommentProfile } from './novel-view/mapper/chapter-comment.profile';
+import { ChpaterProfile } from './novel-view/mapper/chapter.profile';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -73,7 +72,7 @@ import { ChpaterCommentProfile } from './novel-view/mapper/chapter-comment.profi
       provide: EmailServiceToken,
       useClass: EmailServiceImpl,
     },
-    ChpaterCommentProfile,
+    ChpaterProfile,
     {
       provide: APP_PIPE,
       useFactory: () =>

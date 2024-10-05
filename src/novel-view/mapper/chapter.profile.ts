@@ -6,15 +6,40 @@ import { FindByChapterIdCommentResDto } from '../dto/response/find-by-chapter-id
 import { CreateChapterCommentReqDto } from '../dto/request/create-comment-req.dto';
 import { instanceToInstance, plainToInstance } from 'class-transformer';
 import { UserNickName } from '../../user/entities/user-nickname';
+import { UserEntity } from '@app/user/entities/user.entity';
+import { ChapterLikeEntity } from '@app/chapter/entities/chapter-like.entity';
+import { FindChapterLikeResponseDto } from '@app/chapter/dto/response/find-like-by-chapter-id.dto';
 
 @Injectable()
-export class ChpaterCommentProfile extends AutomapperProfile {
+export class ChpaterProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
 
   override get profile() {
     return (mapper) => {
+      createMap(
+        mapper,
+        Object,
+        ChapterLikeEntity,
+        forMember(
+          (dest) => dest.chapter,
+          mapFrom((source) => source['chapterId']),
+        ),
+        forMember(
+          (dest) => dest.user,
+          mapFrom((source) => source['user']),
+        ),
+      );
+      createMap(
+        mapper,
+        ChapterLikeEntity,
+        FindChapterLikeResponseDto,
+        forMember(
+          (dest) => dest.likeCount,
+          mapFrom((source) => 0),
+        ),
+      );
       createMap(
         mapper,
         ChapterCommentEntity,

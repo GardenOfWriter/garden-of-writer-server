@@ -44,14 +44,14 @@ export class NovelViewController {
 
   @FindTextByChapterId()
   @Get('/chapter/:chapterId')
-  async findByChapterId(@Param('chapterId') chapterId: number) {
+  async findByChapterId(@Param('chapterId', ParseIntPipe) chapterId: number) {
     return await this.novelTextService.findByChapterId(chapterId);
   }
 
   @FindCommentByChapterId()
   @Get('/comment/:chapterId')
-  async findCommentByChapterId(@Param('chapterId') chapterId: number, @Query() dto: BasePaginationRequest) {
-    return await this.chapterCommentService.findByChapterId(chapterId, dto);
+  async findCommentByChapterId(@Param('chapterId', ParseIntPipe) chapterId: number, @Query() dto: BasePaginationRequest) {
+    return await this.chapterCommentService.findByChapterId({ chapterId, dto });
   }
   @ApiBearerAuth('Authorization')
   @UseGuards(JwtGuard)
@@ -64,7 +64,7 @@ export class NovelViewController {
   @UseGuards(JwtGuard)
   @SaveLike()
   @Post('/like/:chapterId')
-  async saveLike(@Param('chapterId') chapterId: number, @CurrentUser() user: UserEntity) {
+  async saveLike(@Param('chapterId', ParseIntPipe) chapterId: number, @CurrentUser() user: UserEntity) {
     return await this.chapterLikeService.saveLike({ chapter: { id: chapterId } as ChapterEntity, user } as ChapterLikeEntity);
   }
 
@@ -72,7 +72,7 @@ export class NovelViewController {
   @UseGuards(JwtGuard)
   @DeleteLike()
   @Delete('/like/:chapterId')
-  async deletLike(@Param('chapterId') chapterId: number, @CurrentUser() user: UserEntity) {
+  async deletLike(@Param('chapterId', ParseIntPipe) chapterId: number, @CurrentUser() user: UserEntity) {
     return await this.chapterLikeService.deleteLike(chapterId);
   }
 }

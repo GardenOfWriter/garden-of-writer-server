@@ -3,7 +3,7 @@ import { ChapterCommentEntity } from './entities/chapter-comment.entity';
 import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 import { Injectable, Logger } from '@nestjs/common';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
-import { Mapper } from '@automapper/core';
+import { MapOptions, Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { FindByChapterIdCommentResDto } from '@app/novel-view/dto/response/find-by-chapter-id-res-comment.dto';
 import { CreateChapterCommentReqDto } from '@app/novel-view/dto/request/create-comment-req.dto';
@@ -27,7 +27,13 @@ export class ChapterCommentService {
     @InjectMapper() private readonly classMapper: Mapper,
   ) {}
 
-  async findByChapterId(chapterId: number, dto: BasePaginationRequest): Promise<PagingationResponse<FindByChapterIdCommentResDto>> {
+  async findByChapterId({
+    chapterId,
+    dto,
+  }: {
+    chapterId: number;
+    dto: BasePaginationRequest;
+  }): Promise<PagingationResponse<FindByChapterIdCommentResDto>> {
     const [comments, totalCount] = await this.chapterCommentRepository.findByChapterIdPaging(chapterId, dto);
 
     const result = this.classMapper.mapArray(comments, ChapterCommentEntity, FindByChapterIdCommentResDto);
@@ -36,18 +42,24 @@ export class ChapterCommentService {
   }
 
   async saveComment({ dto, chapterId, user }: { dto: CreateChapterCommentReqDto; chapterId: number; user: UserEntity }): Promise<void> {
-    const comment = this.classMapper.map(dto, CreateChapterCommentReqDto, ChapterCommentEntity, {
-      extraArgs(mapping, destinationObject) {
-        destinationObject.chapter = { id: chapterId } as ChapterEntity;
-        destinationObject.createdBy = user;
-        destinationObject.updatedBy = user;
-        return destinationObject;
-      },
-    });
+    const commentOptions = this.createCommentMapper({ user, chapterId });
+    const comment = this.classMapper.map(dto, CreateChapterCommentReqDto, ChapterCommentEntity, commentOptions);
     await this.chapterCommentRepository.saveRow(comment);
   }
 
   async deleteComment(commentId: number): Promise<void> {
     await this.chapterCommentRepository.deleteComment(commentId);
+  }
+
+  private createCommentMapper({ user, chapterId }: { user: UserEntity; chapterId: number }) {
+    const mapOptions: MapOptions<CreateChapterCommentReqDto, ChapterCommentEntity> = {
+      beforeMap: (source, destination) => {
+        // destination에 createdBy 수동 설정
+        destination.chapter = { id: chapterId } as ChapterEntity;
+        destination.createdBy = user;
+        destination.updatedBy = user;
+      },
+    };
+    return mapOptions;
   }
 }
