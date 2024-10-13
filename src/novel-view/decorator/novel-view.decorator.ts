@@ -1,17 +1,17 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiExtraModels, ApiOperation, ApiProperty, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { ApiCommonResponse } from '@app/commons/decorator/swagger/common-response.decorator';
-import { FindAllNovelViewResponseDto } from '../dto/response/find-all-novel-response.dto';
+import { FindAllNovelViewResDto } from '../dto/response/find-all-novel-res.dto';
 
 export function FindAllNovelView(): MethodDecorator {
   return applyDecorators(
     ApiOperation({
       summary: '소설 리스트 출력',
     }),
-    ApiExtraModels(FindAllNovelViewResponseDto),
+    ApiExtraModels(FindAllNovelViewResDto),
     ApiCommonResponse(
       {
-        $ref: getSchemaPath(FindAllNovelViewResponseDto),
+        $ref: getSchemaPath(FindAllNovelViewResDto),
       },
       { isArray: true },
     ),
@@ -23,10 +23,10 @@ export function FindChapterByNovelRoomId(): MethodDecorator {
     ApiOperation({
       summary: '소설 정보 및 회차 리스트 출력',
     }),
-    ApiExtraModels(FindAllNovelViewResponseDto),
+    ApiExtraModels(FindAllNovelViewResDto),
     ApiCommonResponse(
       {
-        $ref: getSchemaPath(FindAllNovelViewResponseDto),
+        $ref: getSchemaPath(FindAllNovelViewResDto),
       },
       { isArray: true },
     ),

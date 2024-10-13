@@ -36,7 +36,7 @@ export class ChapterLikeRepositoryImpl implements ChapterLikeRepository {
     queryBuilder.groupBy('chapterLike.chapter_id');
     queryBuilder.where('chapterLike.chapter_id IN (:...chapterIds)', { chapterIds });
     const result = await queryBuilder.getRawMany();
-    console.log('first ', result);
+
     return result.map(({ count, chapterid }) => ({ count: +count, chapterId: +chapterid }));
   }
 }

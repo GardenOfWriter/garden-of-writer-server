@@ -12,6 +12,8 @@
     "start:local": "nest start TZ=Asia/Seoul --watch",
     "start:dev": "nest start --watch",
     "start:prod": "--env=prod run -- node dist/main",
+    "docker:build": "docker build . -t tb2527/garden-of-writer-server:0.1",
+    "docker:push": "docker push tb2527/garden-of-writer-server:0.1",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",

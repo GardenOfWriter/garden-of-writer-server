@@ -3,16 +3,17 @@ import { UserEntity } from '../user/entities/user.entity';
 import { ChapterItemsDto, FindByChapterIdResponseDto } from './dto/response/findbychapter-id.dto';
 import { NovelTextEntity } from './entities/novel-text.entity';
 import { NovelTextRepo, NovelTextRepository } from './repository/novel-text.repository';
-import { ChatsGateway } from '@app/chats/chats.gateway';
 import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
 import { NotFoundTextException } from './exception/novel-text.exception';
-import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
+
 import { ChapterRepo, ChapterRepository } from '@app/chapter/repository/chapter.repository';
 import { isEmpty } from '../commons/util/data.helper';
 import { WriterSeqHelper } from '@app/novel-writer/helper/writer-seq.helper';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { FindByChapterIdNovelTextDto } from './dto/request/findby-chapterid.dto';
+import { ChatsGateway } from '@app/chats/chats.gateway';
+import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 
 /**
  * 소설 텍스트 서비스

@@ -15,6 +15,8 @@ import { NovelRoomStatusEnum } from '@app/novel-room/entities/enum/novel-room-st
 import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 import { ChapterLikeRepo, ChapterLikeRepository } from './repository/chapter-like.repository';
 import { ChapterCommentRepo, ChapterCommentRepository } from './repository/chapter-comment.repository';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 /**
  * 회차 서비스 클래스
@@ -38,6 +40,9 @@ export class ChapterService {
 
     @ChapterCommentRepo()
     private readonly chapterCommoentRepository: ChapterCommentRepository,
+
+    @InjectMapper()
+    private readonly mapper: Mapper,
   ) {}
 
   // /**
@@ -142,7 +147,7 @@ export class ChapterService {
    * @param {FindByNovelRoomIdDto} dto 조회할 소설 공방 Id
    * @returns {Promise<PagingationResponse<FindChapterRoomIdResDto>>} 조회된 회차 목록
    */
-  async findChapterText(dto: FindByNovelRoomIdDto): Promise<PagingationResponse<FindChapterRoomIdResDto>> {
+  async findByNovelIdChapter(dto: FindByNovelRoomIdDto): Promise<PagingationResponse<FindChapterRoomIdResDto>> {
     const [chapters, totalCount] = await this.chapterRepository.findChpaterByRoomIdAndCount(dto.novelRoomId, dto);
 
     if (isEmpty(chapters)) throw new NotFoundChapterException();
@@ -155,12 +160,21 @@ export class ChapterService {
   private async findLikeCount(chapters: ChapterEntity[]): Promise<FindChapterRoomIdResDto[]> {
     const chapterIds = chapters.map((chapter) => chapter.id);
     const likes = await this.chapterLikeRepository.countInChapterIds(chapterIds);
-    return await Promise.all(
-      chapters.map(async (chapter) => {
-        const like = likes.find((like) => like.chapterId === chapter.id);
-        return new FindChapterRoomIdResDto({ entity: chapter, likeCount: like ? like.count : 0 });
-      }),
-    );
+
+    return this.mapper.mapArrayAsync(chapters, ChapterEntity, FindChapterRoomIdResDto, {
+      // TODO : beforeMap 과 afterMap 의 차이를 알기
+      // beforeMap 을 했을때는 commentCount,likeCount 가 안나왔는데
+      // afterMap 을 했더니 commentCount,likeCount 가 출력된다
+
+      afterMap: (sourceArray, destinationArray) => {
+        sourceArray.forEach((source, index) => {
+          const destination = { ...destinationArray[index] };
+          destination.likeCount = likes.find((like) => like.chapterId === source.id).count;
+          destination.commentCount = 0;
+          destinationArray[index] = { ...destination };
+        });
+      },
+    });
   }
   /**
    * 소설 공방에 해당하는 회차 목록 조회

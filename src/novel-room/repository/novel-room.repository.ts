@@ -5,7 +5,7 @@ import { BasePaginationRequest, BasePaginationRequest as Pagination } from '@app
 import { NovelRoomEntity } from '../entities/novel-room.entity';
 import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { NovelRoomCategoryType } from '../entities/enum/novel-room-category.enum';
-import { NovelRoomStatusReqEnum } from '@app/novel-view/dto/response/find-all-novel-response.dto';
+import { NovelRoomStatusReqEnum } from '@app/novel-view/dto/response/find-all-novel-res.dto';
 
 export const NovelRoomRepositoryToken = 'NovelRoomRepository';
 

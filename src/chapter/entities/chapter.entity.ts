@@ -7,14 +7,18 @@ import { ChapterCommentEntity } from './chapter-comment.entity';
 import { ChapterStatusEnum, ChapterStatusType } from './enums/chapter-status.enum';
 import { convertDayFormat, getToDay, getToDayISO8601 } from '@app/commons/util/date.util';
 import { ChapterLikeEntity } from './chapter-like.entity';
+import { AutoMap } from '@automapper/classes';
 @Entity({ name: 'chapter' })
 export class ChapterEntity extends PrimaryAuditiedPK {
+  @AutoMap()
   @Column('int', { comment: '소설공방의 회차 번호' })
   no: number;
 
+  @AutoMap()
   @Column({ length: 255, comment: '회차 제목' })
   title: string;
 
+  @AutoMap()
   @Column({
     type: 'enum',
     enum: Object.values(ChapterStatusEnum),
@@ -23,12 +27,15 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   })
   status: ChapterStatusType;
 
+  @AutoMap()
   @Column('bigint', { name: 'novel_room_id' })
   novelRoomId: number;
 
+  @AutoMap()
   @ManyToOne(() => NovelRoomEntity, (room) => room.id)
   novelRoom: NovelRoomEntity;
 
+  @AutoMap()
   @Column('timestamp', {
     comment: '최종 작성일 ',
     nullable: true,
@@ -39,6 +46,7 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   })
   finalAt: Date;
 
+  @AutoMap()
   @Column('timestamp', {
     comment: '연재 승인일',
     nullable: true,
@@ -49,6 +57,7 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   })
   approvalAt: Date;
 
+  @AutoMap()
   @Column('int', { comment: '조회수', default: 0 })
   viewCount: number;
 

@@ -9,6 +9,9 @@ import { UserNickName } from '../../user/entities/user-nickname';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ChapterLikeEntity } from '@app/chapter/entities/chapter-like.entity';
 import { FindChapterLikeResponseDto } from '@app/chapter/dto/response/find-like-by-chapter-id.dto';
+import { FindAllNovelViewResDto } from '../dto/response/find-all-novel-res.dto';
+import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
+import { FindChapterRoomIdResDto } from '@app/chapter/dto/response/findbychapter-id.dto';
 
 @Injectable()
 export class ChpaterProfile extends AutomapperProfile {
@@ -18,6 +21,7 @@ export class ChpaterProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
+      createMap(mapper, ChapterEntity, FindChapterRoomIdResDto);
       createMap(
         mapper,
         Object,

@@ -12,7 +12,7 @@ export enum NovelRoomStatusReqEnum {
   ALL = 'all',
 }
 
-export class FindAllNovelViewResponseDto {
+export class FindAllNovelViewResDto {
   constructor(novelRoom: NovelRoomEntity) {
     const novelWriters = novelRoom.novelWriter;
     const host = novelWriters.find((writer) => writer.isHost());

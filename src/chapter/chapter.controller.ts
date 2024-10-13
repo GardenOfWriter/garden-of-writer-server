@@ -24,7 +24,7 @@ export class ChapterController {
   @FindChapter()
   @Get('')
   async findChpater(@Query() dto: FindByNovelRoomIdDto) {
-    return await this.chapterService.findChapterText(dto);
+    return await this.chapterService.findByNovelIdChapter(dto);
   }
 
   @CreateChapter()

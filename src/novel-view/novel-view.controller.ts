@@ -39,7 +39,14 @@ export class NovelViewController {
   @FindChapter()
   @Get('/novel/:novelRoomId')
   async findChpater(@Param('novelRoomId', ParseIntPipe) novelRoomId: number, @Query() dto: BasePaginationRequest) {
-    return this.chapterService.findChapterText({ novelRoomId, chunkSize: dto.chunkSize, pageNo: dto.pageNo } as FindByNovelRoomIdDto);
+    const roomDetail = await this.novelRoomService.findById(novelRoomId, null);
+    const chapterList = await this.chapterService.findByNovelIdChapter({
+      novelRoomId,
+      chunkSize: dto.chunkSize,
+      pageNo: dto.pageNo,
+    } as FindByNovelRoomIdDto);
+
+    return { roomDetail, chapters: chapterList };
   }
 
   @FindTextByChapterId()
@@ -60,6 +67,7 @@ export class NovelViewController {
   async saveComment(@Param('chapterId', ParseIntPipe) chapterId: number, @Body() dto: CreateChapterCommentReqDto, @CurrentUser() user: UserEntity) {
     return await this.chapterCommentService.saveComment({ dto, chapterId, user });
   }
+
   @ApiBearerAuth('Authorization')
   @UseGuards(JwtGuard)
   @SaveLike()

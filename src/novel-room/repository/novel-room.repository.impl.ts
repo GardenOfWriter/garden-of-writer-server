@@ -7,7 +7,7 @@ import { BasePaginationRequest as Pagination } from '@app/commons/pagination/bas
 import { WriterStatusType } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { NovelRoomCategoryType } from '../entities/enum/novel-room-category.enum';
 import { NovelRoomStatusEnum, NovelRoomStatusType } from '../entities/enum/novel-room-status.enum';
-import { NovelRoomStatusReqEnum } from '@app/novel-view/dto/response/find-all-novel-response.dto';
+import { NovelRoomStatusReqEnum } from '@app/novel-view/dto/response/find-all-novel-res.dto';
 
 export class NovelRoomRepositoryImpl implements NovelRoomRepository {
   constructor(
