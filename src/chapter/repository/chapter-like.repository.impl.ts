@@ -4,6 +4,7 @@ import { ChapterLikeRepository } from './chapter-like.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
+import _ from 'lodash';
 
 @Injectable()
 export class ChapterLikeRepositoryImpl implements ChapterLikeRepository {
