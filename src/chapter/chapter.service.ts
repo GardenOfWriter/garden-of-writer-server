@@ -160,8 +160,7 @@ export class ChapterService {
   private async findLikeCount(chapters: ChapterEntity[]): Promise<FindChapterRoomIdResDto[]> {
     const chapterIds = chapters.map((chapter) => chapter.id);
     const likes = await this.chapterLikeRepository.countInChapterIds(chapterIds);
-    console.log(likes);
-    if (isEmpty(likes)) return;
+
     return this.mapper.mapArrayAsync(chapters, ChapterEntity, FindChapterRoomIdResDto, {
       // TODO : beforeMap 과 afterMap 의 차이를 알기
       // beforeMap 을 했을때는 commentCount,likeCount 가 안나왔는데
@@ -170,7 +169,7 @@ export class ChapterService {
       afterMap: (sourceArray, destinationArray) => {
         sourceArray.forEach((source, index) => {
           const destination = { ...destinationArray[index] };
-          destination.likeCount = likes.find((like) => like.chapterId === source.id).count;
+          destination.likeCount = !isEmpty(likes) ? likes.find((like) => like.chapterId === source.id).count : 0;
           destination.commentCount = 0;
           destinationArray[index] = { ...destination };
         });
