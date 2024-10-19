@@ -95,13 +95,22 @@ export class NovelTextService {
     text.setComplated();
     const chapter = await this.chapterRepo.findById(text.chapterId);
     const writers = await this.novelWriterRepo.findByNovelRoomIdWhereAttending(+chapter.novelRoomId);
+    const currentWriters = writers.find((writer) => writer.isCurrentlyWriter());
+
     const nextWriter = this.writerSeqHelper.getNextWriter(writers);
+
+    currentWriters.setCurrentyWriter(false);
+
     nextWriter.setCurrentyWriter(true);
-    await this.novelTextRepo.addRow(text);
+
+    await this.novelTextRepo.updateRow(text.id, text);
+
+    await this.novelWriterRepo.updateRow(currentWriters.id, currentWriters);
+
     await this.novelWriterRepo.updateRow(nextWriter.id, nextWriter);
 
     this.chatsGateway.sendNovelRoomInMessage(
-      text.createdBy.id,
+      +chapter.novelRoomId,
       SOCKET_EVENT.UPDATE_TEXT,
       JSON.stringify({ textId: text.id, chapterId: text.chapterId }),
     );

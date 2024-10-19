@@ -22,10 +22,11 @@ export class AuthService {
 
   async validateUser(dto: LoginUserDto): Promise<TokenResult> {
     const user: UserEntity = await this.userService.findEmail(dto.email);
-    if (!user) throw new UserIncorrectEmailException();
+    if (isEmpty(user)) throw new UserIncorrectEmailException();
     const comparePassword = await bcrypt.compare(dto.password, user.password);
     this.logger.debug(`compare password ${comparePassword}`);
     if (!comparePassword) throw new UserIncorrectPasswordException();
+    console.log('user ', user);
     const token = this.generateAccessToken(user.id, user.email);
     return token;
   }
@@ -61,6 +62,7 @@ export class AuthService {
    */
   async generateAccessToken(id: number, email: string): Promise<TokenResult> {
     const payload: TokenPayload = { id, email };
+    console.log('payload ', payload);
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_KEY,
       expiresIn: '3d',

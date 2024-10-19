@@ -53,6 +53,9 @@ export class NovelRoomService {
    */
   async findAllRooms(user: UserEntity, dto: FindAttendQueryDto): Promise<PagingationResponse<FindAttendStatusNovelRoomDto>> {
     const roomFilter = dto.queryConvertStatus();
+
+    this.logger.debug(`Room List By User ${user.id}, `);
+
     const [rooms, totalCount] = await this.novelRoomRepo.findAllJoinWriterByStatus(user, roomFilter, dto);
     const itemsPromise = await rooms.map(async (room: NovelRoomEntity) => {
       const attendWriters = await this.novelWriterRepo.findByNovelRoomIdWhereAttending(room.id);

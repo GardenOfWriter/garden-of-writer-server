@@ -96,69 +96,8 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
    */
   sendNovelRoomInMessage(novelRoomId: number, socketEvent: SOCKET_EVENT_TYPE, message: string): void {
     this.logger.debug(`room message ${JSON.stringify(novelRoomId)}`);
+    // console.log('sockets ', this.roomNsp[`/room-${novelRoomId}`].sockets);
     if (isEmpty(this.roomNsp[`/room-${novelRoomId}`])) return;
     this.roomNsp[`/room-${novelRoomId}`].emit(socketEvent, message);
   }
-
-  // @UsePipes(
-  //   new ValidationPipe({
-  //     whitelist: true,
-  //     forbidNonWhitelisted: true,
-  //     transform: true,
-  //   }),
-  // )
-  // @UseFilters(SocketCatchHttpExceptionFilter)
-  // @SubscribeMessage('enterChat')
-  // async enterChat(
-  //   //방의 ID들을 리스트로 받는다.
-  //   @MessageBody() data: EnterChatDto,
-  //   @ConnectedSocket() socket: Socket & { user: UserEntity },
-  // ) {
-  //   for (const chatId of data.chatIds) {
-  //     const exists = await this.chatsService.checkIfChatExists(chatId);
-
-  //     if (!exists) {
-  //       throw new WsException({
-  //         code: 100,
-  //         message: `존재하지 않는 방입니다. chatId: ${chatId}`,
-  //       });
-  //     }
-  //   }
-
-  //   socket.join(data.chatIds.map((x) => x.toString()));
-  // }
-
-  // @UsePipes(
-  //   new ValidationPipe({
-  //     whitelist: true,
-  //     forbidNonWhitelisted: true,
-  //     transform: true,
-  //   }),
-  // )
-  // @UseFilters(SocketCatchHttpExceptionFilter)
-  // @SubscribeMessage('create_chat')
-  // async createChat(@MessageBody() data: CreateChatDto, @ConnectedSocket() socket: Socket & { user: UserEntity }) {
-  //   const chat = await this.chatsService.createChat(data);
-  // }
-
-  // @UsePipes(
-  //   new ValidationPipe({
-  //     whitelist: true,
-  //     forbidNonWhitelisted: true,
-  //     transform: true,
-  //   }),
-  // )
-  // @UseFilters(SocketCatchHttpExceptionFilter)
-  // @SubscribeMessage('send_message')
-  // async sendMessage(@MessageBody() dto: CreateMessagesDto, @ConnectedSocket() socket: Socket & { user: UserEntity }) {
-  //   const chatExists = await this.chatsService.checkIfChatExists(dto.chatId);
-
-  //   if (!chatExists) {
-  //     throw new WsException(`존재하는 않는 방입니다. Chat ID : ${dto.chatId}`);
-  //   }
-
-  //   const message = await this.messagesService.createMessage(dto, socket.user.id);
-
-  //   this.server.in(message.chat.id.toString()).emit('receive_message', message.message);
-  // }
 }

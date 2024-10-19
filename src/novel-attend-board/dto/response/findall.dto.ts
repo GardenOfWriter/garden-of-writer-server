@@ -81,9 +81,9 @@ export class FindAllNovelAttendBoardDto {
   })
   @Expose()
   get host(): string {
-    const hostWriter = this._writers.find((writer) => writer.isHost())[0];
-    if (isEmpty(hostWriter)) return '대표작가 없음';
-    return hostWriter.user.nickname;
+    const host = this._writers.find((writer) => writer.isHost());
+    if (isEmpty(host)) return '대표작가 없음';
+    return host.user.nickname;
   }
   @ApiProperty({
     example: 5,

@@ -28,6 +28,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: TokenPayload, done: VerifiedCallback) {
+    console.log('payload ', payload);
     const user = await this.userService.findById(payload.id);
     if (!user) return done(new UserNotExistsException(), false);
     return done(null, user);

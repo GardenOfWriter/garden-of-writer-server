@@ -35,7 +35,7 @@ export class FindByIdLikeUserDto {
     this._hasLike = hasLike;
     this._currentAttendCnt = writers.length;
     this._type = board.novelRoom.type;
-    this._host = writers.filter((writer) => writer.isHost())[0].user;
+    this._host = writers.find((writer) => writer.isHost()).user;
     this._roomTitle = board.novelRoom.title;
     this._isAttend = isAttend;
     this._writers = writers;

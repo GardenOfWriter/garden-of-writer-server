@@ -46,7 +46,7 @@ import { ChpaterProfile } from './novel-view/mapper/chapter.profile';
       database: process.env.DB_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
-      logging: true,
+      logging: false,
       namingStrategy: new SnakeNamingStrategy(),
       autoLoadEntities: true,
     }),
