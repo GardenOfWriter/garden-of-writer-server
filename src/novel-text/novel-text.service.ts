@@ -114,6 +114,12 @@ export class NovelTextService {
       SOCKET_EVENT.UPDATE_TEXT,
       JSON.stringify({ textId: text.id, chapterId: text.chapterId }),
     );
+
+    this.chatsGateway.sendNovelRoomInMessage(
+      +chapter.novelRoomId,
+      SOCKET_EVENT.CHANGE_WRITER_SEQUENCE,
+      JSON.stringify({ textId: text.id, chapterId: text.chapterId }),
+    );
     return;
   }
 
