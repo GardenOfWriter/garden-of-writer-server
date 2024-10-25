@@ -106,7 +106,7 @@ export class NovelWriterService {
 
     this.logger.log(`Join Room : ${novelRoomId} Writer List ${JSON.stringify(writers)}`);
 
-    const result = writers.map((writer, index) => new FindNovelRoomWritersDto(writer, index));
+    const result = writers.map((writer, index) => new FindNovelRoomWritersDto(writer, user));
 
     const nextWriter = this.writerSeqHelper.getNextWriter(writers);
 

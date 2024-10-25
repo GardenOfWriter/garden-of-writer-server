@@ -10,6 +10,8 @@ import { JwtGuard } from './guard/jwt.guard';
 import { Login, Logout } from './decorator/swagger.decorator';
 import { UserService } from '@app/user/user.service';
 import { JoinUserDto } from '@app/user/dto/join-user.dto';
+import { UserEntity } from '@app/user/entities/user.entity';
+import { isEmpty } from 'lodash';
 
 @ApiTags('인증')
 @Controller('auth')
@@ -21,12 +23,11 @@ export class AuthController {
   ) {}
   @Login()
   @Post('/login')
-  async login(@Body() dto: LoginUserDto, @Res({ passthrough: true }) res: Response): Promise<any> {
+  async login(@Body() dto: LoginUserDto, @Res({ passthrough: true }) res: Response): Promise<TokenResult & { hasRoom: boolean }> {
     const jwt = await this.authService.validateUser(dto);
     const hasRoom = await this.writerService.checkRoomStatusAttend(dto.email);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
     res.cookie('accessToken', jwt.accessToken, {
-      // domain: 'port-0-garden-of-writer-server-71t02clq3bpxzf.sel4.cloudtype.app',
       httpOnly: true,
       maxAge: 3 * 24 * 60 * 60 * 1000,
       sameSite: 'none',
@@ -52,6 +53,16 @@ export class AuthController {
     response.clearCookie('accessToken');
     response.setHeader('Set-Cookie', this.authService.logoutUser());
     return;
+  }
+  @ApiBearerAuth('Authorization')
+  @UseGuards(JwtGuard)
+  @Get('user')
+  async findUser(@CurrentUser() user: UserEntity): Promise<{ id: number; email: string; nickname: string }> {
+    const findUser = await this.userService.findById(user.id);
+    if (isEmpty(findUser)) {
+      return;
+    }
+    return { id: findUser.id, email: findUser.email, nickname: findUser.nickname };
   }
 
   @Post('/temp-password')

@@ -20,15 +20,23 @@ export class AuthService {
     private readonly emailService: EmailService,
   ) {}
 
-  async validateUser(dto: LoginUserDto): Promise<TokenResult> {
+  async validateUser(dto: LoginUserDto): Promise<
+    TokenResult & {
+      user: {
+        id: number;
+        nickname: string;
+        email: string;
+      };
+    }
+  > {
     const user: UserEntity = await this.userService.findEmail(dto.email);
     if (isEmpty(user)) throw new UserIncorrectEmailException();
     const comparePassword = await bcrypt.compare(dto.password, user.password);
     this.logger.debug(`compare password ${comparePassword}`);
     if (!comparePassword) throw new UserIncorrectPasswordException();
-    console.log('user ', user);
-    const token = this.generateAccessToken(user.id, user.email);
-    return token;
+
+    const { accessToken } = await this.generateAccessToken(user.id, user.email);
+    return { accessToken, user: { id: user.id, nickname: user.nickname, email: user.email } };
   }
 
   public logoutUser() {
@@ -62,7 +70,6 @@ export class AuthService {
    */
   async generateAccessToken(id: number, email: string): Promise<TokenResult> {
     const payload: TokenPayload = { id, email };
-    console.log('payload ', payload);
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_ACCESS_KEY,
       expiresIn: '3d',
@@ -85,15 +92,11 @@ export class AuthService {
    */
   extractTokenFromHeader(header: string, isBearer: boolean) {
     const splitToken = header.split(' ');
-
     const prefix = isBearer ? 'Bearer' : 'Basic';
-
     if (splitToken.length !== 2 || splitToken[0] !== prefix) {
       throw new UnauthorizedException('잘못된 토큰입니다.');
     }
-
     const token = splitToken[1];
-
     return token;
   }
 }
