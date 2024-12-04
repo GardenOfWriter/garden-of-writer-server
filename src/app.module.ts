@@ -6,8 +6,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ArgumentInvalidException } from './commons/exception/argument-invalid.exception';
 import { GlobalExceptionFilter } from './commons/filter/global-exception.filter';
@@ -63,9 +61,8 @@ import { ChpaterProfile } from './novel-view/mapper/chapter.profile';
     NovelAttendBoardModule,
     NovelTagModule,
   ],
-  controllers: [AppController, NovelViewController],
+  controllers: [NovelViewController],
   providers: [
-    AppService,
     {
       provide: EmailServiceToken,
       useClass: EmailServiceImpl,
