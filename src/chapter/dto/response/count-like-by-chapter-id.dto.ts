@@ -30,6 +30,7 @@ export class CountChapterLikeResponseDto {
   get id(): number {
     return this._id;
   }
+
   @ApiProperty({
     example: 1,
     description: '회차 no',
@@ -38,6 +39,7 @@ export class CountChapterLikeResponseDto {
   get no(): number {
     return this._no;
   }
+
   @ApiProperty({
     enum: ChapterStatusEnum,
     example: ChapterStatusEnum.WRITING,
@@ -65,6 +67,7 @@ export class CountChapterLikeResponseDto {
   get approvalAt(): Date {
     return this._approvalAt;
   }
+
   @ApiProperty({
     example: '2023-01-01 10:00:00',
     description: '최종 작성일',
@@ -73,6 +76,7 @@ export class CountChapterLikeResponseDto {
   get finalAt(): Date {
     return this._finalAt;
   }
+
   @ApiProperty({
     example: 10,
     description: '조회수',

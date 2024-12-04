@@ -1,11 +1,12 @@
 import { CallHandler, ExecutionContext, HttpException, HttpStatus, Injectable, Logger, NestInterceptor } from '@nestjs/common';
-import { Observable, catchError, throwError } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { BaseException } from '../exception/base.exception';
-import { QueryFailedError, TypeORMError } from 'typeorm';
+import { TypeORMError } from 'typeorm';
 
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
   private logger = new Logger(ErrorsInterceptor.name);
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       catchError((error) => {

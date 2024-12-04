@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { FindChapterRoomIdResDto } from './dto/response/findbychapter-id.dto';
 import { ChapterEntity } from './entities/chapter.entity';
 import { FindByNovelRoomIdDto } from './dto/request/findby-novel-room-id.dto';
@@ -12,7 +12,6 @@ import { ChapterStatusEnum } from './entities/enums/chapter-status.enum';
 import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
 import { NovelRoomRepo, NovelRoomRepository } from '@app/novel-room/repository/novel-room.repository';
 import { NovelRoomStatusEnum } from '@app/novel-room/entities/enum/novel-room-status.enum';
-import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
 import { ChapterLikeRepo, ChapterLikeRepository } from './repository/chapter-like.repository';
 import { ChapterCommentRepo, ChapterCommentRepository } from './repository/chapter-comment.repository';
 import { InjectMapper } from '@automapper/nestjs';
@@ -34,13 +33,10 @@ export class ChapterService {
     private readonly novelRoomRepository: NovelRoomRepository,
     @ChapterRepo()
     private readonly chapterRepository: ChapterRepository,
-
     @ChapterLikeRepo()
     private readonly chapterLikeRepository: ChapterLikeRepository,
-
     @ChapterCommentRepo()
     private readonly chapterCommoentRepository: ChapterCommentRepository,
-
     @InjectMapper()
     private readonly mapper: Mapper,
   ) {}
@@ -176,6 +172,7 @@ export class ChapterService {
       },
     });
   }
+
   /**
    * 소설 공방에 해당하는 회차 목록 조회
    *

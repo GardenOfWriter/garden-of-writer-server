@@ -79,6 +79,7 @@ export function DeleteNovelText(): MethodDecorator {
     }),
   );
 }
+
 export function FindByIdNovelText(): MethodDecorator {
   return applyDecorators(
     ApiOperation({

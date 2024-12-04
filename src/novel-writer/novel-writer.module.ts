@@ -8,10 +8,8 @@ import { WriterManagementController } from './writer-management.controller';
 import { EmailServiceToken } from '@app/commons/email/email.service';
 import { EmailServiceImpl } from '@app/commons/email/email.service.impl';
 import { WriterManagementService } from './writer-management.service';
-import { NovelRoomRepositoryProvider } from '@app/novel-room/repository/novel-room.repository';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { ChatsModule } from '@app/chats/chats.module';
-import { NovelTagService } from '@app/novel-tag/novel-tag.service';
 import { NovelRoomModule } from '@app/novel-room/novel-room.module';
 import { WriterSeqHelper } from './helper/writer-seq.helper';
 

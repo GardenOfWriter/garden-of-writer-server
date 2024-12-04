@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query, SerializeOptions, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
@@ -11,8 +11,6 @@ import { ChapterCommentService } from '@app/chapter/chapter-comment.service';
 import { ChapterLikeService } from '@app/chapter/chapter-like.service';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { UserEntity } from '@app/user/entities/user.entity';
-import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
-import { ChapterLikeEntity } from '@app/chapter/entities/chapter-like.entity';
 import { CreateChapterCommentReqDto } from './dto/request/create-comment-req.dto';
 import { DeleteLike, FindAllNovelView, FindCommentByChapterId, FindTextByChapterId, SaveComment, SaveLike } from './decorator/novel-view.decorator';
 import { FindAllNovelViewReqDto } from './dto/request/find-novel-view-req.dto';
@@ -30,6 +28,7 @@ export class NovelViewController {
     private readonly chapterCommentService: ChapterCommentService,
     private readonly chapterLikeService: ChapterLikeService,
   ) {}
+
   @FindAllNovelView()
   @Get()
   async findByNovelRooms(@Query() dto: FindAllNovelViewReqDto) {
@@ -60,6 +59,7 @@ export class NovelViewController {
   async findCommentByChapterId(@Param('chapterId', ParseIntPipe) chapterId: number, @Query() dto: BasePaginationRequest) {
     return await this.chapterCommentService.findByChapterId({ chapterId, dto });
   }
+
   @ApiBearerAuth('Authorization')
   @UseGuards(JwtGuard)
   @SaveComment()

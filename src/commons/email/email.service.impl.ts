@@ -5,10 +5,11 @@ import { compile } from 'handlebars';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import { EmailTemplate } from './enums/teamplate.enums';
-import { Worker } from 'worker_threads';
+
 @Injectable()
 export class EmailServiceImpl implements EmailService {
   constructor(private readonly mailService: MailerService) {}
+
   //   private logger = new Logger('EmailService');
   async sendEmail({
     to,
@@ -37,6 +38,7 @@ export class EmailServiceImpl implements EmailService {
     };
     await this.mailService.sendMail(mailOptions);
   }
+
   private getTemplate(emailTemplate: EmailTemplate, teamplateArgs: any) {
     const teamplatePath = join(process.env.PWD, `/templates/${emailTemplate.path}`);
     const emailTemplateSource = readFileSync(teamplatePath, 'utf8');

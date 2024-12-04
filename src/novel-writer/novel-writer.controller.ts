@@ -1,8 +1,7 @@
-import { Body, Controller, Delete, Get, ParseIntPipe, Patch, Post, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
-import { Param } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
 import { ChangeWriterSeqRequestDto } from './dto/request/change-writer-seq.dto';
@@ -11,7 +10,6 @@ import { WriterCategoryEnum } from './entities/enums/writer-category.enum';
 import { WriterStatusEnum } from './entities/enums/writer-status.enum';
 import { NovelWriterService } from './novel-writer.service';
 import { ApplyNovelRoomWriter, ChangeWriterSeqRequest, ExitWriter, FindWriter } from './decorator/swagger.decorator';
-import { FindNovelWriteManagementDto } from './dto/request/find-novel-writer.dto';
 import { FindAttendingNovelWrite } from './dto/request/find-attending-novel-writer.dto';
 
 @ApiTags('작가 리스트 [피그마 5번 작가 관련]')
@@ -32,6 +30,7 @@ export class NovelWriterController {
   async findNovelWirters(@Query() dto: FindAttendingNovelWrite, @CurrentUser() user: UserEntity) {
     return await this.novelWriterService.findByNoveRoomId(dto.novelRoomId, user);
   }
+
   /**
    * 소설 공방에 참여 신청
    * TODO : Join 으로 변경을 고려
@@ -51,6 +50,7 @@ export class NovelWriterController {
   async changePriorty(@Body() dto: ChangeWriterSeqRequestDto, @CurrentUser() user: UserEntity) {
     return await this.novelWriterService.changeWriterSeq(dto, user);
   }
+
   /**
    *  작가 퇴출
    */

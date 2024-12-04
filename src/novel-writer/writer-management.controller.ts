@@ -1,6 +1,6 @@
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Body, Controller, Get, Param, ParseIntPipe, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
 import { UpdateNovelWriterStatusRequestDto } from './dto/request/update-novel-writer-status.dto';
@@ -17,6 +17,7 @@ import { ChangeWriterStatus, FindWriterMangement } from './decorator/swagger.dec
 @UseGuards(JwtGuard)
 export class WriterManagementController {
   constructor(private writerMgrService: WriterManagementService) {}
+
   @ChangeWriterStatus()
   @Put('/status/:id')
   async changeWriterStatus(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateNovelWriterStatusRequestDto, @CurrentUser() user: UserEntity) {

@@ -1,4 +1,4 @@
-import { NovelRoomCategoryType, findCategoryName } from '@app/novel-room/entities/enum/novel-room-category.enum';
+import { findCategoryName, NovelRoomCategoryType } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { NovelRoomStatusType } from '@app/novel-room/entities/enum/novel-room-status.enum';
 import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
@@ -11,7 +11,6 @@ import { convertDayFormat } from '../../../commons/util/date.util';
 import { NovelTagEntity } from '@app/novel-tag/entities/novel-tag.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
-import { WriterStatusEnum } from '@app/novel-writer/entities/enums/writer-status.enum';
 import { WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
 
 export class FindByRoomIdDetailDto {
@@ -31,6 +30,7 @@ export class FindByRoomIdDetailDto {
   private _writers: NovelWriterEntity[];
   private _host: UserEntity;
   private _user: UserEntity;
+
   constructor(room: NovelRoomEntity, user: UserEntity) {
     this._id = room.id;
     this._title = room.title;
@@ -104,6 +104,7 @@ export class FindByRoomIdDetailDto {
   get title() {
     return this._title;
   }
+
   @ApiProperty({
     example: 1,
     description: '한줄소개',
@@ -130,6 +131,7 @@ export class FindByRoomIdDetailDto {
   get updatedAt() {
     return this._updatedAt;
   }
+
   @ApiProperty({
     example: convertDayFormat(new Date()),
     description: '연재 완료일',

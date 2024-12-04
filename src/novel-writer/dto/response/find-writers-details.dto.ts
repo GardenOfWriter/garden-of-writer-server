@@ -36,6 +36,7 @@ export class FindByNovelWriterDetails {
   get id(): number {
     return this._id;
   }
+
   @ApiProperty({
     example: { id: 1, nickname: '닉네임' },
     description: 'userId : 유저 ID , nickname : 유저 닉네임',
@@ -47,11 +48,13 @@ export class FindByNovelWriterDetails {
       nickname: this._user.nickname,
     };
   }
+
   @ApiProperty({ ...WriterCategoryDescription })
   @Expose({ name: 'category' })
   get category(): WriterCategoryType {
     return this._category;
   }
+
   @ApiProperty({
     ...WriterStatusDescription,
   })
@@ -68,6 +71,7 @@ export class FindByNovelWriterDetails {
   get createdAt(): Date {
     return this._createdAt;
   }
+
   @ApiProperty({
     example: getToDayISO8601(),
     description: '참여 승인/반려일',
@@ -76,6 +80,7 @@ export class FindByNovelWriterDetails {
   get notifiedAt(): Date {
     return this._notifiedAt;
   }
+
   @ApiProperty({
     example: getToDayISO8601(),
     description: '퇴장일',

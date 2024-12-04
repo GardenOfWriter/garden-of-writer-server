@@ -13,6 +13,7 @@ export class NovelTextExceptionMsg extends EnumType<NovelTextExceptionMsg>() imp
   ) {
     super();
   }
+
   get errorCode(): string {
     return this._errorCode;
   }

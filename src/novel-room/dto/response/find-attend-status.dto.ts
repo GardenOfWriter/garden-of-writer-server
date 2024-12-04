@@ -1,13 +1,13 @@
 import { NovelRoomStatusType } from '@app/novel-room/entities/enum/novel-room-status.enum';
-import { Expose, Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { NovelWriterEntity } from '../../../novel-writer/entities/novel-writer.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
 import { NovelRoomEntity } from '../../entities/novel-room.entity';
 import { NovelRoomType } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { RoomCategoryDescription, findCategoryName } from '../../entities/enum/novel-room-category.enum';
+import { findCategoryName, RoomCategoryDescription } from '../../entities/enum/novel-room-category.enum';
 import { RoomTypeDescription } from '../../entities/enum/novel-room-type.enum';
-import { WriterCategoryDescription, WriterCategoryEnum } from '@app/novel-writer/entities/enums/writer-category.enum';
+import { WriterCategoryDescription } from '@app/novel-writer/entities/enums/writer-category.enum';
 import { NovelRoomStatuDescription } from '../../entities/enum/novel-room-status.enum';
 import { convertDayFormat } from '@app/commons/util/date.util';
 import { WriterStatusDescription } from '@app/novel-writer/entities/enums/writer-status.enum';
@@ -38,6 +38,7 @@ export class FindAttendStatusNovelRoomDto {
     this._completedAt = room.completedAt;
     this._attendWriters = attendWriters;
   }
+
   @ApiProperty({
     example: 1,
     description: '소설 공방 ID',
@@ -46,6 +47,7 @@ export class FindAttendStatusNovelRoomDto {
   get id(): number {
     return this._id;
   }
+
   @ApiProperty({ ...RoomCategoryDescription })
   @Expose({ name: 'category' })
   get category(): { id: number; name: string } {

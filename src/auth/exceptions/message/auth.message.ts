@@ -17,6 +17,7 @@ export class AuthExceptionMsg extends EnumType<AuthExceptionMsg>() implements Co
   ) {
     super();
   }
+
   get errorCode(): string {
     return this._errorCode;
   }

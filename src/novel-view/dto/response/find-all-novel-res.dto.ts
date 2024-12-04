@@ -24,6 +24,7 @@ export class FindAllNovelViewResDto {
     this.bookCover = novelRoom.bookCover;
     this.writerName = `${host.user.nickname} 외 ${novelWriters.length - 1}명`;
   }
+
   @Expose()
   @AutoMap()
   @ApiProperty({

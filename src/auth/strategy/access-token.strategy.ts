@@ -4,7 +4,6 @@ import { ExtractJwt, Strategy, VerifiedCallback } from 'passport-jwt';
 import { TokenPayload } from '../interface/auth.interface';
 import { UserService } from '../../user/user.service';
 import { UserNotExistsException } from '../exceptions/auth.exception';
-import { Request } from 'express';
 
 @Injectable()
 export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {

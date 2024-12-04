@@ -23,6 +23,7 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
       },
     });
   }
+
   async findByNovelRoomIdAndWriterSeq(novelRoomId: number, writingSeq: number): Promise<NovelWriterEntity> {
     return await this.dataSource.findOne({
       where: {
@@ -147,10 +148,12 @@ export class NovelWriterRepositoryImpl implements NovelWriterRepository {
     await this.dataSource.save(entities);
     return;
   }
+
   async updateRow(id: number, entity: Partial<NovelWriterEntity>): Promise<void> {
     await this.dataSource.update({ id }, entity);
     return;
   }
+
   async deleteRow(id: number): Promise<void> {
     await this.dataSource.delete({ id });
     return;

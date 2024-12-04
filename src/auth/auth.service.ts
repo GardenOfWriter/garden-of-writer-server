@@ -2,7 +2,7 @@ import { LoginUserDto } from '@app/auth/dto/login-user.dto';
 import { TokenPayload, TokenResult } from '@app/auth/interface/auth.interface';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { UserService } from '@app/user/user.service';
-import { Inject, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UserIncorrectEmailException, UserIncorrectPasswordException, UserNotExistsException } from './exceptions/auth.exception';
@@ -13,6 +13,7 @@ import { isEmpty } from '../commons/util/data.helper';
 @Injectable()
 export class AuthService {
   private logger = new Logger(AuthService.name);
+
   constructor(
     private readonly userService: UserService, //
     private readonly jwtService: JwtService,

@@ -1,8 +1,5 @@
-import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { Ability, AbilityBuilder, AbilityClass, ExtractSubjectType, InferSubjects } from '@casl/ability';
 import { Inject, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { NovelRoomRepository, NovelRoomRepositoryToken } from '@app/novel-room/repository/novel-room.repository';
 

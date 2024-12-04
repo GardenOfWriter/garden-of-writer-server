@@ -19,6 +19,7 @@ import {
 import { isEmpty } from '@app/commons/util/data.helper';
 import { FindAllNovelViewResDto } from '@app/novel-view/dto/response/find-all-novel-res.dto';
 import { FindAllNovelViewReqDto } from '@app/novel-view/dto/request/find-novel-view-req.dto';
+
 /**
  * 소설 공방 서비스
  *
@@ -34,6 +35,7 @@ import { FindAllNovelViewReqDto } from '@app/novel-view/dto/request/find-novel-v
 @Injectable()
 export class NovelRoomService {
   private logger = new Logger(NovelRoomService.name);
+
   constructor(
     @NovelRoomRepo()
     private readonly novelRoomRepo: NovelRoomRepository,
@@ -64,6 +66,7 @@ export class NovelRoomService {
     const items = await Promise.all(itemsPromise);
     return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
+
   /**
    * 소설 공방 생성
    *
@@ -82,6 +85,7 @@ export class NovelRoomService {
     await Promise.all([await this.novelWriterRepo.saveRow(writer), await this.chapterRepo.saveRow(chapter)]);
     return room;
   }
+
   /**
    * 소설 공방 상세 조회
    *

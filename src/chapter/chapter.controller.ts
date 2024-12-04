@@ -1,8 +1,7 @@
-import { Body, Controller, Get, ParseIntPipe, Post, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, SerializeOptions, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApplyChapter, ChangeChapterTitle, CreateChapter, FindChapter } from './decorator/swagger.decorator';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
-import { Param } from '@nestjs/common';
 import { JwtGuard } from '../auth/guard/jwt.guard';
 import { UserEntity } from '../user/entities/user.entity';
 import { ChapterService } from './chapter.service';

@@ -4,12 +4,10 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
 import { FindByChapterIdCommentResDto } from '../dto/response/find-by-chapter-id-res-comment.dto';
 import { CreateChapterCommentReqDto } from '../dto/request/create-comment-req.dto';
-import { instanceToInstance, plainToInstance } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { UserNickName } from '../../user/entities/user-nickname';
-import { UserEntity } from '@app/user/entities/user.entity';
 import { ChapterLikeEntity } from '@app/chapter/entities/chapter-like.entity';
 import { FindChapterLikeResponseDto } from '@app/chapter/dto/response/find-like-by-chapter-id.dto';
-import { FindAllNovelViewResDto } from '../dto/response/find-all-novel-res.dto';
 import { ChapterEntity } from '@app/chapter/entities/chapter.entity';
 import { FindChapterRoomIdResDto } from '@app/chapter/dto/response/findbychapter-id.dto';
 

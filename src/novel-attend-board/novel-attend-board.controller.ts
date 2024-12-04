@@ -18,6 +18,7 @@ import { CreateBoardLikeDto } from './dto/request/create-board-like.dto';
 @Controller()
 export class NovelAttendBoardController {
   constructor(private novelAttendBoardService: NovelAttendBoardService) {}
+
   @FindNovelAttendBoard()
   @Get('')
   findAll(@Query() dto: FindAttendBoardDto, @CurrentUser() user: UserEntity) {

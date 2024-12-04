@@ -11,6 +11,7 @@ export class ChpaterExceptionMsg extends EnumType<ChpaterExceptionMsg>() impleme
   ) {
     super();
   }
+
   get errorCode(): string {
     return this._errorCode;
   }

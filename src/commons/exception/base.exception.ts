@@ -19,6 +19,7 @@ export class BaseException extends HttpException implements IBaseException, Core
     this.statusCode = statusCode;
     this.validate = validate;
   }
+
   @ApiProperty()
   data: null;
 

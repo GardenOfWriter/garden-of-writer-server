@@ -15,6 +15,7 @@ export class NovelWriterExceptionMsg extends EnumType<NovelWriterExceptionMsg>()
   ) {
     super();
   }
+
   get errorCode(): string {
     return this._errorCode;
   }

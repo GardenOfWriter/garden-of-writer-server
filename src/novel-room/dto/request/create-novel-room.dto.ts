@@ -1,4 +1,4 @@
-import { NovelRoomCategoryType, NovelRoomCategoryEnum } from '@app/novel-room/entities/enum/novel-room-category.enum';
+import { NovelRoomCategoryEnum, NovelRoomCategoryType } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { NovelRoomType, NovelRoomTypeEnum } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
@@ -104,6 +104,7 @@ export class CreateNovelRoomDto {
   toRoomEntity(user: UserEntity): NovelRoomEntity {
     return NovelRoomEntity.of(this.type, this.title, this.subTitle, this.category, this.character, this.summary, this.bookCover, user);
   }
+
   toAttendBoardEntity(roomId: number): NovelAttendBoardEntity | null {
     if (this.type === NovelRoomTypeEnum.SOLO) return null;
     return NovelAttendBoardEntity.of(roomId, this.attendTitle, this.attendContent, this.attendOpenKakaoLink);

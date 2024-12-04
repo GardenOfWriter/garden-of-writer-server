@@ -3,7 +3,7 @@ import { LoginUserDto } from '@app/auth/dto/login-user.dto';
 import { RequestUser, TokenResult } from '@app/auth/interface/auth.interface';
 import { CurrentUser } from '@app/commons/decorator/current-user.decorator';
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { NovelWriterService } from '../novel-writer/novel-writer.service';
 import { JwtGuard } from './guard/jwt.guard';
@@ -21,9 +21,17 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly writerService: NovelWriterService,
   ) {}
+
   @Login()
   @Post('/login')
-  async login(@Body() dto: LoginUserDto, @Res({ passthrough: true }) res: Response): Promise<TokenResult & { hasRoom: boolean }> {
+  async login(
+    @Body() dto: LoginUserDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<
+    TokenResult & {
+      hasRoom: boolean;
+    }
+  > {
     const jwt = await this.authService.validateUser(dto);
     const hasRoom = await this.writerService.checkRoomStatusAttend(dto.email);
     res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
@@ -54,6 +62,7 @@ export class AuthController {
     response.setHeader('Set-Cookie', this.authService.logoutUser());
     return;
   }
+
   @ApiBearerAuth('Authorization')
   @UseGuards(JwtGuard)
   @Get('user')

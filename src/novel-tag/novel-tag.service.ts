@@ -32,6 +32,7 @@ export class NovelTagService {
       await this.novelTagRepository.save(novelTagEntity);
     });
   }
+
   async updateTags(tags: string[], roomId: number) {
     const tagEntities = await Promise.all(
       tags.map(async (tag) => {

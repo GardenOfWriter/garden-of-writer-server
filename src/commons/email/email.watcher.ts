@@ -3,6 +3,7 @@ import { EmailService } from './email.service';
 import { join } from 'path';
 import { EmailTemplate } from './enums/teamplate.enums';
 import { Worker } from 'worker_threads';
+
 @Injectable()
 export class GmailWatcherService implements EmailService {
   async sendEmail({

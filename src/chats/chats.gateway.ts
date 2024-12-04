@@ -22,6 +22,7 @@ export class ChatsGateway implements OnGatewayConnection, OnGatewayDisconnect, O
   server: Server;
 
   private readonly roomNsp: { [key: string]: Namespace } = {};
+
   /**
    * 소켓 서버 초기화
    *

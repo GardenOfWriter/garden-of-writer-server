@@ -13,6 +13,7 @@ export class UserRepository {
   async getAll() {
     return await this.dataSource.createQueryBuilder().select('user.ems').getRawMany();
   }
+
   async getById(id: number): Promise<UserEntity> {
     return await this.dataSource.findOne({
       where: { id },
@@ -27,6 +28,7 @@ export class UserRepository {
     });
     return result;
   }
+
   async getByNicknameEmail(email: string, nickname: string): Promise<UserEntity> {
     return await this.dataSource.findOne({
       where: {
@@ -39,9 +41,11 @@ export class UserRepository {
   async addRow(user: UserEntity) {
     await this.dataSource.save(user);
   }
+
   async deleteUser(id: number) {
     return await this.dataSource.delete(id);
   }
+
   async existEmail(email: string): Promise<boolean> {
     const result = await this.dataSource.exist({
       where: {
@@ -50,6 +54,7 @@ export class UserRepository {
     });
     return !!result;
   }
+
   async existNickname(nickname: string): Promise<boolean> {
     const result = await this.dataSource.exist({
       where: {

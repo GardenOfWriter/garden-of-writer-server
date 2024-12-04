@@ -1,9 +1,10 @@
-import { MailerModule, MailerService } from '@nestjs-modules/mailer';
+import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { EmailServiceToken } from './email.service';
 import { EmailServiceImpl } from './email.service.impl';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
+
 @Module({
   imports: [
     MailerModule.forRootAsync({

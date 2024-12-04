@@ -4,8 +4,8 @@ import { NovelAttendBoardEntity } from '../entities/novel-attend-board.entity';
 import { NovelAttendBoardRepository } from './novel-attend-board.repository';
 import { BoardLikeEntity } from '../entities/board-like.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
-import { FindAttendBoardDto } from '../dto/request/find-attend-board.dto';
 import { BasePaginationRequest as Pagination } from '@app/commons/pagination/base-paginiation.request';
+
 export class NovelAttendBoardRepositoryImpl implements NovelAttendBoardRepository {
   constructor(
     @InjectRepository(NovelAttendBoardEntity)
@@ -13,9 +13,11 @@ export class NovelAttendBoardRepositoryImpl implements NovelAttendBoardRepositor
     @InjectRepository(BoardLikeEntity)
     private boardLikeDataSource: Repository<BoardLikeEntity>,
   ) {}
+
   async addRow(entity: NovelAttendBoardEntity): Promise<void> {
     await this.dataSource.save(entity);
   }
+
   async updateRow(id: number, entity: NovelAttendBoardEntity): Promise<void> {
     await this.dataSource.update({ id }, entity);
   }
@@ -28,6 +30,7 @@ export class NovelAttendBoardRepositoryImpl implements NovelAttendBoardRepositor
       },
     );
   }
+
   async findWithNovelRoom(): Promise<[NovelAttendBoardEntity[], number]> {
     return await this.dataSource
       .createQueryBuilder('nad')
@@ -63,6 +66,7 @@ export class NovelAttendBoardRepositoryImpl implements NovelAttendBoardRepositor
     await this.boardLikeDataSource.save(entity);
     return;
   }
+
   async getByIdBoardLike(roomid: number): Promise<number> {
     return await this.boardLikeDataSource.count({
       where: {
@@ -72,9 +76,11 @@ export class NovelAttendBoardRepositoryImpl implements NovelAttendBoardRepositor
       },
     });
   }
+
   async deleteRow(id: number): Promise<void> {
     await this.dataSource.delete({ id });
   }
+
   async findById(id: number): Promise<NovelAttendBoardEntity> {
     return await this.dataSource.findOne({ where: { id } });
   }

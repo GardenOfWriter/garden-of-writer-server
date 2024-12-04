@@ -5,7 +5,7 @@ import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { AutoMap } from '@automapper/classes';
 import { BadRequestException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -54,6 +54,7 @@ export class UserEntity {
     user.password = password;
     return user;
   }
+
   checkRegexPassword() {
     if (PASSWORD_REG_EXP.test(this.password) === false) {
       throw new BadRequestException(PASSWORD_REG_EXP_ERROR_MESSAGE);

@@ -72,6 +72,7 @@ export function DeleteNovelRoom(): MethodDecorator {
     }),
   );
 }
+
 export function ComplateNovelRoom(): MethodDecorator {
   return applyDecorators(
     ApiOperation({

@@ -14,6 +14,7 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
     @InjectRepository(NovelRoomEntity)
     private dataSource: Repository<NovelRoomEntity>,
   ) {}
+
   async findAllWithUserAndCount(user: UserEntity, pagination: Pagination): Promise<[NovelRoomEntity[], number]> {
     return await this.dataSource.findAndCount({
       take: pagination.take,
@@ -78,6 +79,7 @@ export class NovelRoomRepositoryImpl implements NovelRoomRepository {
   async deleteRow(id: number): Promise<void> {
     await this.dataSource.delete(id);
   }
+
   async findAllByStatusAndCategoryJoinWriter({
     category,
     status,

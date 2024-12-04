@@ -16,6 +16,7 @@ export class FindNovelRoomWritersDto {
   private _writingSeq: number;
   private _currentlyWriting: boolean;
   private _reqUser: UserEntity;
+
   constructor(entity: NovelWriterEntity, reqUser: UserEntity) {
     this._id = entity.id;
     this._status = entity.status;
@@ -34,6 +35,7 @@ export class FindNovelRoomWritersDto {
   get id(): number {
     return this._id;
   }
+
   @ApiProperty({
     example: 1,
     description: '작가 순서',
@@ -42,6 +44,7 @@ export class FindNovelRoomWritersDto {
   get writingSeq(): number {
     return this._writingSeq;
   }
+
   @ApiProperty({
     example: true,
     description: '현재 순서 여부 (true: 현재 작성 순서, false: 작성순서 아님)',
@@ -50,6 +53,7 @@ export class FindNovelRoomWritersDto {
   get currentlyWriting(): boolean {
     return this._currentlyWriting;
   }
+
   @ApiProperty({ ...WriterStatusDescription })
   @Expose()
   get status(): WriterStatusType {
@@ -64,6 +68,7 @@ export class FindNovelRoomWritersDto {
   get nickname(): string {
     return this._user.nickname;
   }
+
   @ApiProperty({ ...WriterCategoryDescription })
   @Expose()
   get category(): string {

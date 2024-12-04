@@ -7,6 +7,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 @Injectable()
 export class UserService {
   private logger = new Logger(UserService.name);
+
   constructor(
     @Inject(UserRepositoryToken)
     private userRepository: UserRepository,
@@ -30,11 +31,13 @@ export class UserService {
     const checkEmail = await this.userRepository.findByEmail(email);
     return checkEmail;
   }
+
   async checkUserEmail(email: string) {
     const checkEmail = await this.userRepository.findByEmail(email);
     if (isEmpty(checkEmail)) return true;
     return false;
   }
+
   async checkUserNickname(nickname: string) {
     const checkNickname = await this.userRepository.findByNickname(nickname);
     if (isEmpty(checkNickname)) return true;
@@ -44,6 +47,7 @@ export class UserService {
   async updateUser(id: number, updateUser: Partial<UserEntity>): Promise<void> {
     await this.userRepository.updateRow(id, updateUser);
   }
+
   async findById(id: number): Promise<UserEntity> {
     return await this.userRepository.findByUserId(id);
   }

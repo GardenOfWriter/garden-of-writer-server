@@ -53,7 +53,14 @@ export class NovelTextService {
 
       chapter.chapterFinalWriterd();
       await this.chapterRepo.saveRow(chapter);
-      this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId, chapterId: entity.chapterId }));
+      this.chatsGateway.sendNovelRoomInMessage(
+        chapter.novelRoomId,
+        SOCKET_EVENT.ENTER_TEXT,
+        JSON.stringify({
+          textId,
+          chapterId: entity.chapterId,
+        }),
+      );
       return;
     } catch (err) {
       console.error(err);
@@ -161,7 +168,7 @@ export class NovelTextService {
    * @async
    * @param {number} textId 소설 텍스트 ID
    * @returns {Promise<NovelTextEntity>} 조회된 소설 텍스트 정보 엔티티
-  //  */
+   //  */
   async findById(textId: number): Promise<ChapterItemsDto> {
     const text = await this.novelTextRepo.findByIdJoinUser(textId);
     const chapter = await this.chapterRepo.findById(text.chapterId);

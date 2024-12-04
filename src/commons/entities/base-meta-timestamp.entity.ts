@@ -1,4 +1,4 @@
-import { BaseEntity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { convertDayFormat } from '../util/date.util';
 import { AutoMap } from '@automapper/classes';
 

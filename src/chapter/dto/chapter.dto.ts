@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNumber, IsString } from 'class-validator';
-import { ChatperStatusDescription } from '../entities/enums/chapter-status.enum';
-import { ChapterStatusEnum, ChapterStatusType } from '../entities/enums/chapter-status.enum';
+import { ChapterStatusEnum, ChapterStatusType, ChatperStatusDescription } from '../entities/enums/chapter-status.enum';
 
 export class ChapterDto {
   @ApiProperty({

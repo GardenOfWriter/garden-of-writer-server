@@ -73,7 +73,7 @@ export interface NovelRoomRepository {
   /**
    * 소설 공방 조회
 
-   * @param {number} id 조회할 소설 공방 id 
+   * @param {number} id 조회할 소설 공방 id
    * @returns {Promise<NovelRoomEntity>} 조회된 소설 공방 정보 (공방 태그 포함)
    */
   getByIdWithTag(id: number): Promise<NovelRoomEntity>;

@@ -1,10 +1,10 @@
-import { ClassSerializerInterceptor, Logger, ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, Logger } from '@nestjs/common';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { BaseAPIDocumentBuilder } from './commons/swagger/api.document';
-import { SocketIoAdpater } from './chats/adapter/socket-io.adapter';
+
 async function bootstrap() {
   const logger = new Logger(bootstrap.name);
   const app = await NestFactory.create(AppModule);
@@ -28,4 +28,5 @@ async function bootstrap() {
     process.exit(0);
   });
 }
+
 bootstrap();

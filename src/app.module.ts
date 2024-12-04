@@ -1,5 +1,5 @@
 import { NovelRoomModule } from '@app/novel-room/novel-room.module';
-import { MiddlewareConsumer, Module, NestModule, ValidationError, ValidationPipe, forwardRef } from '@nestjs/common';
+import { forwardRef, MiddlewareConsumer, Module, NestModule, ValidationError, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
@@ -26,6 +26,7 @@ import { NovelViewController } from './novel-view/novel-view.controller';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { ChpaterProfile } from './novel-view/mapper/chapter.profile';
+
 @Module({
   imports: [
     ConfigModule.forRoot({

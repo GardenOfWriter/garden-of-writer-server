@@ -15,6 +15,7 @@ export function FindNovelAttendBoard(): MethodDecorator {
     }),
   );
 }
+
 export function CreateNovelAttendBoard(): MethodDecorator {
   return applyDecorators(
     ApiOperation({

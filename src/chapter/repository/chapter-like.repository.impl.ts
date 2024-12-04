@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ChapterLikeEntity } from '../entities/chapter-like.entity';
 import { ChapterLikeRepository } from './chapter-like.repository';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
-import _ from 'lodash';
 
 @Injectable()
 export class ChapterLikeRepositoryImpl implements ChapterLikeRepository {
@@ -12,9 +11,11 @@ export class ChapterLikeRepositoryImpl implements ChapterLikeRepository {
     @InjectRepository(ChapterLikeEntity)
     private dataSource: Repository<ChapterLikeEntity>,
   ) {}
+
   async findByChapterId(chapterId: number): Promise<ChapterLikeEntity[]> {
     return await this.dataSource.find({ where: { chapter: { id: chapterId } } });
   }
+
   async countByChapterId(chapterId: number): Promise<number> {
     return await this.dataSource.count({ where: { chapter: { id: chapterId } } });
   }

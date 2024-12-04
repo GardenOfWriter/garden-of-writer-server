@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiExtraModels, ApiOperation, ApiProperty, ApiResponse, getSchemaPath } from '@nestjs/swagger';
+import { ApiExtraModels, ApiOperation, getSchemaPath } from '@nestjs/swagger';
 import { ApiCommonResponse } from '@app/commons/decorator/swagger/common-response.decorator';
 import { FindAllNovelViewResDto } from '../dto/response/find-all-novel-res.dto';
 

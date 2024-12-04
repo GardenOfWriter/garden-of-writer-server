@@ -1,7 +1,7 @@
 import { parentPort, workerData } from 'worker_threads';
 import * as nodemailer from 'nodemailer';
 import { EmailTemplate } from './enums/teamplate.enums';
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { readFileSync } from 'fs';
 import { compile } from 'handlebars';
 import * as hbs from 'nodemailer-express-handlebars';

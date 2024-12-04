@@ -1,7 +1,7 @@
 /**
  * 작가 구분 enum
  *
- * @type {{ readonly HOST: "host"; readonly ATTENDEE: "attendee"; }}
+ * @type {{ readonly HOST: 'host'; readonly ATTENDEE: 'attendee'; }}
  */
 export const WriterCategoryEnum = {
   HOST: 'host', // 대표 착가

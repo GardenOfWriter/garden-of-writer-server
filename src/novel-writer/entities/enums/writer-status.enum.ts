@@ -1,7 +1,7 @@
 /**
  * 작가 상태 Enum
  *
- * @type {{ readonly REVIEW: "review"; readonly ATTENDING: "attending"; readonly REJECT: "reject"; readonly EXIT: "exit"; }}
+ * @type {{ readonly REVIEW: 'review'; readonly ATTENDING: 'attending'; readonly REJECT: 'reject'; readonly EXIT: 'exit'; }}
  */
 export const WriterStatusEnum = {
   REVIEW: 'review', // 참여 검토중

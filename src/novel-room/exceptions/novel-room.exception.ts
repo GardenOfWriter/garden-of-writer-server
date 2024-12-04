@@ -55,6 +55,7 @@ export class NovelRoomAlreadyComplatedException extends BaseException {
     super(NovelRoomErrorMessage.ALREADY_COMPLETED, HttpStatus.CONFLICT);
   }
 }
+
 /**
  *  소설 공방 접근 권한 없음 (작가 상태 참여중이 아닌 경우)
  *

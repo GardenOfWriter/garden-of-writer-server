@@ -52,6 +52,7 @@ export class NovelRoomController {
     private readonly novelAttendBoardService: NovelAttendBoardService,
     private readonly novelTagService: NovelTagService,
   ) {}
+
   /**
    * 소설 공방 생성
    */
@@ -82,6 +83,7 @@ export class NovelRoomController {
     const result = await this.novelRoomService.findAllRooms(user, query);
     return result;
   }
+
   /**
    * 소설 공방 상세 조회
    */
@@ -90,6 +92,7 @@ export class NovelRoomController {
   getRoomById(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: UserEntity) {
     return this.novelRoomService.findById(id, user);
   }
+
   /**
    * 소설 공방 삭제
    */
@@ -98,6 +101,7 @@ export class NovelRoomController {
   async deleteRoom(@Param('id') id: string, user: UserEntity, room: NovelRoomEntity): Promise<void> {
     await this.novelRoomService.deleteRoom(room.id);
   }
+
   /**
    * 소설 공방 연재 완료 처리
    */

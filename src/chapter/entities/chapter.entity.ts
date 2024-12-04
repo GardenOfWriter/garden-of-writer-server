@@ -5,9 +5,10 @@ import { PrimaryAuditiedPK } from '../../commons/entities/primary-auditied-pk.en
 import { ChapterCommentEntity } from './chapter-comment.entity';
 
 import { ChapterStatusEnum, ChapterStatusType } from './enums/chapter-status.enum';
-import { convertDayFormat, getToDay, getToDayISO8601 } from '@app/commons/util/date.util';
+import { convertDayFormat, getToDay } from '@app/commons/util/date.util';
 import { ChapterLikeEntity } from './chapter-like.entity';
 import { AutoMap } from '@automapper/classes';
+
 @Entity({ name: 'chapter' })
 export class ChapterEntity extends PrimaryAuditiedPK {
   @AutoMap()
@@ -97,6 +98,7 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   setReviewStatus() {
     this.status = ChapterStatusEnum.REVIEW;
   }
+
   chapterApproved() {
     this.approvalAt = getToDay();
     this.status = ChapterStatusEnum.APPROVE;
@@ -105,6 +107,7 @@ export class ChapterEntity extends PrimaryAuditiedPK {
   chapterFinalWriterd() {
     this.finalAt = getToDay();
   }
+
   isWritingStatus(): boolean {
     return this.status === ChapterStatusEnum.WRITING;
   }

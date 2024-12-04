@@ -3,7 +3,7 @@ import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '../../commons/entities/primary-generated-pk-with-meta-time.entity';
-import { WriterCategoryType, WriterCategoryEnum } from './enums/writer-category.enum';
+import { WriterCategoryEnum, WriterCategoryType } from './enums/writer-category.enum';
 import { WriterStatusEnum, WriterStatusType } from './enums/writer-status.enum';
 
 @Entity({ name: 'novel-writer' })
@@ -86,6 +86,7 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   setCurrentyWriter(currentlyWriter: boolean) {
     this.currentlyWriting = currentlyWriter;
   }
+
   isCurrentlyWriter() {
     return this.currentlyWriting;
   }
@@ -98,9 +99,11 @@ export class NovelWriterEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
   isStatusAttendingOrReject(): boolean {
     return this.status === WriterStatusEnum.ATTENDING || this.status === WriterStatusEnum.REJECT;
   }
+
   isStatusAttending(): boolean {
     return this.status === WriterStatusEnum.ATTENDING;
   }
+
   isSelf(user: UserEntity): boolean {
     return this.user.id === user.id;
   }

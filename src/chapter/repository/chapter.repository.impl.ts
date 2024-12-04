@@ -13,9 +13,11 @@ export class ChapterRepositoryImpl implements ChapterRepository {
   async findById(id: number): Promise<ChapterEntity> {
     return await this.dataSource.findOne({ where: { id } });
   }
+
   async saveRow(entity: Partial<ChapterEntity>): Promise<void> {
     await this.dataSource.save(entity);
   }
+
   async findOneByOptions(options: FindOneOptions<ChapterEntity>): Promise<ChapterEntity> {
     return await this.dataSource.findOne(options);
   }
@@ -31,6 +33,7 @@ export class ChapterRepositoryImpl implements ChapterRepository {
       },
     });
   }
+
   async countByNovelRoomId(noveRoomId: number): Promise<number> {
     return await this.dataSource.count({
       where: {
@@ -38,6 +41,7 @@ export class ChapterRepositoryImpl implements ChapterRepository {
       },
     });
   }
+
   async findChpaterByRoomIdAndCount(novelRoomId: number, pagination: BasePaginationRequest): Promise<[ChapterEntity[], number]> {
     return await this.dataSource.findAndCount({
       take: pagination.take,
@@ -50,6 +54,7 @@ export class ChapterRepositoryImpl implements ChapterRepository {
       },
     });
   }
+
   async findByoptions(options: FindOneOptions<ChapterEntity>): Promise<ChapterEntity[]> {
     return await this.dataSource.find(options);
   }
@@ -58,10 +63,12 @@ export class ChapterRepositoryImpl implements ChapterRepository {
     await this.dataSource.save(entity);
     return;
   }
+
   async updateRow(id: number, entity: Partial<ChapterEntity>): Promise<void> {
     await this.dataSource.update({ id }, entity);
     return;
   }
+
   async deleteRow(id: number): Promise<void> {
     await this.dataSource.delete({ id });
     return;

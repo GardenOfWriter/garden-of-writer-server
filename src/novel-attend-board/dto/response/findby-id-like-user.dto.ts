@@ -1,4 +1,3 @@
-import { BoardLikeEntity } from '@app/novel-attend-board/entities/board-like.entity';
 import { NovelAttendBoardEntity } from '@app/novel-attend-board/entities/novel-attend-board.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
@@ -6,7 +5,6 @@ import { convertDayFormat } from '../../../commons/util/date.util';
 import { NovelRoomType, RoomTypeDescription } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
-import { isEmpty } from '../../../commons/util/data.helper';
 
 export class FindByIdLikeUserDto {
   @Exclude() private _roomId: number;
@@ -49,6 +47,7 @@ export class FindByIdLikeUserDto {
   get roomId(): number {
     return +this._roomId;
   }
+
   @ApiProperty({
     example: '공방 모집글 타이틀',
     description: '공방 모집글 타이틀',
@@ -93,6 +92,7 @@ export class FindByIdLikeUserDto {
   get host(): { id: number; nickname: string } {
     return { id: this._host.id, nickname: this._host.nickname };
   }
+
   @ApiProperty({
     example: 3,
     description: '공방의 참여중인 작가 수(정원에 포함)',
@@ -116,6 +116,7 @@ export class FindByIdLikeUserDto {
   get viewCount(): number {
     return this._viewCount || 0;
   }
+
   @ApiProperty({
     example: '오픈 카카오 링크 ',
     description: '오픈 카카오 링크',
@@ -124,6 +125,7 @@ export class FindByIdLikeUserDto {
   get openKakaoLink(): string {
     return this._openKakaoLink;
   }
+
   @ApiProperty({
     example: '좋아요수',
     description: '좋아요수',
@@ -141,6 +143,7 @@ export class FindByIdLikeUserDto {
   get hasLike(): boolean {
     return this._hasLike;
   }
+
   @ApiProperty({
     example: true,
     description: 'true 참석,false 미참석',

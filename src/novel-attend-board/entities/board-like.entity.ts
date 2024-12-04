@@ -1,5 +1,4 @@
 import { Entity, ManyToOne } from 'typeorm';
-import { BaseMetaTimeStampEntity } from '@app/commons/entities/base-meta-timestamp.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { NovelAttendBoardEntity } from './novel-attend-board.entity';
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '@app/commons/entities/primary-generated-pk-with-meta-time.entity';

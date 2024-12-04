@@ -36,6 +36,7 @@ export function CreateNovel(): MethodDecorator {
     ApiResponse({ schema: {}, status: 2000 }),
   );
 }
+
 export function ChangeChapterTitle(): MethodDecorator {
   return applyDecorators(
     ApiOperation({

@@ -69,6 +69,7 @@ export class ChapterItemsDto {
   get id(): number {
     return this._id;
   }
+
   @ApiProperty({
     example: 1,
     description: '회차 ID',
@@ -77,6 +78,7 @@ export class ChapterItemsDto {
   get chapterId(): number {
     return this._chapterId;
   }
+
   @ApiProperty({
     ...NovelTextStatusDescription,
   })
@@ -84,6 +86,7 @@ export class ChapterItemsDto {
   get status(): NovelTextStatusType {
     return this._status;
   }
+
   @ApiProperty({
     example: '소설 글쓰기 내용',
     description: '소설 글쓰기 내용',
@@ -92,6 +95,7 @@ export class ChapterItemsDto {
   get content(): string {
     return this._content;
   }
+
   @ApiProperty({
     example: { id: 1, nickname: 'test@test.com' },
     description: '작성자 id 와 nickname',

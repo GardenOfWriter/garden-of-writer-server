@@ -25,6 +25,7 @@ export class ChangeWriterSeqRequestDto extends PickType(NovelWirterDto, ['novelR
     const seq = this.writerIdSeq.indexOf(writerId);
     return seq + 1;
   }
+
   checkRoomAttendWriter(writers: NovelWriterEntity[]) {
     if (this.writerIdSeq.length !== writers.length) {
       return false;

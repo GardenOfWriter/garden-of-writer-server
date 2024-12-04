@@ -1,13 +1,9 @@
-import { JoinUserDto } from '@app/user/dto/join-user.dto';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { UserService } from '@app/user/user.service';
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
 import { CheckNicknameDto } from './dto/check-nickname.dto';
 import { CheckEmailDto } from './dto/check-email.dto';
-import { AuthService } from '@app/auth/auth.service';
-import { TokenResult } from '@app/auth/interface/auth.interface';
 
 @ApiTags('유저')
 @Controller('user')
@@ -42,6 +38,7 @@ export class UserController {
     const result = await this.userService.checkUserNickname(dto.nickname);
     return { result };
   }
+
   //post맨에서 user/{id}로 get해야 됨.
   @ApiOperation({
     summary: '회원조회',

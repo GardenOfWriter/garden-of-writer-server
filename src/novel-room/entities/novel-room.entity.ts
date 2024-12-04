@@ -1,5 +1,5 @@
 import { PrimaryGeneratedPkWithMetaTimeEntity } from '@app/commons/entities/primary-generated-pk-with-meta-time.entity';
-import { NovelRoomCategoryType, NovelRoomCategoryEnum } from '@app/novel-room/entities/enum/novel-room-category.enum';
+import { NovelRoomCategoryEnum, NovelRoomCategoryType } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { NovelRoomType, NovelRoomTypeEnum } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
@@ -119,9 +119,11 @@ export class NovelRoomEntity extends PrimaryGeneratedPkWithMetaTimeEntity {
     this.completedAt = getToDayISO8601();
     this.status = NovelRoomStatusEnum.COMPLETE;
   }
+
   checkCompleted(): boolean {
     return this.status === NovelRoomStatusEnum.COMPLETE;
   }
+
   changeStatus(status: NovelRoomStatusType): void {
     this.status = status;
   }

@@ -18,6 +18,7 @@ import { TransactionInterceptor } from '@app/commons/interceptor/transaction.int
 import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { QueryRunner as QR } from 'typeorm';
 import { FindByChapterIdNovelTextDto } from './dto/request/findby-chapterid.dto';
+
 @ApiTags('소설글쓰기[피그마 5번 채팅 관련]')
 @Controller('novel-text')
 @ApiBearerAuth('Authorization')

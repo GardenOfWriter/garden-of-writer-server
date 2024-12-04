@@ -1,13 +1,11 @@
 import { NovelRoomType, NovelRoomTypeEnum } from '@app/novel-room/entities/enum/novel-room-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { NovelRoomEntity } from '@app/novel-room/entities/novel-room.entity';
 import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { convertDayFormat } from '@app/commons/util/date.util';
-import { RoomCategoryDescription, findCategoryName } from '@app/novel-room/entities/enum/novel-room-category.enum';
+import { findCategoryName, RoomCategoryDescription } from '@app/novel-room/entities/enum/novel-room-category.enum';
 import { NovelAttendBoardEntity } from '@app/novel-attend-board/entities/novel-attend-board.entity';
-import { isEmail } from 'class-validator';
 import { isEmpty } from 'lodash';
 
 export class FindAllNovelAttendBoardDto {
@@ -41,6 +39,7 @@ export class FindAllNovelAttendBoardDto {
   get roomId(): number {
     return this._roomId;
   }
+
   @ApiProperty({
     example: '소설 공방 제목',
     description: '소설 공방 제목 입니다.',
@@ -49,6 +48,7 @@ export class FindAllNovelAttendBoardDto {
   get roomTitle(): string {
     return this._roomTitle;
   }
+
   @ApiProperty({
     example: '공방 참여 게시글 제목',
     description: '공방 참여 게시글 제목 입니다.',
@@ -66,6 +66,7 @@ export class FindAllNovelAttendBoardDto {
   get viewCount(): number {
     return this._viewCount || 0;
   }
+
   @ApiProperty({
     example: convertDayFormat(new Date()),
     description: '소설공방 개설일',
@@ -85,6 +86,7 @@ export class FindAllNovelAttendBoardDto {
     if (isEmpty(host)) return '대표작가 없음';
     return host.user.nickname;
   }
+
   @ApiProperty({
     example: 5,
     description: '좋아요 수',
@@ -94,11 +96,13 @@ export class FindAllNovelAttendBoardDto {
     if (!this._attendBoard) return 0;
     return this._attendBoard.boardLike.length || 0;
   }
+
   @ApiProperty({ ...RoomCategoryDescription })
   @Expose({ name: 'category' })
   get category(): { id: number; name: string } {
     return { id: this._category, name: findCategoryName(this._category) };
   }
+
   @ApiProperty({
     example: 2,
     description: '참여 작가 수',
@@ -108,6 +112,7 @@ export class FindAllNovelAttendBoardDto {
     const attendWriters = this._writers.filter((writer) => writer.isStatusAttending());
     return attendWriters.length;
   }
+
   @ApiProperty({
     enum: NovelRoomTypeEnum,
     example: '소설 공방 타입',

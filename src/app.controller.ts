@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Inject, Post, Put, Query } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
 import { AppService } from './app.service';
 import { EmailService, EmailServiceToken } from './commons/email/email.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller()
 export class AppController {
@@ -24,6 +23,7 @@ export class AppController {
     }
     return this.appService.getHello();
   }
+
   // @ApiTags('test')
   // @ApiOperation({
   //   description: '바디값 테스트[GET]',
