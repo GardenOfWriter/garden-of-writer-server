@@ -78,4 +78,16 @@ export class FindNovelRoomWritersDto {
   get isLoginUser(): boolean {
     return this._reqUser.email === this._user.email;
   }
+
+  @ApiProperty({
+    example: { id: 1, email: 'test@test.com' },
+  })
+  @Expose()
+  get user(): { id: number; email: string; nickname: string } {
+    return {
+      id: this._user.id,
+      email: this._user.email,
+      nickname: this._user.nickname,
+    };
+  }
 }

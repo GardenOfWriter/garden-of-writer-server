@@ -26,6 +26,7 @@ import { NovelViewController } from './novel-view/novel-view.controller';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { ChpaterProfile } from './novel-view/mapper/chapter.profile';
+import { AbilityModule } from './commons/abilities/ability.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -61,6 +62,7 @@ import { ChpaterProfile } from './novel-view/mapper/chapter.profile';
     ChapterModule,
     NovelAttendBoardModule,
     NovelTagModule,
+    AbilityModule,
   ],
   controllers: [AppController, NovelViewController],
   providers: [

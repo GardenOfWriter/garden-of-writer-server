@@ -38,6 +38,7 @@ import { TransactionInterceptor } from '@app/commons/interceptor/transaction.int
 import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { QueryRunner as QR } from 'typeorm';
 import { isEmpty } from '../commons/util/data.helper';
+import { HostGuard } from '@app/auth/guard/host.guard';
 
 @ApiTags('소설 공방 (작가의 정원)')
 @Controller('novel-room')
@@ -118,6 +119,7 @@ export class NovelRoomController {
    * @param {QR} qr QueryRunner 트랜잭션
    * @returns {Promise<NovelRoomEntity>} 수정된 소설 공방 정보
    */
+  @UseGuards(HostGuard)
   @UseInterceptors(TransactionInterceptor)
   @UpdateNovelRoom()
   @Put(':id')
