@@ -15,24 +15,16 @@ export class FindNovelRoomWritersDto {
   private _category: WriterCategoryType;
   private _writingSeq: number;
   private _currentlyWriting: boolean;
-  constructor(entity: NovelWriterEntity, no: number) {
+  private _reqUser: UserEntity;
+  constructor(entity: NovelWriterEntity, reqUser: UserEntity) {
     this._id = entity.id;
     this._status = entity.status;
     this._user = entity.user;
     this._category = entity.category;
     this._writingSeq = entity.writingSeq;
     this._currentlyWriting = entity.currentlyWriting;
-
-    // this._no = no;
+    this._reqUser = reqUser;
   }
-  // @ApiProperty({
-  //   example: 1,
-  //   description: '작가 리스트 No',
-  // })
-  // @Expose()
-  // get no(): number {
-  //   return this._no;
-  // }
 
   @ApiProperty({
     example: 1,
@@ -76,5 +68,26 @@ export class FindNovelRoomWritersDto {
   @Expose()
   get category(): string {
     return this._category;
+  }
+
+  @ApiProperty({
+    example: true,
+    description: 'API 요청 유저이면 true,아니면 false',
+  })
+  @Expose()
+  get isLoginUser(): boolean {
+    return this._reqUser.email === this._user.email;
+  }
+
+  @ApiProperty({
+    example: { id: 1, email: 'test@test.com' },
+  })
+  @Expose()
+  get user(): { id: number; email: string; nickname: string } {
+    return {
+      id: this._user.id,
+      email: this._user.email,
+      nickname: this._user.nickname,
+    };
   }
 }

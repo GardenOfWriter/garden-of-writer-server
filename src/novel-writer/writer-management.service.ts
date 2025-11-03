@@ -118,10 +118,15 @@ export class WriterManagementService {
   private async changeSendEmail(writer: NovelWriterEntity): Promise<void> {
     if (writer.isStatusAttendingOrReject()) {
       const template = writer.status == WriterStatusEnum.ATTENDING ? EmailTemplate.WRITER_ATTENDING : EmailTemplate.WRITER_REJECT;
-      await this.emailService.sendEmail(writer.user.email, template.title, ' ', template, {
-        username: writer.user.nickname,
-        room: writer.novelRoom.title,
-      });
+      // await this.emailService.sendEmail(
+      //   {
+      //     to: writer.user.email,
+      //     subject: template.title,
+      //   }
+      //   writer.user.email, template.title, ' ', template, {
+      //   username: writer.user.nickname,
+      //   room: writer.novelRoom.title,
+      // });
     }
   }
 }

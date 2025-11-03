@@ -29,6 +29,7 @@ export class FindByRoomIdDetailDto {
   private _status: NovelRoomStatusType;
   private _novelTags: NovelTagEntity[];
   private _writers: NovelWriterEntity[];
+  private _host: UserEntity;
   private _user: UserEntity;
   constructor(room: NovelRoomEntity, user: UserEntity) {
     this._id = room.id;

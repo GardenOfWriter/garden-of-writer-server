@@ -1,4 +1,5 @@
 import { UserEmailAlreadyExistsException, UserNicknameAlreadyExistsException } from '@app/auth/exceptions/auth.exception';
+import { isEmpty } from '@app/commons/util/data.helper';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { UserRepository, UserRepositoryToken } from '@app/user/repository/user.repository';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -16,7 +17,6 @@ export class UserService {
   }
 
   async create(joinUser: Partial<UserEntity>): Promise<void> {
-    this.logger.log(`Join User ${JSON.stringify(joinUser)}`);
     const checkEmail = await this.userRepository.existEmail(joinUser.email);
     if (checkEmail) throw new UserEmailAlreadyExistsException();
     const checkNickname = await this.userRepository.existNickname(joinUser.nickname);
@@ -30,7 +30,20 @@ export class UserService {
     const checkEmail = await this.userRepository.findByEmail(email);
     return checkEmail;
   }
+  async checkUserEmail(email: string) {
+    const checkEmail = await this.userRepository.findByEmail(email);
+    if (isEmpty(checkEmail)) return true;
+    return false;
+  }
+  async checkUserNickname(nickname: string) {
+    const checkNickname = await this.userRepository.findByNickname(nickname);
+    if (isEmpty(checkNickname)) return true;
+    return false;
+  }
 
+  async updateUser(id: number, updateUser: Partial<UserEntity>): Promise<void> {
+    await this.userRepository.updateRow(id, updateUser);
+  }
   async findById(id: number): Promise<UserEntity> {
     return await this.userRepository.findByUserId(id);
   }

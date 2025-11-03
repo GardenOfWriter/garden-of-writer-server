@@ -12,9 +12,9 @@ export class WriterSeqHelper {
    * 예외 처리 진행
    */
   getNextWriter(writers: NovelWriterEntity[]): NovelWriterEntity {
-    const currentWriter = writers.filter((writer) => writer.isCurrentlyWriter())[0];
+    const currentWriter = writers.find((writer) => writer.isCurrentlyWriter());
     const nextWriterSeq = currentWriter.getNextSeq(getSize(writers));
-    const result = writers.filter((writer) => writer.writingSeq === nextWriterSeq)[0];
+    const result = writers.find((writer) => writer.writingSeq === nextWriterSeq);
     return result;
   }
 }

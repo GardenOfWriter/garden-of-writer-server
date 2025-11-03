@@ -21,15 +21,16 @@ export class FindAllNovelAttendBoardDto {
   private _type: NovelRoomType;
   private _attendBoard: NovelAttendBoardEntity;
 
-  constructor(user: UserEntity, room: NovelRoomEntity) {
-    this._roomId = room.id;
-    this._roomTitle = room.title;
-    this._boardTitle = room.novelAttendBoard?.title;
-    this._roomCreatedAt = room.createdAt;
-    this._category = room.category;
-    this._type = room.type;
-    this._attendBoard = room?.novelAttendBoard;
-    this._writers = room.novelWriter;
+  constructor(user: UserEntity, board: NovelAttendBoardEntity) {
+    this._roomId = board.id;
+    this._roomTitle = board.title;
+    this._boardTitle = board?.title;
+    this._roomCreatedAt = board.novelRoom.createdAt;
+    this._category = board.novelRoom.category;
+    this._type = board.novelRoom.type;
+    this._attendBoard = board;
+    this._writers = board.novelRoom.novelWriter;
+    this._viewCount = board.viewCount;
   }
 
   @ApiProperty({
@@ -80,11 +81,9 @@ export class FindAllNovelAttendBoardDto {
   })
   @Expose()
   get host(): string {
-    const hostWriter = this._writers.filter((writer) => {
-      return writer.isHost();
-    })[0];
-    if (isEmpty(hostWriter)) return 'test';
-    return hostWriter.user.nickname;
+    const host = this._writers.find((writer) => writer.isHost());
+    if (isEmpty(host)) return '대표작가 없음';
+    return host.user.nickname;
   }
   @ApiProperty({
     example: 5,
@@ -92,9 +91,7 @@ export class FindAllNovelAttendBoardDto {
   })
   @Expose()
   get likeCount() {
-    if (!this._attendBoard) {
-      return 0;
-    }
+    if (!this._attendBoard) return 0;
     return this._attendBoard.boardLike.length || 0;
   }
   @ApiProperty({ ...RoomCategoryDescription })
@@ -107,8 +104,9 @@ export class FindAllNovelAttendBoardDto {
     description: '참여 작가 수',
   })
   @Expose()
-  get currentWriterCnt() {
-    return this._writers.length;
+  get currentAttendCnt() {
+    const attendWriters = this._writers.filter((writer) => writer.isStatusAttending());
+    return attendWriters.length;
   }
   @ApiProperty({
     enum: NovelRoomTypeEnum,

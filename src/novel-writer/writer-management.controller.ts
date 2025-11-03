@@ -17,7 +17,6 @@ import { ChangeWriterStatus, FindWriterMangement } from './decorator/swagger.dec
 @UseGuards(JwtGuard)
 export class WriterManagementController {
   constructor(private writerMgrService: WriterManagementService) {}
-
   @ChangeWriterStatus()
   @Put('/status/:id')
   async changeWriterStatus(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateNovelWriterStatusRequestDto, @CurrentUser() user: UserEntity) {

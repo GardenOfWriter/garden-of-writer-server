@@ -34,6 +34,7 @@ export class NovelWriterController {
   }
   /**
    * 소설 공방에 참여 신청
+   * TODO : Join 으로 변경을 고려
    */
   @ApplyNovelRoomWriter()
   @Post('/novel-room/approval')

@@ -14,24 +14,28 @@ import { GlobalExceptionFilter } from './commons/filter/global-exception.filter'
 import { ResponseInterceptor } from './commons/interceptor/response.interceptor';
 import { NovelTextModule } from './novel-text/novel-text.module';
 
-import { MessageEntity } from './message/message.entity';
 import { NovelTagModule } from './novel-tag/novel-tags.module';
 import { ChapterModule } from './chapter/chapter.module';
-import { ChatsModule } from './chats/chats.module';
 import { EmailModule } from './commons/email/emai.module';
 import { EmailServiceToken } from './commons/email/email.service';
 import { EmailServiceImpl } from './commons/email/email.service.impl';
 import { NovelAttendBoardModule } from './novel-attend-board/novel-attend-board.module';
 import { NovelWriterModule } from './novel-writer/novel-writer.module';
 import { UserModule } from './user/user.module';
-import { ErrorsInterceptor } from './commons/interceptor/error.interceptor';
-import { AppHeaderProvider } from './commons/provider/app-header.provider';
-
+import { NovelViewController } from './novel-view/novel-view.controller';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { ChpaterProfile } from './novel-view/mapper/chapter.profile';
+import { AbilityModule } from './commons/abilities/ability.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
+      envFilePath: '.env',
+    }),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -58,15 +62,16 @@ import { AppHeaderProvider } from './commons/provider/app-header.provider';
     ChapterModule,
     NovelAttendBoardModule,
     NovelTagModule,
-    ChatsModule,
+    AbilityModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, NovelViewController],
   providers: [
     AppService,
     {
       provide: EmailServiceToken,
       useClass: EmailServiceImpl,
     },
+    ChpaterProfile,
     {
       provide: APP_PIPE,
       useFactory: () =>
@@ -77,6 +82,7 @@ import { AppHeaderProvider } from './commons/provider/app-header.provider';
           whitelist: true,
           forbidNonWhitelisted: true,
           transform: true,
+
           exceptionFactory: (errors: ValidationError[]) => {
             const constraints = errors.map((_error) => Object.values(_error.constraints))[0];
             throw new ArgumentInvalidException(constraints);
@@ -87,10 +93,6 @@ import { AppHeaderProvider } from './commons/provider/app-header.provider';
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
     },
-    // {
-    //   provide: APP_INTERCEPTOR,
-    //   useClass: ErrorsInterceptor,
-    // },
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
@@ -100,6 +102,6 @@ import { AppHeaderProvider } from './commons/provider/app-header.provider';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AppHeaderProvider).forRoutes('*');
+    // consumer.apply(AppHeaderProvider).forRoutes('*');
   }
 }

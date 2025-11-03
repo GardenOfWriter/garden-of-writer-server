@@ -81,6 +81,7 @@ export class CreateNovelRoomDto {
     description: '공방 모집글 제목',
   })
   @IsString()
+  @IsOptional()
   attendTitle: string;
 
   @ApiProperty({
@@ -88,6 +89,7 @@ export class CreateNovelRoomDto {
     description: '공방 모집글 카카오톡 링크',
   })
   @IsString()
+  @IsOptional()
   attendOpenKakaoLink: string;
 
   @ApiProperty({
@@ -95,13 +97,15 @@ export class CreateNovelRoomDto {
     description: '공방 모집글 본문',
   })
   @IsString()
+  @IsOptional()
   attendContent: string;
 
   // request dto -> toEntity -> of method -> entity
   toRoomEntity(user: UserEntity): NovelRoomEntity {
     return NovelRoomEntity.of(this.type, this.title, this.subTitle, this.category, this.character, this.summary, this.bookCover, user);
   }
-  toAttendBoardEntity(roomId: number): NovelAttendBoardEntity {
+  toAttendBoardEntity(roomId: number): NovelAttendBoardEntity | null {
+    if (this.type === NovelRoomTypeEnum.SOLO) return null;
     return NovelAttendBoardEntity.of(roomId, this.attendTitle, this.attendContent, this.attendOpenKakaoLink);
   }
 

@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "allowJs": true,
     "paths": {
+      "@app/user/*": ["./src/user/*"],
       "@app/auth/*": ["./src/auth/*"],
       "@app/commons/*": ["./src/commons/*"],
       "@app/entities/*": ["./src/commons/entities/*"],

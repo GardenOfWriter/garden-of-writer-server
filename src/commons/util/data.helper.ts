@@ -11,6 +11,10 @@ export const isEmpty = (data: any): boolean => {
   return _.isEmpty(data);
 };
 
+export const isNotEmpty = (data: any): boolean => {
+  return !_.isEmpty(data);
+};
+
 // /**
 //  * 배열의 길이를 반환합니다.
 //  *
@@ -19,4 +23,8 @@ export const isEmpty = (data: any): boolean => {
 //  */
 export const getSize = (data: any) => {
   return _.size(data);
+};
+
+export const sortBy = (data: any, key: string) => {
+  return _.sortBy(data, key);
 };

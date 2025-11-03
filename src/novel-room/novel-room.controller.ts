@@ -38,8 +38,9 @@ import { TransactionInterceptor } from '@app/commons/interceptor/transaction.int
 import { QueryRunner } from '@app/commons/decorator/query-runner.decorator';
 import { QueryRunner as QR } from 'typeorm';
 import { isEmpty } from '../commons/util/data.helper';
+import { HostGuard } from '@app/auth/guard/host.guard';
 
-@ApiTags('소설 공방')
+@ApiTags('소설 공방 (작가의 정원)')
 @Controller('novel-room')
 @ApiBearerAuth('Authorization')
 @SerializeOptions({
@@ -60,7 +61,10 @@ export class NovelRoomController {
   @Post('')
   async createRoom(@Body() dto: CreateNovelRoomDto, @CurrentUser() user: UserEntity, @QueryRunner() qr: QR): Promise<void> {
     const room = await this.novelRoomService.createRoom(dto, user);
-    await this.novelAttendBoardService.create(dto.toAttendBoardEntity(room.id));
+    const novelAttendBoard = dto.toAttendBoardEntity(room.id);
+    if (!isEmpty(novelAttendBoard)) {
+      await this.novelAttendBoardService.create(novelAttendBoard);
+    }
     if (isEmpty(dto.novelTags)) return;
     await this.novelTagService.saveTag(dto.novelTags, room.id);
     return;
@@ -115,6 +119,7 @@ export class NovelRoomController {
    * @param {QR} qr QueryRunner 트랜잭션
    * @returns {Promise<NovelRoomEntity>} 수정된 소설 공방 정보
    */
+  @UseGuards(HostGuard)
   @UseInterceptors(TransactionInterceptor)
   @UpdateNovelRoom()
   @Put(':id')

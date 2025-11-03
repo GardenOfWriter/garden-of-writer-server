@@ -17,7 +17,8 @@ import {
   NovelRoomNotFoundException,
 } from './exceptions/novel-room.exception';
 import { isEmpty } from '@app/commons/util/data.helper';
-
+import { FindAllNovelViewResDto } from '@app/novel-view/dto/response/find-all-novel-res.dto';
+import { FindAllNovelViewReqDto } from '@app/novel-view/dto/request/find-novel-view-req.dto';
 /**
  * 소설 공방 서비스
  *
@@ -52,6 +53,9 @@ export class NovelRoomService {
    */
   async findAllRooms(user: UserEntity, dto: FindAttendQueryDto): Promise<PagingationResponse<FindAttendStatusNovelRoomDto>> {
     const roomFilter = dto.queryConvertStatus();
+
+    this.logger.debug(`Room List By User ${user.id}, `);
+
     const [rooms, totalCount] = await this.novelRoomRepo.findAllJoinWriterByStatus(user, roomFilter, dto);
     const itemsPromise = await rooms.map(async (room: NovelRoomEntity) => {
       const attendWriters = await this.novelWriterRepo.findByNovelRoomIdWhereAttending(room.id);
@@ -136,5 +140,15 @@ export class NovelRoomService {
     }
     novelRoom.setCompletedAt();
     await this.novelRoomRepo.saveRow(novelRoom);
+  }
+
+  async findByStatusJoinWriters(dto: FindAllNovelViewReqDto): Promise<PagingationResponse<FindAllNovelViewResDto>> {
+    const [rooms, totalCount] = await this.novelRoomRepo.findAllByStatusAndCategoryJoinWriter({
+      status: dto.status,
+      category: dto.category,
+      paging: dto,
+    });
+    const items = rooms.map((room) => new FindAllNovelViewResDto(room));
+    return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
 }

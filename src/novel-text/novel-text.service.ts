@@ -3,16 +3,17 @@ import { UserEntity } from '../user/entities/user.entity';
 import { ChapterItemsDto, FindByChapterIdResponseDto } from './dto/response/findbychapter-id.dto';
 import { NovelTextEntity } from './entities/novel-text.entity';
 import { NovelTextRepo, NovelTextRepository } from './repository/novel-text.repository';
-import { ChatsGateway } from '@app/chats/chats.gateway';
 import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
 import { NotFoundTextException } from './exception/novel-text.exception';
-import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
+
 import { ChapterRepo, ChapterRepository } from '@app/chapter/repository/chapter.repository';
 import { isEmpty } from '../commons/util/data.helper';
 import { WriterSeqHelper } from '@app/novel-writer/helper/writer-seq.helper';
 import { UpdateTextNovelRequestDto } from './dto/request/update-novel.dto';
 import { PagingationResponse } from '@app/commons/pagination/pagination.response';
 import { FindByChapterIdNovelTextDto } from './dto/request/findby-chapterid.dto';
+import { ChatsGateway } from '@app/chats/chats.gateway';
+import { SOCKET_EVENT } from '@app/chats/enums/socket.event';
 
 /**
  * 소설 텍스트 서비스
@@ -34,7 +35,7 @@ export class NovelTextService {
     private chapterRepo: ChapterRepository,
     private chatsGateway: ChatsGateway,
     private writerSeqHelper: WriterSeqHelper,
-  ) { }
+  ) {}
 
   /**
    * 소설 텍스트 생성
@@ -49,18 +50,14 @@ export class NovelTextService {
     try {
       const chapter = await this.chapterRepo.findById(entity.chapterId);
       const textId = await this.novelTextRepo.addRow(entity);
-      console.log('chapter =======');
-      console.log(chapter);
-      console.log('textId=========');
-      console.log(textId);
+
       chapter.chapterFinalWriterd();
       await this.chapterRepo.saveRow(chapter);
       this.chatsGateway.sendNovelRoomInMessage(chapter.novelRoomId, SOCKET_EVENT.ENTER_TEXT, JSON.stringify({ textId, chapterId: entity.chapterId }));
       return;
     } catch (err) {
-      console.log(err)
+      console.error(err);
     }
-
   }
 
   /**
@@ -98,14 +95,29 @@ export class NovelTextService {
     text.setComplated();
     const chapter = await this.chapterRepo.findById(text.chapterId);
     const writers = await this.novelWriterRepo.findByNovelRoomIdWhereAttending(+chapter.novelRoomId);
+    const currentWriters = writers.find((writer) => writer.isCurrentlyWriter());
+
     const nextWriter = this.writerSeqHelper.getNextWriter(writers);
+
+    currentWriters.setCurrentyWriter(false);
+
     nextWriter.setCurrentyWriter(true);
-    await this.novelTextRepo.addRow(text);
+
+    await this.novelTextRepo.updateRow(text.id, text);
+
+    await this.novelWriterRepo.updateRow(currentWriters.id, currentWriters);
+
     await this.novelWriterRepo.updateRow(nextWriter.id, nextWriter);
 
     this.chatsGateway.sendNovelRoomInMessage(
-      text.createdBy.id,
+      +chapter.novelRoomId,
       SOCKET_EVENT.UPDATE_TEXT,
+      JSON.stringify({ textId: text.id, chapterId: text.chapterId }),
+    );
+
+    this.chatsGateway.sendNovelRoomInMessage(
+      +chapter.novelRoomId,
+      SOCKET_EVENT.CHANGE_WRITER_SEQUENCE,
       JSON.stringify({ textId: text.id, chapterId: text.chapterId }),
     );
     return;
@@ -157,6 +169,11 @@ export class NovelTextService {
       throw new NotFoundTextException();
     }
     return new ChapterItemsDto(text);
+  }
+
+  async findByChapterId(chapterId: number): Promise<string[]> {
+    const texts = await this.novelTextRepo.findByChapterIdAndCompleted(chapterId);
+    return texts.map((text) => text.content);
   }
 
   // /**

@@ -12,6 +12,7 @@ import { UpdateNovelRoomDto } from '@app/novel-room/dto/request/update-novel-roo
 import { NovelWriterRepo, NovelWriterRepository } from '@app/novel-writer/repository/novel-writer.repository';
 import { isEmpty } from 'lodash';
 import { AlreadBoardLikeException, NotFoundNovelAttendBoardException } from './exception/already-board-like.exception';
+import { isNotEmpty } from '@app/commons/util/data.helper';
 
 @Injectable()
 export class NovelAttendBoardService {
@@ -45,8 +46,8 @@ export class NovelAttendBoardService {
    * @return {Promise<PagingationResponse<FindAllNovelAttendBoardDto>>} 조회된 게시글 DTO (페이지 처리)
    */
   async findAll(dto: FindAttendBoardDto, user: UserEntity): Promise<PagingationResponse<FindAllNovelAttendBoardDto>> {
-    const [rooms, totalCount] = await this.novelRoomRepo.findAllJoinBoardWithBoardLikeAndCount(user, dto);
-    const items = rooms.map((room) => new FindAllNovelAttendBoardDto(user, room));
+    const [boards, totalCount] = await this.boardRepo.findAllJoinRoomWIthBoardLikeAndCount(user, dto);
+    const items = boards.map((board) => new FindAllNovelAttendBoardDto(user, board));
     return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
 
@@ -59,11 +60,14 @@ export class NovelAttendBoardService {
    * @returns {Promise<FindByIdLikeUserDto>} 조회된 게시글 DTO
    */
   async findById(novelRoomId: number, user: UserEntity): Promise<FindByIdLikeUserDto> {
-    const board = await this.boardRepo.findByIdWhereLikeUserJoinNovelRoom(novelRoomId);
-    if (isEmpty(board)) throw new NotFoundNovelAttendBoardException();
+    const attendBoard = await this.boardRepo.findByIdWhereLikeUserJoinNovelRoom(novelRoomId);
+    if (isEmpty(attendBoard)) throw new NotFoundNovelAttendBoardException();
     const writers = await this.novelWriterRepo.findByNovelRoomIdWhereAttending(novelRoomId);
+    const isAttendUser = await this.novelWriterRepo.findByUserIdAndNovelRoomId(novelRoomId, user.id);
     const hasBoard = await this.boardRepo.hasBoardLike(user.id, novelRoomId);
-    return new FindByIdLikeUserDto(board, hasBoard, writers, user);
+    await this.boardRepo.updateViewCounting(attendBoard.id);
+    attendBoard.updateViewCounting();
+    return new FindByIdLikeUserDto(attendBoard, hasBoard, writers, isNotEmpty(isAttendUser));
   }
 
   /**

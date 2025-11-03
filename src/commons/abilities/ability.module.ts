@@ -1,9 +1,12 @@
-import { CaslGuard } from '@app/auth/guard/casl.guard';
 import { Module } from '@nestjs/common';
 import { AbilityFactory } from './ability.factory';
+import { NovelWriterRepositoryProvider } from '@app/novel-writer/repository/novel-writer.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { NovelWriterEntity } from '@app/novel-writer/entities/novel-writer.entity';
 
 @Module({
-  providers: [AbilityFactory, CaslGuard],
-  exports: [AbilityFactory, CaslGuard],
+  imports: [TypeOrmModule.forFeature([NovelWriterEntity])],
+  providers: [AbilityFactory, NovelWriterRepositoryProvider],
+  exports: [AbilityFactory],
 })
 export class AbilityModule {}

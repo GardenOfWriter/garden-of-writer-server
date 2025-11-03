@@ -93,13 +93,13 @@ export class ChapterItemsDto {
     return this._content;
   }
   @ApiProperty({
-    example: { userId: 1, nickname: 'test@test.com' },
-    description: '작성자',
+    example: { id: 1, nickname: 'test@test.com' },
+    description: '작성자 id 와 nickname',
   })
   @Expose()
-  get createdBy(): { userId: number; nickname: string } {
+  get createdBy(): { id: number; nickname: string } {
     return {
-      userId: this._user.id,
+      id: this._user.id,
       nickname: this._user.nickname,
     };
   }

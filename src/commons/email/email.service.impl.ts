@@ -5,11 +5,24 @@ import { compile } from 'handlebars';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 import { EmailTemplate } from './enums/teamplate.enums';
+import { Worker } from 'worker_threads';
 @Injectable()
 export class EmailServiceImpl implements EmailService {
   constructor(private readonly mailService: MailerService) {}
   //   private logger = new Logger('EmailService');
-  async sendEmail(to: string, subject: string, text: string, template?: EmailTemplate, templateArgs?: any): Promise<void> {
+  async sendEmail({
+    to,
+    subject,
+    text,
+    template,
+    templateArgs,
+  }: {
+    to: string;
+    subject: string;
+    text: string;
+    template?: EmailTemplate;
+    templateArgs?: any;
+  }): Promise<void> {
     let templateMessage;
     if (template) {
       templateMessage = this.getTemplate(template, templateArgs);

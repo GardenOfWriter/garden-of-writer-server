@@ -10,6 +10,13 @@ import { isEmpty } from '../commons/util/data.helper';
 import { NotFoundChapterException, NotWritingChapterException } from './exception/chpater.exception';
 import { ChapterStatusEnum } from './entities/enums/chapter-status.enum';
 import { CreateChapterRequestDto } from './dto/request/create-chapter.dto';
+import { NovelRoomRepo, NovelRoomRepository } from '@app/novel-room/repository/novel-room.repository';
+import { NovelRoomStatusEnum } from '@app/novel-room/entities/enum/novel-room-status.enum';
+import { BasePaginationRequest } from '@app/commons/pagination/base-paginiation.request';
+import { ChapterLikeRepo, ChapterLikeRepository } from './repository/chapter-like.repository';
+import { ChapterCommentRepo, ChapterCommentRepository } from './repository/chapter-comment.repository';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 /**
  * 회차 서비스 클래스
@@ -23,8 +30,19 @@ export class ChapterService {
   private logger = new Logger(ChapterService.name);
 
   constructor(
+    @NovelRoomRepo()
+    private readonly novelRoomRepository: NovelRoomRepository,
     @ChapterRepo()
     private readonly chapterRepository: ChapterRepository,
+
+    @ChapterLikeRepo()
+    private readonly chapterLikeRepository: ChapterLikeRepository,
+
+    @ChapterCommentRepo()
+    private readonly chapterCommoentRepository: ChapterCommentRepository,
+
+    @InjectMapper()
+    private readonly mapper: Mapper,
   ) {}
 
   // /**
@@ -67,6 +85,12 @@ export class ChapterService {
     chapter.setReviewStatus();
     this.logger.log(`Chapter Apply ${JSON.stringify(chapter)}`);
     await this.chapterRepository.saveRow(chapter);
+    if (chapter.isFirstChapter()) {
+      this.logger.log(`Chapter Status Series ${JSON.stringify(chapter)}`);
+      const novelRoom = await this.novelRoomRepository.getById(chapter.novelRoomId);
+      novelRoom.changeStatus(NovelRoomStatusEnum.SERIES);
+      await this.novelRoomRepository.saveRow(novelRoom);
+    }
     return;
   }
 
@@ -80,7 +104,7 @@ export class ChapterService {
    */
   async changeTitle(id: number, dto: ChangeTitleDto): Promise<void> {
     const chapter = await this.findByChapterId(id);
-    if (!isEmpty(chapter)) throw new NotFoundChapterException();
+    if (isEmpty(chapter)) throw new NotFoundChapterException();
     chapter.changeTitle(dto.title);
     await this.chapterRepository.saveRow(chapter);
     return;
@@ -123,12 +147,35 @@ export class ChapterService {
    * @param {FindByNovelRoomIdDto} dto 조회할 소설 공방 Id
    * @returns {Promise<PagingationResponse<FindChapterRoomIdResDto>>} 조회된 회차 목록
    */
-  async findChapterText(dto: FindByNovelRoomIdDto): Promise<PagingationResponse<FindChapterRoomIdResDto>> {
+  async findByNovelIdChapter(dto: FindByNovelRoomIdDto): Promise<PagingationResponse<FindChapterRoomIdResDto>> {
     const [chapters, totalCount] = await this.chapterRepository.findChpaterByRoomIdAndCount(dto.novelRoomId, dto);
-    const items = chapters.map((chapter) => new FindChapterRoomIdResDto(chapter));
+
+    if (isEmpty(chapters)) throw new NotFoundChapterException();
+
+    const items = await this.findLikeCount(chapters);
+
     return new PagingationResponse(totalCount, dto.chunkSize, items);
   }
 
+  private async findLikeCount(chapters: ChapterEntity[]): Promise<FindChapterRoomIdResDto[]> {
+    const chapterIds = chapters.map((chapter) => chapter.id);
+    const likes = await this.chapterLikeRepository.countInChapterIds(chapterIds);
+
+    return this.mapper.mapArrayAsync(chapters, ChapterEntity, FindChapterRoomIdResDto, {
+      // TODO : beforeMap 과 afterMap 의 차이를 알기
+      // beforeMap 을 했을때는 commentCount,likeCount 가 안나왔는데
+      // afterMap 을 했더니 commentCount,likeCount 가 출력된다
+
+      afterMap: (sourceArray, destinationArray) => {
+        sourceArray.forEach((source, index) => {
+          const destination = { ...destinationArray[index] };
+          destination.likeCount = !isEmpty(likes) ? likes.find((like) => like.chapterId === source.id).count : 0;
+          destination.commentCount = 0;
+          destinationArray[index] = { ...destination };
+        });
+      },
+    });
+  }
   /**
    * 소설 공방에 해당하는 회차 목록 조회
    *
@@ -136,24 +183,11 @@ export class ChapterService {
    * @param {number} id 조회할 소설 공방 Id
    * @returns {Promise<ChapterEntity>} 조회된 회차 목록
    */
-  private findByChapterId(id: number): Promise<ChapterEntity> {
+  async findByChapterId(id: number): Promise<ChapterEntity> {
     return this.chapterRepository.findOneByOptions({
       where: {
         id,
       },
     });
-  }
-
-  /**
-   * 다음 회차 번호 조회
-   *
-   * @private
-   * @async
-   * @param {number} novelRoomId 소설 공방 Id
-   * @returns {Promise<number>} 다음 회차 번호
-   */
-  private async nextChapterNo(novelRoomId: number): Promise<number> {
-    const chpaterNo = await this.chapterRepository.countByNovelRoomId(novelRoomId);
-    return chpaterNo + 1;
   }
 }
